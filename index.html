@@ -1,0 +1,861 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DANSER - Draft Page</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <style>
+        /* ===== CSS VARIABLES â€“ DANSER PALETTE ===== */
+        :root {
+            --navy:        #1B3A6B;
+            --blue:        #2E6DA4;
+            --blue-light:  #4A90C4;
+            --sage:        #8FAB7A;
+            --sage-dark:   #6B8A5A;
+            --water:       #5BA3C9;
+            --water-light: #A8D4E8;
+            --water-pale:  #E8F4FB;
+            --white:       #FFFFFF;
+            --gray-50:     #F8FAFC;
+            --gray-100:    #F1F5F9;
+            --gray-200:    #E2E8F0;
+            --gray-400:    #94A3B8;
+            --gray-600:    #475569;
+            --gray-800:    #1E293B;
+            --font: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        /* ===== RESET ===== */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { font-family: var(--font); color: var(--gray-800); background: var(--white); line-height: 1.6; }
+        img  { max-width: 100%; display: block; }
+        a    { text-decoration: none; color: inherit; }
+
+        /* ===== NAVIGATION ===== */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            background: rgba(244, 250, 255, 0.96);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(27,58,107,0.12);
+            box-shadow: 0 4px 14px rgba(15,37,71,0.08);
+            padding: 0 2.5rem;
+            height: 68px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .nav-logo { display: flex; align-items: center; gap: 12px; }
+        .nav-logo img {
+            width: 42px;
+            height: 42px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+        .nav-logo-text { display: flex; flex-direction: column; line-height: 1.1; }
+        .nav-logo-text .acronym  { font-size: 1.25rem; font-weight: 800; color: var(--navy); letter-spacing: 3px; }
+        .nav-logo-text .tagline  { font-size: 0.6rem; color: var(--blue); font-weight: 400; letter-spacing: 0.5px; text-transform: uppercase; opacity: 0.9; }
+        .nav-links { display: flex; align-items: center; gap: 1.75rem; }
+        .nav-links a { color: rgba(27,58,107,0.78); font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--navy); }
+
+        /* ===== HERO ===== */
+        .hero {
+            min-height: 100vh;
+            padding-top: 68px;
+            background: linear-gradient(155deg, #0f2547 0%, #1b3a6b 45%, #1e4d8c 100%);
+            display: flex; flex-direction: column;
+            position: relative; overflow: hidden;
+        }
+        .hero-grain {
+            position: absolute; inset: 0; pointer-events: none; opacity: 0.025;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-size: 200px;
+        }
+        .hero-content {
+            flex: 1;
+            display: grid; grid-template-columns: 1fr 1.65fr;
+            align-items: center; gap: 3rem;
+            padding: 3rem 3.5rem;
+            max-width: 1440px; margin: 0 auto; width: 100%;
+        }
+        .hero-text { color: var(--white); }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.18);
+            border-radius: 20px; padding: 5px 14px;
+            font-size: 0.72rem; font-weight: 600; letter-spacing: 1px;
+            text-transform: uppercase; color: var(--water-light);
+            margin-bottom: 1.5rem;
+        }
+        .hero-badge .dot { width: 6px; height: 6px; background: var(--sage); border-radius: 50%; animation: blink 2s infinite; }
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+        .hero-title {
+            font-size: clamp(1.9rem, 3.5vw, 3rem);
+            font-weight: 800; line-height: 1.15;
+            margin-bottom: 1.1rem;
+        }
+        .hero-title em { font-style: normal; color: var(--water-light); }
+        .hero-subtitle {
+            font-size: 0.95rem; color: rgba(255,255,255,0.72);
+            max-width: 440px; margin-bottom: 2.5rem; line-height: 1.75;
+        }
+        .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+        .btn-primary {
+            background: var(--sage); color: var(--white);
+            padding: 11px 26px; border-radius: 8px;
+            font-weight: 600; font-size: 0.88rem;
+            transition: all 0.2s; display: inline-flex; align-items: center; gap: 7px;
+        }
+        .btn-primary:hover { background: var(--sage-dark); transform: translateY(-1px); box-shadow: 0 6px 18px rgba(107,138,90,0.4); }
+        .btn-outline {
+            background: transparent; color: var(--white);
+            padding: 11px 26px; border-radius: 8px;
+            font-weight: 600; font-size: 0.88rem;
+            border: 1.5px solid rgba(255,255,255,0.35);
+            transition: all 0.2s; display: inline-flex; align-items: center; gap: 7px;
+        }
+        .btn-outline:hover { border-color: rgba(255,255,255,0.75); background: rgba(255,255,255,0.06); }
+
+        /* ===== MAP PANEL ===== */
+        .hero-map-panel {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px; overflow: hidden; padding: 1.25rem;
+            position: relative;
+        }
+        .map-bar {
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.85rem;
+            margin-bottom: 0.9rem;
+        }
+        .map-bar-title { color: rgba(255,255,255,0.6); font-size: 0.72rem; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; }
+        .map-legend { display: flex; gap: 1rem; flex-wrap: wrap; }
+        .leg { display: flex; align-items: center; gap: 5px; font-size: 0.68rem; color: rgba(255,255,255,0.55); }
+        .leg-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+        .leg { opacity: 0.72; transition: opacity 0.2s ease, color 0.2s ease; }
+        .leg.is-active { opacity: 1; color: rgba(255,255,255,0.95); font-weight: 700; }
+        .leg.is-muted { opacity: 0.34; color: rgba(255,255,255,0.45); }
+        .map-switcher { display: flex; gap: 0.45rem; flex-wrap: wrap; width: 100%; }
+        .map-switcher-btn {
+            appearance: none;
+            font-family: inherit;
+            border: 1px solid rgba(255,255,255,0.26);
+            background: rgba(255,255,255,0.08);
+            color: rgba(255,255,255,0.86);
+            padding: 5px 10px;
+            border-radius: 999px;
+            font-size: 0.68rem;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+            cursor: pointer;
+            transition: all 0.18s ease;
+        }
+        .map-switcher-btn:hover {
+            border-color: rgba(255,255,255,0.52);
+            background: rgba(255,255,255,0.14);
+        }
+        .map-switcher-btn.is-active {
+            background: rgba(168,212,232,0.22);
+            border-color: rgba(168,212,232,0.9);
+            color: #ffffff;
+            box-shadow: 0 0 0 1px rgba(168,212,232,0.25) inset;
+        }
+
+        /* ===== MAP SVG ===== */
+        .map-wrapper { position: relative; }
+        #danube-map {
+            width: 100%;
+            height: 460px;
+            border-radius: 12px;
+            display: block;
+            background: linear-gradient(165deg, #e6eef9 0%, #d8e4f4 100%);
+            border: 1px solid rgba(255,255,255,0.18);
+        }
+        .leaflet-container { font-family: var(--font); }
+        .leaflet-tooltip.map-zone-tip {
+            background: rgba(15,37,71,0.95);
+            border: 1px solid rgba(255,255,255,0.16);
+            color: #ffffff;
+            border-radius: 8px;
+            box-shadow: none;
+            padding: 7px 10px;
+            font-size: 12px;
+        }
+        .leaflet-tooltip.map-zone-tip::before { border-top-color: rgba(15,37,71,0.95); }
+        .map-footnote {
+            font-size: 0.72rem;
+            color: rgba(255,255,255,0.62);
+            margin-top: 0.75rem;
+            line-height: 1.45;
+        }
+
+        /* ===== STATS STRIP ===== */
+        .stats-strip {
+            background: var(--white);
+            border-top: 4px solid var(--sage);
+            padding: 1.75rem 3.5rem;
+        }
+        .stats-inner {
+            max-width: 1440px; margin: 0 auto;
+            display: grid; grid-template-columns: repeat(5,1fr);
+            gap: 1.5rem; align-items: center;
+        }
+        .stat { text-align: center; }
+        .stat-val  { font-size: 2rem; font-weight: 800; color: var(--navy); line-height: 1; }
+        .stat-lbl  { font-size: 0.78rem; color: var(--gray-600); margin-top: 4px; }
+
+        /* ===== SHARED SECTION STYLES ===== */
+        .sec { padding: 5rem 3.5rem; }
+        .sec-inner { max-width: 1440px; margin: 0 auto; }
+        .sec-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--sage-dark); margin-bottom: 0.6rem; }
+        .sec-title { font-size: clamp(1.5rem, 2.8vw, 2.2rem); font-weight: 800; color: var(--navy); margin-bottom: 0.9rem; line-height: 1.2; }
+        .sec-body  { font-size: 0.95rem; color: var(--gray-600); max-width: 620px; line-height: 1.75; }
+
+        /* ===== ABOUT ===== */
+        #about { background: var(--gray-50); }
+        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+        .feature-list { margin-top: 2rem; display: flex; flex-direction: column; gap: 0.9rem; }
+        .feat {
+            display: flex; gap: 1rem; align-items: flex-start;
+            background: var(--white); border-radius: 10px;
+            border-left: 3px solid var(--sage);
+            padding: 1rem 1.2rem;
+        }
+        .feat-ico { font-size: 1.3rem; flex-shrink: 0; margin-top: 1px; }
+        .feat h4 { font-size: 0.88rem; font-weight: 700; color: var(--navy); margin-bottom: 3px; }
+        .feat p  { font-size: 0.8rem; color: var(--gray-600); line-height: 1.5; }
+        .about-vis {
+            border-radius: 16px; overflow: hidden;
+            background: linear-gradient(135deg, var(--navy), var(--blue));
+            padding: 2.5rem; color: var(--white); position: relative;
+        }
+        .about-vis .watermark {
+            position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+            opacity: 0.06; pointer-events: none;
+        }
+        .river-facts { position: relative; z-index: 1; }
+        .river-facts .main-stat { font-size: 3rem; font-weight: 800; line-height: 1; }
+        .river-facts .main-lbl { font-size: 0.85rem; opacity: 0.75; margin-top: 4px; }
+        .river-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-top: 2rem; }
+        .river-kpi .val { font-size: 1.6rem; font-weight: 800; }
+        .river-kpi .lbl { font-size: 0.72rem; opacity: 0.65; margin-top: 2px; }
+
+        /* ===== OBJECTIVES ===== */
+        #objectives { background: var(--navy); }
+        #objectives .sec-title { color: var(--white); }
+        #objectives .sec-label { color: var(--sage); }
+        #objectives .sec-body  { color: rgba(255,255,255,0.65); max-width: 100%; }
+        .obj-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.25rem; margin-top: 2.75rem; }
+        .obj-card {
+            background: rgba(255,255,255,0.055);
+            border: 1px solid rgba(255,255,255,0.09);
+            border-radius: 12px; padding: 1.6rem;
+            transition: background 0.2s;
+        }
+        .obj-card:hover { background: rgba(255,255,255,0.1); }
+        .obj-num   { font-size: 1.8rem; font-weight: 800; color: var(--sage); opacity: 0.55; line-height: 1; margin-bottom: 1rem; }
+        .obj-title { font-size: 0.95rem; font-weight: 700; color: var(--white); margin-bottom: 0.45rem; }
+        .obj-desc  { font-size: 0.81rem; color: rgba(255,255,255,0.58); line-height: 1.6; }
+
+        /* ===== DEMO AREAS ===== */
+        #demos { background: var(--white); }
+        .demos-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.75rem; margin-top: 2.75rem; }
+        .demo-card {
+            border-radius: 14px; border: 1px solid var(--gray-200);
+            overflow: hidden; transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .demo-card:hover { transform: translateY(-5px); box-shadow: 0 14px 36px rgba(27,58,107,0.13); }
+        .demo-head { padding: 1.4rem 1.4rem 0; display: flex; align-items: center; gap: 1rem; }
+        .demo-badge {
+            width: 42px; height: 42px; border-radius: 9px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 0.8rem; color: var(--white); flex-shrink: 0;
+        }
+        .demo-badge.up  { background: var(--sage); }
+        .demo-badge.mid { background: var(--blue); }
+        .demo-badge.low { background: var(--navy); }
+        .demo-head-text .title  { font-size: 1rem; font-weight: 700; color: var(--navy); }
+        .demo-head-text .region { font-size: 0.75rem; color: var(--gray-400); margin-top: 1px; }
+        .demo-body { padding: 1rem 1.4rem 1.4rem; }
+        .demo-desc { font-size: 0.83rem; color: var(--gray-600); line-height: 1.65; margin-bottom: 1rem; }
+        .demo-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 0.85rem; }
+        .demo-tag  {
+            background: var(--water-pale); color: var(--blue);
+            font-size: 0.7rem; font-weight: 600;
+            padding: 3px 9px; border-radius: 20px;
+        }
+        .demo-pilots { font-size: 0.76rem; color: var(--gray-400); }
+        .demo-pilots strong { color: var(--navy); }
+
+        /* ===== WORK PACKAGES ===== */
+        #workpackages { background: var(--gray-50); }
+        .wp-list { display: flex; flex-direction: column; gap: 1px; margin-top: 2.25rem; background: var(--gray-200); border-radius: 12px; overflow: hidden; }
+        .wp-row {
+            background: var(--white); padding: 1.1rem 1.6rem;
+            display: grid; grid-template-columns: 72px 1fr auto;
+            align-items: center; gap: 1.5rem;
+            transition: background 0.15s;
+        }
+        .wp-row:hover { background: var(--water-pale); }
+        .wp-code { font-size: 0.82rem; font-weight: 800; color: var(--blue); letter-spacing: 1px; }
+        .wp-name { font-size: 0.88rem; font-weight: 600; color: var(--navy); }
+        .wp-desc-text { font-size: 0.78rem; color: var(--gray-600); margin-top: 2px; line-height: 1.45; }
+        .wp-badge {
+            font-size: 0.68rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; white-space: nowrap;
+        }
+        .wp-badge.active  { background: #D1FAE5; color: #065F46; }
+        .wp-badge.planned { background: #E0E7FF; color: #3730A3; }
+
+        /* ===== PARTNERS ===== */
+        #partners { background: var(--white); }
+        .partners-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(148px,1fr));
+            gap: 0.9rem; margin-top: 2.25rem;
+        }
+        .partner {
+            background: var(--gray-50); border: 1px solid var(--gray-200);
+            border-radius: 10px; padding: 1.1rem 0.9rem; text-align: center;
+            transition: all 0.2s;
+        }
+        .partner:hover { border-color: var(--blue); background: var(--water-pale); }
+        .partner-acr  { font-size: 1.05rem; font-weight: 800; color: var(--navy); }
+        .partner-ctry { font-size: 0.7rem; color: var(--gray-400); margin-top: 2px; }
+        .partner-type { font-size: 0.62rem; font-weight: 600; color: var(--blue); margin-top: 3px; text-transform: uppercase; letter-spacing: 0.4px; }
+        /* ===== EU BANNER ===== */
+        .eu-banner { background: var(--gray-100); border-top: 1px solid var(--gray-200); padding: 1.75rem 3.5rem; }
+        .eu-inner  { max-width: 1440px; margin: 0 auto; display: flex; align-items: center; gap: 1.75rem; }
+        .eu-flag   { flex-shrink: 0; border-radius: 4px; overflow: hidden; }
+        .eu-txt    { font-size: 0.78rem; color: var(--gray-600); line-height: 1.55; }
+        .eu-txt strong { color: var(--gray-800); }
+
+        /* ===== FOOTER ===== */
+        footer { background: var(--navy); color: rgba(255,255,255,0.65); padding: 3rem 3.5rem 2rem; }
+        .footer-grid {
+            max-width: 1440px; margin: 0 auto;
+            display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem; padding-bottom: 2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .footer-brand-name { font-size: 1.35rem; font-weight: 800; color: var(--white); letter-spacing: 3px; }
+        .footer-brand-sub  { font-size: 0.68rem; color: var(--water-light); letter-spacing: 0.5px; text-transform: uppercase; opacity: 0.8; margin-top: 2px; }
+        .footer-brand-desc { font-size: 0.8rem; margin-top: 0.9rem; line-height: 1.6; }
+        .social-row { display: flex; gap: 1.25rem; margin-top: 1.25rem; }
+        .social-row a { font-size: 0.8rem; color: rgba(255,255,255,0.5); transition: color 0.2s; }
+        .social-row a:hover { color: var(--white); }
+        .foot-col h5 { color: var(--white); font-size: 0.82rem; font-weight: 700; letter-spacing: 0.3px; margin-bottom: 0.85rem; }
+        .foot-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.45rem; }
+        .foot-col ul li a { font-size: 0.8rem; color: rgba(255,255,255,0.55); transition: color 0.2s; }
+        .foot-col ul li a:hover { color: var(--white); }
+        .footer-bottom {
+            max-width: 1440px; margin: 1.5rem auto 0;
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 0.75rem;
+        }
+        .footer-links { display: flex; gap: 1.5rem; }
+        .footer-links a { color: rgba(255,255,255,0.4); transition: color 0.2s; }
+        .footer-links a:hover { color: var(--white); }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1100px) {
+            .hero-content { grid-template-columns: 1fr; padding: 2.5rem 2rem; }
+            .about-grid   { grid-template-columns: 1fr; gap: 2.5rem; }
+            .obj-grid     { grid-template-columns: repeat(2,1fr); }
+            .demos-grid   { grid-template-columns: 1fr; }
+            .footer-grid  { grid-template-columns: 1fr 1fr; }
+            .stats-inner  { grid-template-columns: repeat(3,1fr); }
+            .sec          { padding: 3.5rem 2rem; }
+            .stats-strip  { padding: 1.5rem 2rem; }
+        }
+        @media (max-width: 768px) {
+            nav           { padding: 0 1rem; }
+            .nav-links    { display: none; }
+            .footer-grid  { grid-template-columns: 1fr; gap: 2rem; }
+            .stats-inner  { grid-template-columns: repeat(2,1fr); }
+            .obj-grid     { grid-template-columns: 1fr; }
+            .wp-row       { grid-template-columns: 56px 1fr; }
+            .wp-badge     { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-logo">
+        <img src="./DANSERArtboard-1.png" alt="DANSER logo">
+        <div class="nav-logo-text">
+            <span class="acronym">DANSER</span>
+            <span class="tagline">DANube SEdiment Restoration</span>
+        </div>
+    </div>
+    <div class="nav-links">
+        <a href="#about">About</a>
+        <a href="#objectives">Objectives</a>
+        <a href="#demos">Demo Areas</a>
+        <a href="#workpackages">Work Packages</a>
+        <a href="#partners">Partners</a>
+    </div>
+</nav>
+
+<div class="hero">
+    <div class="hero-grain"></div>
+    <div class="hero-content">
+        <div class="hero-text">
+            <div class="hero-badge"><span class="dot"></span>Dashboard View</div>
+            <h1 class="hero-title">Danube Sediment<br><em>Restoration Dashboard</em></h1>
+            <p class="hero-subtitle">Operational overview of DANSER progress across the Danube Basin, including pilots, consortium structure, and implementation packages.</p>
+            <div class="hero-actions">
+                <a href="#workpackages" class="btn-primary">View Work Packages</a>
+                <a href="#partners" class="btn-outline">See Partners</a>
+            </div>
+        </div>
+        <div class="hero-map-panel">
+            <div class="map-bar">
+                <span class="map-bar-title" id="map-title">Danube River Basin · Upper / Middle / Lower</span>
+                <div class="map-legend">
+                    <div class="leg" data-zone="upper"><span class="leg-dot" style="background:#8FAB7A"></span>Upper Basin</div>
+                    <div class="leg" data-zone="middle"><span class="leg-dot" style="background:#3B8FC2"></span>Middle Basin</div>
+                    <div class="leg" data-zone="lower"><span class="leg-dot" style="background:#1B3A6B"></span>Lower Basin</div>
+                </div>
+                <div class="map-switcher" id="map-switcher" aria-label="Map selector"></div>
+            </div>
+            <div class="map-wrapper">
+                <div id="danube-map" role="img" aria-label="Danube River Basin divided into upper, middle and lower basins"></div>
+            </div>
+            <p class="map-footnote" id="map-footnote">Vector map generated from JSON geometry data for clean scaling and easy updates.</p>
+        </div>
+    </div>
+</div>
+
+<div class="stats-strip">
+    <div class="stats-inner">
+        <div class="stat"><div class="stat-val" data-target="48">48</div><div class="stat-lbl">Months Duration</div></div>
+        <div class="stat"><div class="stat-val" data-target="35">35</div><div class="stat-lbl">Consortium Partners</div></div>
+        <div class="stat"><div class="stat-val" data-target="13">13</div><div class="stat-lbl">Pilot Actions</div></div>
+        <div class="stat"><div class="stat-val" data-target="7">7</div><div class="stat-lbl">EU Countries</div></div>
+        <div class="stat"><div class="stat-val" data-target="8">8</div><div class="stat-lbl">Work Packages</div></div>
+    </div>
+</div>
+
+<section class="sec" id="about">
+    <div class="sec-inner about-grid">
+        <div>
+            <p class="sec-label">Overview</p>
+            <h2 class="sec-title">Project Focus</h2>
+            <p class="sec-body">DANSER addresses sediment imbalance across the Danube Basin with modelling, restoration interventions, and policy integration.</p>
+            <div class="feature-list">
+                <div class="feat"><div class="feat-ico">1</div><div><h4>Baseline Assessment</h4><p>Hydromorphological diagnostics across Upper, Middle, and Lower Danube reaches.</p></div></div>
+                <div class="feat"><div class="feat-ico">2</div><div><h4>Restoration Measures</h4><p>Floodplain reconnection, gravel augmentation, and delta stabilization actions.</p></div></div>
+                <div class="feat"><div class="feat-ico">3</div><div><h4>Decision Support</h4><p>Evidence-based tools for river authorities and basin-level policy coordination.</p></div></div>
+            </div>
+        </div>
+        <div class="about-vis">
+            <div class="river-facts">
+                <div class="main-stat">2,850 km</div>
+                <div class="main-lbl">Danube River Length</div>
+                <div class="river-grid">
+                    <div class="river-kpi"><div class="val">3</div><div class="lbl">Demo Regions</div></div>
+                    <div class="river-kpi"><div class="val">13</div><div class="lbl">Pilot Actions</div></div>
+                    <div class="river-kpi"><div class="val">8</div><div class="lbl">Work Packages</div></div>
+                    <div class="river-kpi"><div class="val">2025-2028</div><div class="lbl">Program Window</div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="sec" id="objectives">
+    <div class="sec-inner">
+        <p class="sec-label">Goals</p>
+        <h2 class="sec-title">Core Objectives</h2>
+        <p class="sec-body">The dashboard tracks the main operational priorities of the project.</p>
+        <div class="obj-grid">
+            <div class="obj-card"><div class="obj-num">01</div><div class="obj-title">Quantify Sediment Budgets</div><div class="obj-desc">Measure deficits, transport dynamics, and geomorphological pressure points across the basin.</div></div>
+            <div class="obj-card"><div class="obj-num">02</div><div class="obj-title">Implement Pilot Measures</div><div class="obj-desc">Deploy and evaluate restoration actions at three representative Danube regions.</div></div>
+            <div class="obj-card"><div class="obj-num">03</div><div class="obj-title">Scale to Policy</div><div class="obj-desc">Translate findings into tools and recommendations for basin governance and investment planning.</div></div>
+        </div>
+    </div>
+</section>
+
+<section class="sec" id="demos">
+    <div class="sec-inner">
+        <p class="sec-label">Pilot Areas</p>
+        <h2 class="sec-title">Demo Regions</h2>
+        <p class="sec-body">Three reaches represent the longitudinal Danube gradient from Alpine headwaters to deltaic systems.</p>
+        <div class="demos-grid">
+            <div class="demo-card">
+                <div class="demo-head"><div class="demo-badge up">UP</div><div class="demo-head-text"><div class="title">Upper Danube</div><div class="region">Germany · Austria</div></div></div>
+                <div class="demo-body"><p class="demo-desc">Focus on sediment deficits, gravel augmentation, and channel restoration in regulated Alpine sections.</p><p class="demo-pilots"><strong>4 pilot actions</strong></p></div>
+            </div>
+            <div class="demo-card">
+                <div class="demo-head"><div class="demo-badge mid">MD</div><div class="demo-head-text"><div class="title">Middle Danube</div><div class="region">Hungary · Serbia</div></div></div>
+                <div class="demo-body"><p class="demo-desc">Floodplain reconnection and navigation-ecology balancing in transboundary river segments.</p><p class="demo-pilots"><strong>5 pilot actions</strong></p></div>
+            </div>
+            <div class="demo-card">
+                <div class="demo-head"><div class="demo-badge low">LW</div><div class="demo-head-text"><div class="title">Lower Danube</div><div class="region">Romania · Bulgaria</div></div></div>
+                <div class="demo-body"><p class="demo-desc">Delta stabilization, wetland restoration, and climate-resilient nature-based interventions.</p><p class="demo-pilots"><strong>4 pilot actions</strong></p></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="sec" id="workpackages">
+    <div class="sec-inner">
+        <p class="sec-label">Execution</p>
+        <h2 class="sec-title">Work Packages</h2>
+        <p class="sec-body">Current implementation status across the eight package structure.</p>
+        <div class="wp-list">
+            <div class="wp-row"><div class="wp-code">WP1</div><div><div class="wp-name">Coordination & Management</div><div class="wp-desc-text">Program governance, reporting, and quality control.</div></div><span class="wp-badge active">Active</span></div>
+            <div class="wp-row"><div class="wp-code">WP2</div><div><div class="wp-name">Baseline & Monitoring</div><div class="wp-desc-text">Sediment baselines, field campaigns, and monitoring framework.</div></div><span class="wp-badge active">Active</span></div>
+            <div class="wp-row"><div class="wp-code">WP3</div><div><div class="wp-name">Modelling</div><div class="wp-desc-text">1D/2D/3D morphodynamic and transport model chain.</div></div><span class="wp-badge active">Active</span></div>
+            <div class="wp-row"><div class="wp-code">WP4</div><div><div class="wp-name">Upper Danube Measures</div><div class="wp-desc-text">Implementation of restoration interventions in upper reach.</div></div><span class="wp-badge active">Active</span></div>
+            <div class="wp-row"><div class="wp-code">WP5</div><div><div class="wp-name">Mid/Lower Measures</div><div class="wp-desc-text">Deployment of pilot measures in middle and lower reaches.</div></div><span class="wp-badge planned">Planned</span></div>
+            <div class="wp-row"><div class="wp-code">WP6</div><div><div class="wp-name">Ecosystem Impact</div><div class="wp-desc-text">Biodiversity and ecosystem-service assessment.</div></div><span class="wp-badge planned">Planned</span></div>
+            <div class="wp-row"><div class="wp-code">WP7</div><div><div class="wp-name">Decision Support</div><div class="wp-desc-text">DSS integration with basin governance and policy.</div></div><span class="wp-badge planned">Planned</span></div>
+            <div class="wp-row"><div class="wp-code">WP8</div><div><div class="wp-name">Communication</div><div class="wp-desc-text">Stakeholder engagement and dissemination.</div></div><span class="wp-badge active">Active</span></div>
+        </div>
+    </div>
+</section>
+
+<section class="sec" id="partners" style="background:var(--white)">
+    <div class="sec-inner">
+        <p class="sec-label">Consortium</p>
+        <h2 class="sec-title">35 Partners Across 7 Countries</h2>
+        <p class="sec-body">Representative consortium members shown below.</p>
+        <div class="partners-grid">
+            <div class="partner"><div class="partner-acr">DDNI</div><div class="partner-ctry">Romania</div><div class="partner-type">Coordinator</div></div>
+            <div class="partner"><div class="partner-acr">TUM</div><div class="partner-ctry">Germany</div><div class="partner-type">University</div></div>
+            <div class="partner"><div class="partner-acr">BOKU</div><div class="partner-ctry">Austria</div><div class="partner-type">University</div></div>
+            <div class="partner"><div class="partner-acr">BfG</div><div class="partner-ctry">Germany</div><div class="partner-type">Federal Institute</div></div>
+            <div class="partner"><div class="partner-acr">VITUKI</div><div class="partner-ctry">Hungary</div><div class="partner-type">Research</div></div>
+            <div class="partner"><div class="partner-acr">IHMS</div><div class="partner-ctry">Hungary</div><div class="partner-type">Hydrology</div></div>
+            <div class="partner"><div class="partner-acr">RHMSS</div><div class="partner-ctry">Serbia</div><div class="partner-type">Meteorology</div></div>
+            <div class="partner"><div class="partner-acr">NIMRD</div><div class="partner-ctry">Romania</div><div class="partner-type">Marine Research</div></div>
+            <div class="partner"><div class="partner-acr">ISKAR</div><div class="partner-ctry">Bulgaria</div><div class="partner-type">Environment</div></div>
+            <div class="partner"><div class="partner-acr">WasserCluster</div><div class="partner-ctry">Austria</div><div class="partner-type">Research Center</div></div>
+            <div class="partner"><div class="partner-acr">NLWKN</div><div class="partner-ctry">Germany</div><div class="partner-type">Water Authority</div></div>
+            <div class="partner"><div class="partner-acr">STK</div><div class="partner-ctry">Slovakia</div><div class="partner-type">River Authority</div></div>
+        </div>
+    </div>
+</section>
+
+<div class="eu-banner">
+    <div class="eu-inner">
+        <p class="eu-txt"><strong>Co-funded by the European Union — Horizon Europe Programme.</strong> Views and opinions expressed are those of the author(s).</p>
+    </div>
+</div>
+
+<footer id="footer">
+    <div class="footer-grid">
+        <div>
+            <div class="footer-brand-name">DANSER</div>
+            <div class="footer-brand-sub">DANube SEdiment Restoration</div>
+            <p class="footer-brand-desc">Dashboard-focused project summary page.</p>
+            <div class="social-row">
+                <a href="https://www.linkedin.com/company/danser" target="_blank" rel="noopener">LinkedIn</a>
+                <a href="https://www.facebook.com/profile.php?id=6157735241286" target="_blank" rel="noopener">Facebook</a>
+            </div>
+        </div>
+        <div class="foot-col">
+            <h5>Project</h5>
+            <ul>
+                <li><a href="#about">Overview</a></li>
+                <li><a href="#objectives">Objectives</a></li>
+                <li><a href="#workpackages">Work Packages</a></li>
+                <li><a href="#demos">Demo Areas</a></li>
+            </ul>
+        </div>
+        <div class="foot-col">
+            <h5>Consortium</h5>
+            <ul>
+                <li><a href="#partners">Partners</a></li>
+                <li><a href="#">Governance</a></li>
+                <li><a href="#">Advisory Board</a></li>
+            </ul>
+        </div>
+        <div class="foot-col">
+            <h5>Resources</h5>
+            <ul>
+                <li><a href="#">Publications</a></li>
+                <li><a href="#">Deliverables</a></li>
+                <li><a href="#">Data Portal</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <span>© DANSER Project 2025 · Horizon Europe</span>
+        <div class="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Accessibility</a>
+            <a href="#">Sitemap</a>
+        </div>
+    </div>
+</footer>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+(function () {
+    'use strict';
+
+    /* Map rendering from JSON files */
+    const mapHost     = document.getElementById('danube-map');
+    const mapPanel    = document.querySelector('.hero-map-panel');
+    const mapTitle    = document.getElementById('map-title');
+    const mapFootnote = document.getElementById('map-footnote');
+    const mapSwitcher = document.getElementById('map-switcher');
+    const legendItems = Array.from(document.querySelectorAll('.map-legend .leg'));
+
+    if (mapHost && mapPanel && mapTitle && mapFootnote && mapSwitcher) {
+        if (typeof L === 'undefined') {
+            mapTitle.textContent = 'Map Library Unavailable';
+            mapFootnote.textContent = 'Leaflet could not be loaded.';
+            return;
+        }
+
+        const map = L.map(mapHost, {
+            zoomControl: true,
+            attributionControl: true,
+            scrollWheelZoom: false
+        }).setView([47.0, 20.5], 5);
+
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
+        }).addTo(map);
+
+        // Layer order control: basins and guides stay below, rivers stay above.
+        map.createPane('basinPane');
+        map.getPane('basinPane').style.zIndex = 330;
+        map.createPane('guidePane');
+        map.getPane('guidePane').style.zIndex = 345;
+        map.createPane('riverPane');
+        map.getPane('riverPane').style.zIndex = 430;
+
+        const dataCache = new Map();
+        const mapMetaById = new Map();
+        const switcherButtons = new Map();
+        const mapLayers = L.layerGroup().addTo(map);
+        const officialOverlayBounds = L.latLngBounds([41.8, 7.0], [50.8, 31.0]);
+        let activeMapId = '';
+
+        const loadJson = async (path) => {
+            const response = await fetch(path, { cache: 'no-store' });
+            if (!response.ok) throw new Error(`Failed to load ${path}`);
+            return response.json();
+        };
+
+        const setActiveButton = (mapId) => {
+            switcherButtons.forEach((btn, id) => {
+                btn.classList.toggle('is-active', id === mapId);
+                btn.setAttribute('aria-pressed', id === mapId ? 'true' : 'false');
+            });
+        };
+
+        const updateLegend = (focusZone) => {
+            legendItems.forEach((item) => {
+                const zone = item.getAttribute('data-zone') || '';
+                const isActive = !focusZone || zone === focusZone;
+                item.classList.toggle('is-active', isActive);
+                item.classList.toggle('is-muted', Boolean(focusZone) && !isActive);
+            });
+        };
+
+        const toBasinGeometry = (basin) => {
+            if (Array.isArray(basin.multipolygon) && basin.multipolygon.length) {
+                return {
+                    type: 'MultiPolygon',
+                    coordinates: basin.multipolygon
+                };
+            }
+            if (Array.isArray(basin.polygon) && basin.polygon.length) {
+                return {
+                    type: 'Polygon',
+                    coordinates: [basin.polygon]
+                };
+            }
+            return null;
+        };
+
+        const renderMap = (mapData) => {
+            const bounds = mapData.bounds;
+            const focusZone = mapData.focusZone || '';
+            const hasFocus = Boolean(focusZone);
+            mapLayers.clearLayers();
+            updateLegend(focusZone);
+
+            const basinFeatures = mapData.basins
+                .map((basin) => {
+                    const geometry = toBasinGeometry(basin);
+                    if (!geometry) return null;
+                    return {
+                        type: 'Feature',
+                        properties: {
+                            id: basin.id,
+                            name: basin.name,
+                            color: basin.color,
+                            summary: basin.summary,
+                            isFocus: !focusZone || basin.id === focusZone
+                        },
+                        geometry
+                    };
+                })
+                .filter(Boolean);
+
+            const basinLayer = L.geoJSON(
+                { type: 'FeatureCollection', features: basinFeatures },
+                {
+                    pane: 'basinPane',
+                    style: (feature) => ({
+                        color: feature.properties.isFocus ? 'rgba(255,255,255,0.82)' : 'rgba(255,255,255,0.38)',
+                        weight: feature.properties.isFocus ? (hasFocus ? 1.2 : 1.0) : 0.7,
+                        fillColor: feature.properties.isFocus ? feature.properties.color : '#C9D6E4',
+                        fillOpacity: feature.properties.isFocus ? (hasFocus ? 0.34 : 0.30) : 0.16
+                    }),
+                    onEachFeature: (feature, layer) => {
+                        layer.bindTooltip(
+                            `<strong>${feature.properties.name}</strong><br>${feature.properties.summary}`,
+                            { className: 'map-zone-tip', sticky: true }
+                        );
+                    }
+                }
+            ).addTo(mapLayers);
+
+            // Official basin boundary guides extracted from DanubeGIS for higher visual fidelity.
+            L.imageOverlay('./data/maps/source/rbd_parts_padded.png', officialOverlayBounds, {
+                pane: 'guidePane',
+                opacity: hasFocus ? 0.24 : 0.30,
+                interactive: false,
+                className: 'map-guide-rbd'
+            }).addTo(mapLayers);
+
+            L.imageOverlay('./data/maps/source/river4000.png', officialOverlayBounds, {
+                pane: 'riverPane',
+                opacity: hasFocus ? 0.90 : 0.96,
+                interactive: false,
+                className: 'map-guide-river4000'
+            }).addTo(mapLayers);
+
+            let riverLine = null;
+            if (mapData.river && Array.isArray(mapData.river.line) && mapData.river.line.length > 1) {
+                riverLine = L.polyline(mapData.river.line.map((pair) => [pair[1], pair[0]]), {
+                    pane: 'riverPane',
+                    color: '#0F4E8C',
+                    weight: 4.6,
+                    opacity: 0.98,
+                    lineCap: 'round',
+                    lineJoin: 'round'
+                }).addTo(mapLayers);
+            }
+
+            let fitBounds = basinLayer.getBounds();
+            if (riverLine && riverLine.getBounds().isValid()) fitBounds = fitBounds.extend(riverLine.getBounds());
+            if (fitBounds.isValid()) map.fitBounds(fitBounds.pad(0.12));
+
+            if (bounds && typeof bounds.latMin === 'number') {
+                const dataBounds = L.latLngBounds(
+                    [bounds.latMin, bounds.lonMin],
+                    [bounds.latMax, bounds.lonMax]
+                );
+                map.setMaxBounds(dataBounds.pad(0.2));
+            }
+
+            mapTitle.textContent = mapData.title || 'Danube River Basin';
+            mapFootnote.textContent = mapData.description || 'Vector map generated from official DanubeGIS basin units for cleaner and clearer boundaries.';
+            setTimeout(() => map.invalidateSize(), 60);
+        };
+
+        const activateMap = async (mapId) => {
+            const meta = mapMetaById.get(mapId);
+            if (!meta) return;
+            setActiveButton(mapId);
+            activeMapId = mapId;
+            try {
+                let mapData = dataCache.get(mapId);
+                if (!mapData) {
+                    mapData = await loadJson(`./data/maps/${meta.file}`);
+                    dataCache.set(mapId, mapData);
+                }
+                if (activeMapId === mapId) renderMap(mapData);
+            } catch (error) {
+                mapTitle.textContent = 'Map Data Unavailable';
+                mapFootnote.textContent = `Could not load ${meta.file}.`;
+                console.error(error);
+            }
+        };
+
+        const buildMapSwitcher = (maps) => {
+            mapSwitcher.innerHTML = '';
+            switcherButtons.clear();
+            maps.forEach((meta) => {
+                mapMetaById.set(meta.id, meta);
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'map-switcher-btn';
+                button.textContent = meta.label || meta.id;
+                button.setAttribute('aria-pressed', 'false');
+                button.addEventListener('click', () => activateMap(meta.id));
+                mapSwitcher.appendChild(button);
+                switcherButtons.set(meta.id, button);
+            });
+        };
+
+        const initMaps = async () => {
+            try {
+                const mapIndex = await loadJson('./data/maps/maps-index.json');
+                const maps = Array.isArray(mapIndex.maps) ? mapIndex.maps : [];
+                if (!maps.length) throw new Error('No map definitions found.');
+                buildMapSwitcher(maps);
+                const defaultMap = mapIndex.defaultMap || maps[0].id;
+                await activateMap(defaultMap);
+            } catch (error) {
+                mapTitle.textContent = 'Map Data Unavailable';
+                mapFootnote.textContent = 'Could not load map files from data/maps.';
+                console.error(error);
+            }
+        };
+
+        window.addEventListener('resize', () => map.invalidateSize());
+        initMaps();
+    }
+
+    /* â”€â”€ Stat counter animation â”€â”€ */
+    const statEls = document.querySelectorAll('.stat-val[data-target]');
+    const io = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            const el     = entry.target;
+            const target = parseInt(el.dataset.target, 10);
+            let   cur    = 0;
+            const step   = target / 28;
+            const timer  = setInterval(() => {
+                cur += step;
+                if (cur >= target) { el.textContent = target; clearInterval(timer); }
+                else               { el.textContent = Math.floor(cur); }
+            }, 28);
+            io.unobserve(el);
+        });
+    }, { threshold: 0.6 });
+    statEls.forEach(el => io.observe(el));
+
+    /* â”€â”€ Nav active link tracking â”€â”€ */
+    const navA    = document.querySelectorAll('.nav-links a[href^="#"]');
+    const anchors = document.querySelectorAll('section[id]');
+    const navIO   = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            navA.forEach(a => {
+                a.style.color = a.getAttribute('href') === '#' + entry.target.id
+                    ? '#1B3A6B' : 'rgba(27,58,107,0.78)';
+            });
+        });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+    anchors.forEach(s => navIO.observe(s));
+
+})();
+</script>
+</body>
+</html>
+
+
+
+

@@ -1,0 +1,25 @@
+{
+  "defaultMap": "overview",
+  "maps": [
+    {
+      "id": "overview",
+      "label": "Overview",
+      "file": "danube-overview.json"
+    },
+    {
+      "id": "upper",
+      "label": "Upper Basin",
+      "file": "danube-upper.json"
+    },
+    {
+      "id": "middle",
+      "label": "Middle Basin",
+      "file": "danube-middle.json"
+    },
+    {
+      "id": "lower",
+      "label": "Lower Basin",
+      "file": "danube-lower.json"
+    }
+  ]
+}
