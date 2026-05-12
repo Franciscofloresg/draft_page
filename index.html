@@ -59,6 +59,20 @@
         .nav-links { display: flex; align-items: center; gap: 1.75rem; }
         .nav-links a { color: rgba(27,58,107,0.78); font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
         .nav-links a:hover { color: var(--navy); }
+        .nav-links .nav-dashboard-link {
+            background: var(--navy);
+            color: var(--white);
+            padding: 7px 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(27,58,107,0.96);
+            box-shadow: 0 6px 14px rgba(27,58,107,0.18);
+            font-weight: 700;
+            line-height: 1;
+        }
+        .nav-links .nav-dashboard-link:hover {
+            color: var(--white);
+            background: #153058;
+        }
 
         /* ===== HERO ===== */
         .hero {
@@ -390,12 +404,12 @@
         </div>
     </div>
     <div class="nav-links">
-        <a href="./dashboard.html">Dashboard</a>
         <a href="#about">About</a>
         <a href="#objectives">Objectives</a>
         <a href="#demos">Demo Areas</a>
         <a href="#workpackages">Work Packages</a>
         <a href="#partners">Partners</a>
+        <a href="./dashboard.html" class="nav-dashboard-link">Dashboard</a>
     </div>
 </nav>
 
