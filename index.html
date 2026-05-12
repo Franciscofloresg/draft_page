@@ -636,7 +636,6 @@
         const switcherButtons = new Map();
         const mapLayers = L.layerGroup().addTo(map);
         const officialOverlayBounds = L.latLngBounds([41.8, 7.0], [50.8, 31.0]);
-        let danubeMainline = null;
         let activeMapId = '';
 
         const loadJson = async (path) => {
@@ -737,30 +736,13 @@
                 className: 'map-danube-highlight'
             }).addTo(mapLayers);
 
-            if (danubeMainline && Array.isArray(danubeMainline.line) && danubeMainline.line.length > 1) {
-                const lineLatLng = danubeMainline.line.map((pair) => [pair[1], pair[0]]);
-                // Soft halo under the Danube axis to separate it from tributaries.
-                L.polyline(lineLatLng, {
-                    pane: 'riverPane',
-                    color: 'rgba(255,255,255,0.78)',
-                    weight: 5.2,
-                    opacity: 0.5,
-                    smoothFactor: 0,
-                    lineCap: 'round',
-                    lineJoin: 'round'
-                }).addTo(mapLayers);
-
-                // Main Danube axis (dark blue and thicker than the rest).
-                L.polyline(lineLatLng, {
-                    pane: 'riverPane',
-                    color: '#0B3DAB',
-                    weight: 3.6,
-                    opacity: 0.94,
-                    smoothFactor: 0,
-                    lineCap: 'round',
-                    lineJoin: 'round'
-                }).addTo(mapLayers);
-            }
+            // Danube mainline overlay aligned in the same raster grid as the river layer.
+            L.imageOverlay('./data/maps/source/danube_mainline_overlay.png', officialOverlayBounds, {
+                pane: 'riverPane',
+                opacity: hasFocus ? 0.9 : 0.95,
+                interactive: false,
+                className: 'map-danube-mainline-overlay'
+            }).addTo(mapLayers);
 
             let fitBounds = basinLayer.getBounds();
             if (fitBounds.isValid()) map.fitBounds(fitBounds.pad(0.12));
@@ -788,9 +770,6 @@
                 if (!mapData) {
                     mapData = await loadJson(`./data/maps/${meta.file}`);
                     dataCache.set(mapId, mapData);
-                }
-                if (!danubeMainline) {
-                    danubeMainline = await loadJson('./data/maps/danube-mainline.json');
                 }
                 if (activeMapId === mapId) renderMap(mapData);
             } catch (error) {
