@@ -728,17 +728,10 @@
                 className: 'map-guide-rbd'
             }).addTo(mapLayers);
 
-            L.imageOverlay('./data/maps/source/river4000.png', officialOverlayBounds, {
-                pane: 'riverPane',
-                opacity: hasFocus ? 0.46 : 0.52,
-                interactive: false,
-                className: 'map-guide-river4000'
-            }).addTo(mapLayers);
-
-            // Danube highlight based on official river style data (no manual polyline).
+            // Danube-only river layer based on official data (no manual polyline).
             L.imageOverlay('./data/maps/source/danube_river500_highlight.png', officialOverlayBounds, {
                 pane: 'riverPane',
-                opacity: hasFocus ? 0.86 : 0.94,
+                opacity: hasFocus ? 0.98 : 1,
                 interactive: false,
                 className: 'map-danube-highlight'
             }).addTo(mapLayers);
