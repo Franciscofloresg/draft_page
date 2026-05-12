@@ -1,0 +1,814 @@
+{
+  "meta": {
+    "name": "Synthetic monthly basin metrics",
+    "units": {
+      "sediment_load_kt": "kt/month",
+      "discharge_m3s": "m3/s",
+      "restoration_index": "0-100",
+      "water_quality_index": "0-100"
+    },
+    "generated_on": "2026-05-12"
+  },
+  "months": [
+    "2024-01",
+    "2024-02",
+    "2024-03",
+    "2024-04",
+    "2024-05",
+    "2024-06",
+    "2024-07",
+    "2024-08",
+    "2024-09",
+    "2024-10",
+    "2024-11",
+    "2024-12",
+    "2025-01",
+    "2025-02",
+    "2025-03",
+    "2025-04",
+    "2025-05",
+    "2025-06",
+    "2025-07",
+    "2025-08",
+    "2025-09",
+    "2025-10",
+    "2025-11",
+    "2025-12",
+    "2026-01",
+    "2026-02",
+    "2026-03",
+    "2026-04",
+    "2026-05",
+    "2026-06",
+    "2026-07",
+    "2026-08",
+    "2026-09",
+    "2026-10",
+    "2026-11",
+    "2026-12"
+  ],
+  "basins": {
+    "upper": [
+      {
+        "month": "2024-01",
+        "sediment_load_kt": 197.4,
+        "discharge_m3s": 1788.9,
+        "restoration_index": 57.87,
+        "water_quality_index": 63.29
+      },
+      {
+        "month": "2024-02",
+        "sediment_load_kt": 211.55,
+        "discharge_m3s": 1803.8,
+        "restoration_index": 62.34,
+        "water_quality_index": 62.8
+      },
+      {
+        "month": "2024-03",
+        "sediment_load_kt": 214.5,
+        "discharge_m3s": 1562.2,
+        "restoration_index": 61.57,
+        "water_quality_index": 63.64
+      },
+      {
+        "month": "2024-04",
+        "sediment_load_kt": 209.56,
+        "discharge_m3s": 1400.5,
+        "restoration_index": 63.91,
+        "water_quality_index": 63.05
+      },
+      {
+        "month": "2024-05",
+        "sediment_load_kt": 207.21,
+        "discharge_m3s": 1285.1,
+        "restoration_index": 64.38,
+        "water_quality_index": 60.71
+      },
+      {
+        "month": "2024-06",
+        "sediment_load_kt": 205.91,
+        "discharge_m3s": 1191.3,
+        "restoration_index": 61.91,
+        "water_quality_index": 60.94
+      },
+      {
+        "month": "2024-07",
+        "sediment_load_kt": 195.45,
+        "discharge_m3s": 1121.7,
+        "restoration_index": 59.94,
+        "water_quality_index": 61.06
+      },
+      {
+        "month": "2024-08",
+        "sediment_load_kt": 182.2,
+        "discharge_m3s": 1235.4,
+        "restoration_index": 61.61,
+        "water_quality_index": 63.97
+      },
+      {
+        "month": "2024-09",
+        "sediment_load_kt": 170.33,
+        "discharge_m3s": 1438.2,
+        "restoration_index": 59.78,
+        "water_quality_index": 64.74
+      },
+      {
+        "month": "2024-10",
+        "sediment_load_kt": 174.74,
+        "discharge_m3s": 1573.9,
+        "restoration_index": 62.09,
+        "water_quality_index": 66.38
+      },
+      {
+        "month": "2024-11",
+        "sediment_load_kt": 179.29,
+        "discharge_m3s": 1663.8,
+        "restoration_index": 61.27,
+        "water_quality_index": 66.92
+      },
+      {
+        "month": "2024-12",
+        "sediment_load_kt": 181.06,
+        "discharge_m3s": 1799.1,
+        "restoration_index": 62.96,
+        "water_quality_index": 67.97
+      },
+      {
+        "month": "2025-01",
+        "sediment_load_kt": 203.94,
+        "discharge_m3s": 1836.5,
+        "restoration_index": 66.37,
+        "water_quality_index": 68.28
+      },
+      {
+        "month": "2025-02",
+        "sediment_load_kt": 210.64,
+        "discharge_m3s": 1840.2,
+        "restoration_index": 69.62,
+        "water_quality_index": 69.51
+      },
+      {
+        "month": "2025-03",
+        "sediment_load_kt": 217.09,
+        "discharge_m3s": 1660.1,
+        "restoration_index": 69.53,
+        "water_quality_index": 68.28
+      },
+      {
+        "month": "2025-04",
+        "sediment_load_kt": 231.56,
+        "discharge_m3s": 1462.2,
+        "restoration_index": 71.74,
+        "water_quality_index": 68.54
+      },
+      {
+        "month": "2025-05",
+        "sediment_load_kt": 223.77,
+        "discharge_m3s": 1311.3,
+        "restoration_index": 70.45,
+        "water_quality_index": 65.83
+      },
+      {
+        "month": "2025-06",
+        "sediment_load_kt": 204.66,
+        "discharge_m3s": 1131.0,
+        "restoration_index": 69.6,
+        "water_quality_index": 68.5
+      },
+      {
+        "month": "2025-07",
+        "sediment_load_kt": 200.76,
+        "discharge_m3s": 1118.7,
+        "restoration_index": 70.12,
+        "water_quality_index": 67.05
+      },
+      {
+        "month": "2025-08",
+        "sediment_load_kt": 189.87,
+        "discharge_m3s": 1215.1,
+        "restoration_index": 67.82,
+        "water_quality_index": 67.46
+      },
+      {
+        "month": "2025-09",
+        "sediment_load_kt": 177.33,
+        "discharge_m3s": 1338.8,
+        "restoration_index": 68.68,
+        "water_quality_index": 70.89
+      },
+      {
+        "month": "2025-10",
+        "sediment_load_kt": 174.46,
+        "discharge_m3s": 1518.1,
+        "restoration_index": 70.74,
+        "water_quality_index": 71.2
+      },
+      {
+        "month": "2025-11",
+        "sediment_load_kt": 176.07,
+        "discharge_m3s": 1664.0,
+        "restoration_index": 69.01,
+        "water_quality_index": 73.04
+      },
+      {
+        "month": "2025-12",
+        "sediment_load_kt": 199.06,
+        "discharge_m3s": 1825.6,
+        "restoration_index": 70.99,
+        "water_quality_index": 73.34
+      },
+      {
+        "month": "2026-01",
+        "sediment_load_kt": 216.3,
+        "discharge_m3s": 1859.5,
+        "restoration_index": 76.69,
+        "water_quality_index": 75.41
+      },
+      {
+        "month": "2026-02",
+        "sediment_load_kt": 213.15,
+        "discharge_m3s": 1810.0,
+        "restoration_index": 77.91,
+        "water_quality_index": 74.32
+      },
+      {
+        "month": "2026-03",
+        "sediment_load_kt": 225.22,
+        "discharge_m3s": 1647.8,
+        "restoration_index": 77.51,
+        "water_quality_index": 73.49
+      },
+      {
+        "month": "2026-04",
+        "sediment_load_kt": 229.59,
+        "discharge_m3s": 1506.2,
+        "restoration_index": 81.05,
+        "water_quality_index": 72.23
+      },
+      {
+        "month": "2026-05",
+        "sediment_load_kt": 224.89,
+        "discharge_m3s": 1227.6,
+        "restoration_index": 81.07,
+        "water_quality_index": 73.56
+      },
+      {
+        "month": "2026-06",
+        "sediment_load_kt": 210.99,
+        "discharge_m3s": 1183.0,
+        "restoration_index": 79.19,
+        "water_quality_index": 71.01
+      },
+      {
+        "month": "2026-07",
+        "sediment_load_kt": 205.53,
+        "discharge_m3s": 1150.1,
+        "restoration_index": 78.73,
+        "water_quality_index": 72.53
+      },
+      {
+        "month": "2026-08",
+        "sediment_load_kt": 181.84,
+        "discharge_m3s": 1196.3,
+        "restoration_index": 75.1,
+        "water_quality_index": 74.69
+      },
+      {
+        "month": "2026-09",
+        "sediment_load_kt": 189.01,
+        "discharge_m3s": 1418.4,
+        "restoration_index": 75.84,
+        "water_quality_index": 73.24
+      },
+      {
+        "month": "2026-10",
+        "sediment_load_kt": 188.72,
+        "discharge_m3s": 1619.9,
+        "restoration_index": 75.62,
+        "water_quality_index": 76.17
+      },
+      {
+        "month": "2026-11",
+        "sediment_load_kt": 182.32,
+        "discharge_m3s": 1763.9,
+        "restoration_index": 79.53,
+        "water_quality_index": 76.48
+      },
+      {
+        "month": "2026-12",
+        "sediment_load_kt": 200.59,
+        "discharge_m3s": 1843.4,
+        "restoration_index": 79.87,
+        "water_quality_index": 79.95
+      }
+    ],
+    "middle": [
+      {
+        "month": "2024-01",
+        "sediment_load_kt": 289.96,
+        "discharge_m3s": 2591.0,
+        "restoration_index": 57.17,
+        "water_quality_index": 64.14
+      },
+      {
+        "month": "2024-02",
+        "sediment_load_kt": 290.72,
+        "discharge_m3s": 2360.2,
+        "restoration_index": 59.86,
+        "water_quality_index": 63.27
+      },
+      {
+        "month": "2024-03",
+        "sediment_load_kt": 289.45,
+        "discharge_m3s": 2121.0,
+        "restoration_index": 56.85,
+        "water_quality_index": 61.19
+      },
+      {
+        "month": "2024-04",
+        "sediment_load_kt": 274.94,
+        "discharge_m3s": 1911.6,
+        "restoration_index": 56.61,
+        "water_quality_index": 60.67
+      },
+      {
+        "month": "2024-05",
+        "sediment_load_kt": 253.49,
+        "discharge_m3s": 1805.6,
+        "restoration_index": 55.56,
+        "water_quality_index": 62.81
+      },
+      {
+        "month": "2024-06",
+        "sediment_load_kt": 249.43,
+        "discharge_m3s": 1752.6,
+        "restoration_index": 54.6,
+        "water_quality_index": 62.58
+      },
+      {
+        "month": "2024-07",
+        "sediment_load_kt": 227.54,
+        "discharge_m3s": 1917.2,
+        "restoration_index": 56.62,
+        "water_quality_index": 63.35
+      },
+      {
+        "month": "2024-08",
+        "sediment_load_kt": 228.46,
+        "discharge_m3s": 2253.3,
+        "restoration_index": 56.47,
+        "water_quality_index": 63.58
+      },
+      {
+        "month": "2024-09",
+        "sediment_load_kt": 228.61,
+        "discharge_m3s": 2471.8,
+        "restoration_index": 56.31,
+        "water_quality_index": 66.02
+      },
+      {
+        "month": "2024-10",
+        "sediment_load_kt": 252.74,
+        "discharge_m3s": 2725.1,
+        "restoration_index": 60.32,
+        "water_quality_index": 66.19
+      },
+      {
+        "month": "2024-11",
+        "sediment_load_kt": 265.79,
+        "discharge_m3s": 2790.3,
+        "restoration_index": 62.28,
+        "water_quality_index": 67.57
+      },
+      {
+        "month": "2024-12",
+        "sediment_load_kt": 280.17,
+        "discharge_m3s": 2780.1,
+        "restoration_index": 63.05,
+        "water_quality_index": 67.97
+      },
+      {
+        "month": "2025-01",
+        "sediment_load_kt": 293.79,
+        "discharge_m3s": 2690.6,
+        "restoration_index": 64.99,
+        "water_quality_index": 69.6
+      },
+      {
+        "month": "2025-02",
+        "sediment_load_kt": 302.91,
+        "discharge_m3s": 2323.6,
+        "restoration_index": 68.03,
+        "water_quality_index": 68.9
+      },
+      {
+        "month": "2025-03",
+        "sediment_load_kt": 304.55,
+        "discharge_m3s": 2178.3,
+        "restoration_index": 67.63,
+        "water_quality_index": 66.04
+      },
+      {
+        "month": "2025-04",
+        "sediment_load_kt": 283.9,
+        "discharge_m3s": 1859.1,
+        "restoration_index": 65.39,
+        "water_quality_index": 65.19
+      },
+      {
+        "month": "2025-05",
+        "sediment_load_kt": 265.02,
+        "discharge_m3s": 1855.2,
+        "restoration_index": 63.86,
+        "water_quality_index": 67.46
+      },
+      {
+        "month": "2025-06",
+        "sediment_load_kt": 249.55,
+        "discharge_m3s": 1801.9,
+        "restoration_index": 65.35,
+        "water_quality_index": 68.66
+      },
+      {
+        "month": "2025-07",
+        "sediment_load_kt": 239.6,
+        "discharge_m3s": 1999.3,
+        "restoration_index": 61.97,
+        "water_quality_index": 67.51
+      },
+      {
+        "month": "2025-08",
+        "sediment_load_kt": 243.0,
+        "discharge_m3s": 2224.5,
+        "restoration_index": 63.68,
+        "water_quality_index": 70.41
+      },
+      {
+        "month": "2025-09",
+        "sediment_load_kt": 234.57,
+        "discharge_m3s": 2493.2,
+        "restoration_index": 64.76,
+        "water_quality_index": 72.3
+      },
+      {
+        "month": "2025-10",
+        "sediment_load_kt": 250.19,
+        "discharge_m3s": 2765.3,
+        "restoration_index": 65.23,
+        "water_quality_index": 71.51
+      },
+      {
+        "month": "2025-11",
+        "sediment_load_kt": 275.47,
+        "discharge_m3s": 2837.3,
+        "restoration_index": 68.19,
+        "water_quality_index": 72.19
+      },
+      {
+        "month": "2025-12",
+        "sediment_load_kt": 297.97,
+        "discharge_m3s": 2751.8,
+        "restoration_index": 71.83,
+        "water_quality_index": 74.1
+      },
+      {
+        "month": "2026-01",
+        "sediment_load_kt": 303.1,
+        "discharge_m3s": 2643.0,
+        "restoration_index": 73.43,
+        "water_quality_index": 74.87
+      },
+      {
+        "month": "2026-02",
+        "sediment_load_kt": 303.97,
+        "discharge_m3s": 2416.8,
+        "restoration_index": 73.45,
+        "water_quality_index": 72.53
+      },
+      {
+        "month": "2026-03",
+        "sediment_load_kt": 306.39,
+        "discharge_m3s": 2090.6,
+        "restoration_index": 73.87,
+        "water_quality_index": 72.96
+      },
+      {
+        "month": "2026-04",
+        "sediment_load_kt": 283.89,
+        "discharge_m3s": 1893.4,
+        "restoration_index": 75.7,
+        "water_quality_index": 73.23
+      },
+      {
+        "month": "2026-05",
+        "sediment_load_kt": 266.72,
+        "discharge_m3s": 1747.1,
+        "restoration_index": 72.02,
+        "water_quality_index": 72.98
+      },
+      {
+        "month": "2026-06",
+        "sediment_load_kt": 262.97,
+        "discharge_m3s": 1865.8,
+        "restoration_index": 71.4,
+        "water_quality_index": 71.02
+      },
+      {
+        "month": "2026-07",
+        "sediment_load_kt": 250.65,
+        "discharge_m3s": 1997.2,
+        "restoration_index": 71.77,
+        "water_quality_index": 74.76
+      },
+      {
+        "month": "2026-08",
+        "sediment_load_kt": 244.56,
+        "discharge_m3s": 2144.6,
+        "restoration_index": 72.83,
+        "water_quality_index": 74.01
+      },
+      {
+        "month": "2026-09",
+        "sediment_load_kt": 250.87,
+        "discharge_m3s": 2542.9,
+        "restoration_index": 71.59,
+        "water_quality_index": 74.98
+      },
+      {
+        "month": "2026-10",
+        "sediment_load_kt": 255.99,
+        "discharge_m3s": 2708.2,
+        "restoration_index": 74.08,
+        "water_quality_index": 77.89
+      },
+      {
+        "month": "2026-11",
+        "sediment_load_kt": 284.03,
+        "discharge_m3s": 2771.3,
+        "restoration_index": 77.78,
+        "water_quality_index": 77.69
+      },
+      {
+        "month": "2026-12",
+        "sediment_load_kt": 298.14,
+        "discharge_m3s": 2844.1,
+        "restoration_index": 80.9,
+        "water_quality_index": 77.46
+      }
+    ],
+    "lower": [
+      {
+        "month": "2024-01",
+        "sediment_load_kt": 358.79,
+        "discharge_m3s": 2850.9,
+        "restoration_index": 50.3,
+        "water_quality_index": 62.8
+      },
+      {
+        "month": "2024-02",
+        "sediment_load_kt": 348.24,
+        "discharge_m3s": 2546.4,
+        "restoration_index": 52.52,
+        "water_quality_index": 61.43
+      },
+      {
+        "month": "2024-03",
+        "sediment_load_kt": 324.09,
+        "discharge_m3s": 2294.4,
+        "restoration_index": 49.15,
+        "water_quality_index": 62.13
+      },
+      {
+        "month": "2024-04",
+        "sediment_load_kt": 309.8,
+        "discharge_m3s": 2296.6,
+        "restoration_index": 50.83,
+        "water_quality_index": 61.32
+      },
+      {
+        "month": "2024-05",
+        "sediment_load_kt": 280.71,
+        "discharge_m3s": 2328.7,
+        "restoration_index": 48.26,
+        "water_quality_index": 63.08
+      },
+      {
+        "month": "2024-06",
+        "sediment_load_kt": 283.68,
+        "discharge_m3s": 2661.1,
+        "restoration_index": 50.45,
+        "water_quality_index": 62.13
+      },
+      {
+        "month": "2024-07",
+        "sediment_load_kt": 279.28,
+        "discharge_m3s": 2862.2,
+        "restoration_index": 51.0,
+        "water_quality_index": 65.81
+      },
+      {
+        "month": "2024-08",
+        "sediment_load_kt": 296.86,
+        "discharge_m3s": 3237.2,
+        "restoration_index": 50.55,
+        "water_quality_index": 67.47
+      },
+      {
+        "month": "2024-09",
+        "sediment_load_kt": 326.09,
+        "discharge_m3s": 3503.6,
+        "restoration_index": 55.24,
+        "water_quality_index": 68.52
+      },
+      {
+        "month": "2024-10",
+        "sediment_load_kt": 335.66,
+        "discharge_m3s": 3542.9,
+        "restoration_index": 55.93,
+        "water_quality_index": 69.36
+      },
+      {
+        "month": "2024-11",
+        "sediment_load_kt": 366.2,
+        "discharge_m3s": 3470.1,
+        "restoration_index": 59.69,
+        "water_quality_index": 67.33
+      },
+      {
+        "month": "2024-12",
+        "sediment_load_kt": 374.45,
+        "discharge_m3s": 3134.6,
+        "restoration_index": 61.2,
+        "water_quality_index": 68.81
+      },
+      {
+        "month": "2025-01",
+        "sediment_load_kt": 362.17,
+        "discharge_m3s": 2926.5,
+        "restoration_index": 60.11,
+        "water_quality_index": 66.35
+      },
+      {
+        "month": "2025-02",
+        "sediment_load_kt": 357.37,
+        "discharge_m3s": 2541.6,
+        "restoration_index": 58.1,
+        "water_quality_index": 65.32
+      },
+      {
+        "month": "2025-03",
+        "sediment_load_kt": 329.1,
+        "discharge_m3s": 2414.1,
+        "restoration_index": 60.52,
+        "water_quality_index": 65.24
+      },
+      {
+        "month": "2025-04",
+        "sediment_load_kt": 312.2,
+        "discharge_m3s": 2276.2,
+        "restoration_index": 59.52,
+        "water_quality_index": 66.22
+      },
+      {
+        "month": "2025-05",
+        "sediment_load_kt": 299.97,
+        "discharge_m3s": 2327.0,
+        "restoration_index": 58.8,
+        "water_quality_index": 65.82
+      },
+      {
+        "month": "2025-06",
+        "sediment_load_kt": 292.95,
+        "discharge_m3s": 2577.7,
+        "restoration_index": 55.77,
+        "water_quality_index": 67.89
+      },
+      {
+        "month": "2025-07",
+        "sediment_load_kt": 293.55,
+        "discharge_m3s": 2891.7,
+        "restoration_index": 58.53,
+        "water_quality_index": 69.66
+      },
+      {
+        "month": "2025-08",
+        "sediment_load_kt": 303.12,
+        "discharge_m3s": 3231.0,
+        "restoration_index": 59.07,
+        "water_quality_index": 71.8
+      },
+      {
+        "month": "2025-09",
+        "sediment_load_kt": 318.88,
+        "discharge_m3s": 3496.5,
+        "restoration_index": 62.42,
+        "water_quality_index": 73.04
+      },
+      {
+        "month": "2025-10",
+        "sediment_load_kt": 353.73,
+        "discharge_m3s": 3533.6,
+        "restoration_index": 64.21,
+        "water_quality_index": 71.64
+      },
+      {
+        "month": "2025-11",
+        "sediment_load_kt": 370.59,
+        "discharge_m3s": 3395.4,
+        "restoration_index": 66.06,
+        "water_quality_index": 74.23
+      },
+      {
+        "month": "2025-12",
+        "sediment_load_kt": 379.97,
+        "discharge_m3s": 3161.5,
+        "restoration_index": 67.34,
+        "water_quality_index": 72.41
+      },
+      {
+        "month": "2026-01",
+        "sediment_load_kt": 371.65,
+        "discharge_m3s": 2853.6,
+        "restoration_index": 67.07,
+        "water_quality_index": 71.76
+      },
+      {
+        "month": "2026-02",
+        "sediment_load_kt": 366.29,
+        "discharge_m3s": 2604.5,
+        "restoration_index": 69.42,
+        "water_quality_index": 71.71
+      },
+      {
+        "month": "2026-03",
+        "sediment_load_kt": 335.26,
+        "discharge_m3s": 2369.8,
+        "restoration_index": 65.2,
+        "water_quality_index": 70.3
+      },
+      {
+        "month": "2026-04",
+        "sediment_load_kt": 315.42,
+        "discharge_m3s": 2301.5,
+        "restoration_index": 66.5,
+        "water_quality_index": 71.03
+      },
+      {
+        "month": "2026-05",
+        "sediment_load_kt": 298.61,
+        "discharge_m3s": 2340.8,
+        "restoration_index": 65.17,
+        "water_quality_index": 73.17
+      },
+      {
+        "month": "2026-06",
+        "sediment_load_kt": 296.88,
+        "discharge_m3s": 2564.3,
+        "restoration_index": 63.84,
+        "water_quality_index": 73.19
+      },
+      {
+        "month": "2026-07",
+        "sediment_load_kt": 298.62,
+        "discharge_m3s": 2894.7,
+        "restoration_index": 67.45,
+        "water_quality_index": 75.47
+      },
+      {
+        "month": "2026-08",
+        "sediment_load_kt": 314.32,
+        "discharge_m3s": 3181.7,
+        "restoration_index": 67.03,
+        "water_quality_index": 74.65
+      },
+      {
+        "month": "2026-09",
+        "sediment_load_kt": 329.37,
+        "discharge_m3s": 3433.5,
+        "restoration_index": 71.7,
+        "water_quality_index": 76.01
+      },
+      {
+        "month": "2026-10",
+        "sediment_load_kt": 355.09,
+        "discharge_m3s": 3527.9,
+        "restoration_index": 71.75,
+        "water_quality_index": 78.69
+      },
+      {
+        "month": "2026-11",
+        "sediment_load_kt": 374.47,
+        "discharge_m3s": 3383.3,
+        "restoration_index": 75.45,
+        "water_quality_index": 76.57
+      },
+      {
+        "month": "2026-12",
+        "sediment_load_kt": 387.07,
+        "discharge_m3s": 3227.3,
+        "restoration_index": 74.77,
+        "water_quality_index": 77.5
+      }
+    ]
+  }
+}

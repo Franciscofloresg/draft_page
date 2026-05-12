@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>draft_page | dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+    <style>
+        :root {
+            --navy: #1B3A6B;
+            --blue: #2E6DA4;
+            --blue-light: #4A90C4;
+            --sage: #8FAB7A;
+            --water: #5BA3C9;
+            --water-light: #A8D4E8;
+            --white: #FFFFFF;
+            --gray-50: #F8FAFC;
+            --gray-100: #F1F5F9;
+            --gray-200: #E2E8F0;
+            --gray-400: #94A3B8;
+            --gray-600: #475569;
+            --gray-800: #1E293B;
+            --font: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--font);
+            color: var(--gray-800);
+            background: linear-gradient(180deg, #f3f8fd 0%, #eef4fb 38%, #f7fafd 100%);
+            line-height: 1.5;
+        }
+        a { color: inherit; text-decoration: none; }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            height: 68px;
+            padding: 0 2.5rem;
+            background: rgba(244, 250, 255, 0.96);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(27,58,107,0.12);
+            box-shadow: 0 4px 14px rgba(15,37,71,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .nav-logo { display: flex; align-items: center; gap: 12px; }
+        .nav-logo img { width: 42px; height: 42px; object-fit: contain; }
+        .nav-logo-text { display: flex; flex-direction: column; line-height: 1.1; }
+        .nav-logo-text .acronym  { font-size: 1.25rem; font-weight: 800; color: var(--navy); letter-spacing: 3px; }
+        .nav-logo-text .tagline  { font-size: 0.6rem; color: var(--blue); font-weight: 400; letter-spacing: 0.5px; text-transform: uppercase; opacity: 0.9; }
+        .nav-links { display: flex; align-items: center; gap: 1.6rem; }
+        .nav-links a { color: rgba(27,58,107,0.78); font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--navy); }
+        .nav-links a.is-active {
+            color: var(--navy);
+            font-weight: 700;
+        }
+
+        .page-shell {
+            padding: 92px 2.4rem 3rem;
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+        .hero-panel {
+            background: linear-gradient(145deg, #103261 0%, #1e4d8c 60%, #2d699f 100%);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 18px;
+            padding: 1.4rem;
+            box-shadow: 0 20px 45px rgba(15,37,71,0.2);
+            margin-bottom: 1.2rem;
+            color: var(--white);
+            display: grid;
+            grid-template-columns: 1.3fr 1fr;
+            gap: 1.2rem;
+        }
+        .hero-title {
+            font-size: clamp(1.4rem, 2.6vw, 2.2rem);
+            line-height: 1.1;
+            font-weight: 800;
+            margin-bottom: 0.6rem;
+        }
+        .hero-subtitle {
+            font-size: 0.92rem;
+            color: rgba(255,255,255,0.82);
+            max-width: 72ch;
+            line-height: 1.6;
+        }
+        .hero-meta {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.16);
+            border-radius: 14px;
+            padding: 0.95rem 1rem;
+        }
+        .hero-meta h3 {
+            font-size: 0.82rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--water-light);
+            margin-bottom: 0.55rem;
+        }
+        .hero-meta ul {
+            list-style: none;
+            display: grid;
+            gap: 0.45rem;
+            font-size: 0.84rem;
+            color: rgba(255,255,255,0.9);
+        }
+        .hero-meta strong { color: #fff; font-weight: 700; }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(120px, 1fr));
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        .kpi-card {
+            background: #ffffff;
+            border: 1px solid rgba(27,58,107,0.1);
+            border-radius: 12px;
+            padding: 0.85rem 0.9rem;
+            box-shadow: 0 6px 20px rgba(26, 52, 89, 0.06);
+        }
+        .kpi-label { font-size: 0.72rem; color: var(--gray-600); text-transform: uppercase; letter-spacing: 0.7px; }
+        .kpi-value { font-size: 1.32rem; color: var(--navy); font-weight: 800; line-height: 1.1; margin-top: 0.35rem; }
+        .kpi-trend { font-size: 0.74rem; color: var(--blue); margin-top: 0.28rem; font-weight: 600; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 0.9rem;
+        }
+        .panel {
+            background: #ffffff;
+            border-radius: 14px;
+            border: 1px solid rgba(27,58,107,0.12);
+            box-shadow: 0 8px 25px rgba(21, 49, 88, 0.07);
+            padding: 0.9rem;
+        }
+        .panel h3 {
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 0.6rem;
+            letter-spacing: 0.3px;
+        }
+        .panel-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 0.6rem;
+            margin-bottom: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .panel-toolbar label {
+            font-size: 0.72rem;
+            color: var(--gray-600);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            font-weight: 700;
+        }
+        .panel-toolbar select {
+            border: 1px solid rgba(27,58,107,0.2);
+            border-radius: 8px;
+            padding: 5px 9px;
+            font: inherit;
+            font-size: 0.8rem;
+            color: var(--gray-800);
+            background: #fff;
+        }
+        .chart-host { width: 100%; height: 360px; }
+        .chart-tall { height: 420px; }
+        .span-12 { grid-column: span 12; }
+        .span-8 { grid-column: span 8; }
+        .span-6 { grid-column: span 6; }
+        .span-4 { grid-column: span 4; }
+
+        .footer-note {
+            margin-top: 0.9rem;
+            font-size: 0.77rem;
+            color: var(--gray-600);
+        }
+        .footer-note code {
+            background: rgba(27,58,107,0.08);
+            padding: 1px 5px;
+            border-radius: 4px;
+            color: var(--navy);
+        }
+
+        @media (max-width: 1200px) {
+            .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+            .span-8, .span-6, .span-4 { grid-column: span 12; }
+        }
+        @media (max-width: 900px) {
+            nav { padding: 0 1rem; }
+            .nav-links { gap: 1rem; }
+            .page-shell { padding: 86px 1rem 2rem; }
+            .hero-panel { grid-template-columns: 1fr; }
+            .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+            .chart-host { height: 330px; }
+        }
+        @media (max-width: 620px) {
+            .nav-links a:nth-child(n+3) { display: none; }
+            .kpi-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a class="nav-logo" href="./index.html">
+        <img src="./DANSERArtboard-1.png" alt="DANSER logo">
+        <div class="nav-logo-text">
+            <span class="acronym">DANSER</span>
+            <span class="tagline">DANube SEdiment Restoration</span>
+        </div>
+    </a>
+    <div class="nav-links">
+        <a href="./index.html">Home</a>
+        <a href="./dashboard.html" class="is-active">Dashboard</a>
+        <a href="#timeseries">Time Series</a>
+        <a href="#portfolio">Portfolio</a>
+        <a href="#risk">Risk Matrix</a>
+    </div>
+</nav>
+
+<main class="page-shell">
+    <section class="hero-panel">
+        <div>
+            <h1 class="hero-title">DANSER Basin Analytics Dashboard</h1>
+            <p class="hero-subtitle">
+                This page keeps the same visual identity as the main site and adds a dynamic dashboard prototype:
+                synthetic portfolio data, monthly basin signals, intervention pipeline, and risk matrix views for
+                Upper, Middle, and Lower Danube.
+            </p>
+        </div>
+        <aside class="hero-meta">
+            <h3>Data Context</h3>
+            <ul>
+                <li><strong>Source Type:</strong> synthetic data for UI/UX prototyping</li>
+                <li><strong>Coverage:</strong> 2024-01 to 2026-12 (monthly)</li>
+                <li><strong>Basins:</strong> upper, middle, lower</li>
+                <li><strong>Data Folder:</strong> <code>data/synthetic-dashboard/</code></li>
+                <li><strong>Engine:</strong> Plotly interactive charts</li>
+            </ul>
+        </aside>
+    </section>
+
+    <section class="kpi-grid" id="kpi-grid" aria-label="Key performance indicators"></section>
+
+    <section class="grid">
+        <article class="panel span-8" id="timeseries">
+            <h3>Monthly Basin Signal</h3>
+            <div class="panel-toolbar">
+                <label for="metric-select">Metric</label>
+                <select id="metric-select">
+                    <option value="sediment_load_kt">Sediment Load</option>
+                    <option value="discharge_m3s">Discharge</option>
+                    <option value="restoration_index">Restoration Index</option>
+                    <option value="water_quality_index">Water Quality</option>
+                </select>
+            </div>
+            <div id="ts-chart" class="chart-host chart-tall"></div>
+        </article>
+
+        <article class="panel span-4" id="portfolio">
+            <h3>Intervention Pipeline</h3>
+            <div class="panel-toolbar">
+                <label for="bar-breakdown-select">Breakdown</label>
+                <select id="bar-breakdown-select">
+                    <option value="phase">By Phase</option>
+                    <option value="type">By Type</option>
+                </select>
+            </div>
+            <div id="bar-chart" class="chart-host chart-tall"></div>
+        </article>
+
+        <article class="panel span-6">
+            <h3>Project Impact vs Budget</h3>
+            <div class="panel-toolbar">
+                <label for="bubble-basin-select">Basin</label>
+                <select id="bubble-basin-select">
+                    <option value="all">All</option>
+                    <option value="upper">Upper</option>
+                    <option value="middle">Middle</option>
+                    <option value="lower">Lower</option>
+                </select>
+            </div>
+            <div id="bubble-chart" class="chart-host"></div>
+        </article>
+
+        <article class="panel span-6" id="risk">
+            <h3>Monthly Risk Heatmap</h3>
+            <div class="panel-toolbar">
+                <label for="risk-metric-select">Risk Metric</label>
+                <select id="risk-metric-select"></select>
+            </div>
+            <div id="heatmap-chart" class="chart-host"></div>
+        </article>
+    </section>
+
+    <p class="footer-note">
+        Synthetic files were created to prototype style and interactions. Swap them later with real sources without changing the chart structure.
+    </p>
+</main>
+
+<script src="./scripts/dashboard.js"></script>
+</body>
+</html>

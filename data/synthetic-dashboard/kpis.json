@@ -1,0 +1,50 @@
+{
+  "meta": {
+    "name": "Synthetic dashboard KPIs",
+    "generated_on": "2026-05-12"
+  },
+  "kpis": [
+    {
+      "id": "budget",
+      "label": "Portfolio Budget",
+      "value": 1137.7,
+      "unit": "M EUR",
+      "trend": "+4.8% QoQ"
+    },
+    {
+      "id": "active",
+      "label": "Active Interventions",
+      "value": 20,
+      "unit": "projects",
+      "trend": "+3 vs last quarter"
+    },
+    {
+      "id": "sediment",
+      "label": "Sediment Managed",
+      "value": 885.8,
+      "unit": "kt/month",
+      "trend": "+6.1% YoY"
+    },
+    {
+      "id": "restoration",
+      "label": "Restoration Index",
+      "value": 78.5,
+      "unit": "/100",
+      "trend": "+2.7 pts YoY"
+    },
+    {
+      "id": "quality",
+      "label": "Water Quality Index",
+      "value": 78.3,
+      "unit": "/100",
+      "trend": "+1.9 pts YoY"
+    },
+    {
+      "id": "progress",
+      "label": "Implementation Progress",
+      "value": 57.7,
+      "unit": "%",
+      "trend": "On-track"
+    }
+  ]
+}
