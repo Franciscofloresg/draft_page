@@ -280,6 +280,7 @@
             border-radius: 14px; border: 1px solid var(--gray-200);
             overflow: hidden; transition: transform 0.2s, box-shadow 0.2s;
         }
+        .demo-card-link { display: block; text-decoration: none; color: inherit; }
         .demo-card:hover { transform: translateY(-5px); box-shadow: 0 14px 36px rgba(27,58,107,0.13); }
         .demo-head { padding: 1.4rem 1.4rem 0; display: flex; align-items: center; gap: 1rem; }
         .demo-badge {
@@ -302,25 +303,16 @@
         }
         .demo-pilots { font-size: 0.76rem; color: var(--gray-400); }
         .demo-pilots strong { color: var(--navy); }
-
-        /* ===== WORK PACKAGES ===== */
-        #workpackages { background: var(--gray-50); }
-        .wp-list { display: flex; flex-direction: column; gap: 1px; margin-top: 2.25rem; background: var(--gray-200); border-radius: 12px; overflow: hidden; }
-        .wp-row {
-            background: var(--white); padding: 1.1rem 1.6rem;
-            display: grid; grid-template-columns: 72px 1fr auto;
-            align-items: center; gap: 1.5rem;
-            transition: background 0.15s;
+        .demo-actions { margin-top: 1rem; }
+        .demo-more {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: 0.74rem; font-weight: 700;
+            color: var(--white); background: var(--navy);
+            border-radius: 999px; padding: 6px 12px;
+            border: 1px solid rgba(27,58,107,0.9);
+            transition: background 0.2s;
         }
-        .wp-row:hover { background: var(--water-pale); }
-        .wp-code { font-size: 0.82rem; font-weight: 800; color: var(--blue); letter-spacing: 1px; }
-        .wp-name { font-size: 0.88rem; font-weight: 600; color: var(--navy); }
-        .wp-desc-text { font-size: 0.78rem; color: var(--gray-600); margin-top: 2px; line-height: 1.45; }
-        .wp-badge {
-            font-size: 0.68rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; white-space: nowrap;
-        }
-        .wp-badge.active  { background: #D1FAE5; color: #065F46; }
-        .wp-badge.planned { background: #E0E7FF; color: #3730A3; }
+        .demo-card:hover .demo-more { background: #153058; }
 
         /* ===== PARTNERS ===== */
         #partners { background: var(--white); }
@@ -388,8 +380,6 @@
             .footer-grid  { grid-template-columns: 1fr; gap: 2rem; }
             .stats-inner  { grid-template-columns: repeat(2,1fr); }
             .obj-grid     { grid-template-columns: 1fr; }
-            .wp-row       { grid-template-columns: 56px 1fr; }
-            .wp-badge     { display: none; }
         }
     </style>
 </head>
@@ -407,7 +397,6 @@
         <a href="#about">About</a>
         <a href="#objectives">Objectives</a>
         <a href="#demos">Demo Areas</a>
-        <a href="#workpackages">Work Packages</a>
         <a href="#partners">Partners</a>
         <a href="./dashboard.html" class="nav-dashboard-link">Dashboard</a>
     </div>
@@ -419,9 +408,9 @@
         <div class="hero-text">
             <div class="hero-badge"><span class="dot"></span>Dashboard View</div>
             <h1 class="hero-title">Danube Sediment<br><em>Restoration Dashboard</em></h1>
-            <p class="hero-subtitle">Operational overview of DANSER progress across the Danube Basin, including pilots, consortium structure, and implementation packages.</p>
+            <p class="hero-subtitle">Operational overview of DANSER progress across the Danube Basin, including pilots and consortium structure.</p>
             <div class="hero-actions">
-                <a href="#workpackages" class="btn-primary">View Work Packages</a>
+                <a href="#demos" class="btn-primary">Demo Regions</a>
                 <a href="#partners" class="btn-outline">See Partners</a>
             </div>
         </div>
@@ -449,7 +438,7 @@
         <div class="stat"><div class="stat-val" data-target="35">35</div><div class="stat-lbl">Consortium Partners</div></div>
         <div class="stat"><div class="stat-val" data-target="13">13</div><div class="stat-lbl">Pilot Actions</div></div>
         <div class="stat"><div class="stat-val" data-target="7">7</div><div class="stat-lbl">EU Countries</div></div>
-        <div class="stat"><div class="stat-val" data-target="8">8</div><div class="stat-lbl">Work Packages</div></div>
+        <div class="stat"><div class="stat-val" data-target="3">3</div><div class="stat-lbl">Demo Regions</div></div>
     </div>
 </div>
 
@@ -472,7 +461,7 @@
                 <div class="river-grid">
                     <div class="river-kpi"><div class="val">3</div><div class="lbl">Demo Regions</div></div>
                     <div class="river-kpi"><div class="val">13</div><div class="lbl">Pilot Actions</div></div>
-                    <div class="river-kpi"><div class="val">8</div><div class="lbl">Work Packages</div></div>
+                    <div class="river-kpi"><div class="val">35</div><div class="lbl">Partners</div></div>
                     <div class="river-kpi"><div class="val">2025-2028</div><div class="lbl">Program Window</div></div>
                 </div>
             </div>
@@ -499,36 +488,30 @@
         <h2 class="sec-title">Demo Regions</h2>
         <p class="sec-body">Three reaches represent the longitudinal Danube gradient from Alpine headwaters to deltaic systems.</p>
         <div class="demos-grid">
-            <div class="demo-card">
+            <a class="demo-card demo-card-link" href="./demo-regions/upper.html">
                 <div class="demo-head"><div class="demo-badge up">UP</div><div class="demo-head-text"><div class="title">Upper Danube</div><div class="region">Germany · Austria</div></div></div>
-                <div class="demo-body"><p class="demo-desc">Focus on sediment deficits, gravel augmentation, and channel restoration in regulated Alpine sections.</p><p class="demo-pilots"><strong>4 pilot actions</strong></p></div>
-            </div>
-            <div class="demo-card">
+                <div class="demo-body">
+                    <p class="demo-desc">Focus on sediment deficits, gravel augmentation, and channel restoration in regulated Alpine sections.</p>
+                    <p class="demo-pilots"><strong>4 pilot actions</strong></p>
+                    <div class="demo-actions"><span class="demo-more">More information</span></div>
+                </div>
+            </a>
+            <a class="demo-card demo-card-link" href="./demo-regions/middle.html">
                 <div class="demo-head"><div class="demo-badge mid">MD</div><div class="demo-head-text"><div class="title">Middle Danube</div><div class="region">Hungary · Serbia</div></div></div>
-                <div class="demo-body"><p class="demo-desc">Floodplain reconnection and navigation-ecology balancing in transboundary river segments.</p><p class="demo-pilots"><strong>5 pilot actions</strong></p></div>
-            </div>
-            <div class="demo-card">
+                <div class="demo-body">
+                    <p class="demo-desc">Floodplain reconnection and navigation-ecology balancing in transboundary river segments.</p>
+                    <p class="demo-pilots"><strong>5 pilot actions</strong></p>
+                    <div class="demo-actions"><span class="demo-more">More information</span></div>
+                </div>
+            </a>
+            <a class="demo-card demo-card-link" href="./demo-regions/lower.html">
                 <div class="demo-head"><div class="demo-badge low">LW</div><div class="demo-head-text"><div class="title">Lower Danube</div><div class="region">Romania · Bulgaria</div></div></div>
-                <div class="demo-body"><p class="demo-desc">Delta stabilization, wetland restoration, and climate-resilient nature-based interventions.</p><p class="demo-pilots"><strong>4 pilot actions</strong></p></div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="sec" id="workpackages">
-    <div class="sec-inner">
-        <p class="sec-label">Execution</p>
-        <h2 class="sec-title">Work Packages</h2>
-        <p class="sec-body">Current implementation status across the eight package structure.</p>
-        <div class="wp-list">
-            <div class="wp-row"><div class="wp-code">WP1</div><div><div class="wp-name">Coordination & Management</div><div class="wp-desc-text">Program governance, reporting, and quality control.</div></div><span class="wp-badge active">Active</span></div>
-            <div class="wp-row"><div class="wp-code">WP2</div><div><div class="wp-name">Baseline & Monitoring</div><div class="wp-desc-text">Sediment baselines, field campaigns, and monitoring framework.</div></div><span class="wp-badge active">Active</span></div>
-            <div class="wp-row"><div class="wp-code">WP3</div><div><div class="wp-name">Modelling</div><div class="wp-desc-text">1D/2D/3D morphodynamic and transport model chain.</div></div><span class="wp-badge active">Active</span></div>
-            <div class="wp-row"><div class="wp-code">WP4</div><div><div class="wp-name">Upper Danube Measures</div><div class="wp-desc-text">Implementation of restoration interventions in upper reach.</div></div><span class="wp-badge active">Active</span></div>
-            <div class="wp-row"><div class="wp-code">WP5</div><div><div class="wp-name">Mid/Lower Measures</div><div class="wp-desc-text">Deployment of pilot measures in middle and lower reaches.</div></div><span class="wp-badge planned">Planned</span></div>
-            <div class="wp-row"><div class="wp-code">WP6</div><div><div class="wp-name">Ecosystem Impact</div><div class="wp-desc-text">Biodiversity and ecosystem-service assessment.</div></div><span class="wp-badge planned">Planned</span></div>
-            <div class="wp-row"><div class="wp-code">WP7</div><div><div class="wp-name">Decision Support</div><div class="wp-desc-text">DSS integration with basin governance and policy.</div></div><span class="wp-badge planned">Planned</span></div>
-            <div class="wp-row"><div class="wp-code">WP8</div><div><div class="wp-name">Communication</div><div class="wp-desc-text">Stakeholder engagement and dissemination.</div></div><span class="wp-badge active">Active</span></div>
+                <div class="demo-body">
+                    <p class="demo-desc">Delta stabilization, wetland restoration, and climate-resilient nature-based interventions.</p>
+                    <p class="demo-pilots"><strong>4 pilot actions</strong></p>
+                    <div class="demo-actions"><span class="demo-more">More information</span></div>
+                </div>
+            </a>
         </div>
     </div>
 </section>
@@ -577,7 +560,6 @@
             <ul>
                 <li><a href="#about">Overview</a></li>
                 <li><a href="#objectives">Objectives</a></li>
-                <li><a href="#workpackages">Work Packages</a></li>
                 <li><a href="#demos">Demo Areas</a></li>
             </ul>
         </div>
