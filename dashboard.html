@@ -177,6 +177,11 @@
         }
         .chart-host { width: 100%; height: 360px; }
         .chart-tall { height: 420px; }
+        .chart-square {
+            aspect-ratio: 1 / 1;
+            height: auto;
+            min-height: 320px;
+        }
         .span-12 { grid-column: span 12; }
         .span-8 { grid-column: span 8; }
         .span-6 { grid-column: span 6; }
@@ -226,6 +231,7 @@
         <a href="./index.html">Home</a>
         <a href="./dashboard.html" class="is-active">Dashboard</a>
         <a href="#timeseries">Time Series</a>
+        <a href="#river-daily">River Daily</a>
         <a href="#portfolio">Portfolio</a>
         <a href="#risk">Risk Matrix</a>
     </div>
@@ -237,16 +243,17 @@
             <h1 class="hero-title">DANSER Basin Analytics Dashboard</h1>
             <p class="hero-subtitle">
                 This page keeps the same visual identity as the main site and adds a dynamic dashboard prototype:
-                synthetic portfolio data, monthly basin signals, intervention pipeline, and risk matrix views for
-                Upper, Middle, and Lower Danube.
+                synthetic portfolio data, monthly basin signals, annual daily hydrology series by station,
+                intervention pipeline, and risk matrix views for Upper, Middle, and Lower Danube.
             </p>
         </div>
         <aside class="hero-meta">
             <h3>Data Context</h3>
             <ul>
-                <li><strong>Source Type:</strong> synthetic data for UI/UX prototyping</li>
+                <li><strong>Source Type:</strong> synthetic portfolio + observed daily stations</li>
                 <li><strong>Coverage:</strong> 2024-01 to 2026-12 (monthly)</li>
                 <li><strong>Basins:</strong> upper, middle, lower</li>
+                <li><strong>Hydrology:</strong> daily stations 2025 (365 days)</li>
                 <li><strong>Data Folder:</strong> <code>data/synthetic-dashboard/</code></li>
                 <li><strong>Engine:</strong> Plotly interactive charts</li>
             </ul>
@@ -303,6 +310,39 @@
                 <select id="risk-metric-select"></select>
             </div>
             <div id="heatmap-chart" class="chart-host"></div>
+        </article>
+
+        <article class="panel span-12" id="river-daily">
+            <h3>Daily River Monitoring (2025)</h3>
+            <div class="panel-toolbar">
+                <label for="river-metric-select">Metric</label>
+                <select id="river-metric-select">
+                    <option value="water_level_cm">Water level H</option>
+                    <option value="discharge_m3s">Discharge Q</option>
+                    <option value="water_temp_c">Water temperature t</option>
+                </select>
+                <label for="river-aggregation-select">Resolution</label>
+                <select id="river-aggregation-select">
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly mean</option>
+                    <option value="monthly">Monthly mean</option>
+                </select>
+                <label for="river-point-select">Station</label>
+                <select id="river-point-select">
+                    <option value="all">All stations</option>
+                </select>
+            </div>
+            <div id="river-chart" class="chart-host chart-tall"></div>
+        </article>
+
+        <article class="panel span-6" id="river-rates">
+            <h3>Monthly Rate of Change by Station</h3>
+            <div id="river-rate-chart" class="chart-host chart-square"></div>
+        </article>
+
+        <article class="panel span-6" id="river-distribution">
+            <h3>Station Distribution</h3>
+            <div id="river-distribution-chart" class="chart-host chart-square"></div>
         </article>
     </section>
 
