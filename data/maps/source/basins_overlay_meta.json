@@ -1,0 +1,32 @@
+{
+  "source": "DRBMP2021:DRBD_2021 + Danube mainline chainage split",
+  "split_points": {
+    "upper_to_middle": {
+      "name": "Bratislava / Devin Gate",
+      "mainline_index": 944,
+      "lon": 17.1077,
+      "lat": 48.1486
+    },
+    "middle_to_lower": {
+      "name": "Iron Gate",
+      "mainline_index": 2304,
+      "lon": 22.53,
+      "lat": 44.68
+    }
+  },
+  "bbox": [
+    7.0,
+    41.8,
+    31.0,
+    50.8
+  ],
+  "pixel_size": [
+    2600,
+    1200
+  ],
+  "zone_pixels": {
+    "upper": 328386,
+    "middle": 587447,
+    "lower": 458503
+  }
+}

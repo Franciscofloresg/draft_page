@@ -37,7 +37,7 @@
 
         /* ===== NAVIGATION ===== */
         nav {
-            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            position: fixed; top: 0; left: 0; right: 0; z-index: 2200;
             background: rgba(244, 250, 255, 0.96);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(27,58,107,0.12);
@@ -139,13 +139,24 @@
             border: 1px solid rgba(255,255,255,0.1);
             border-radius: 16px; overflow: hidden; padding: 1.25rem;
             position: relative;
+            z-index: 1;
+            isolation: isolate;
         }
         .map-bar {
             display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.85rem;
             margin-bottom: 0.9rem;
         }
         .map-bar-title { color: rgba(255,255,255,0.6); font-size: 0.72rem; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; }
-        .map-legend { display: flex; gap: 1rem; flex-wrap: wrap; }
+        .map-legend {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: nowrap;
+            align-items: center;
+            white-space: nowrap;
+            overflow-x: auto;
+            max-width: 100%;
+            padding-bottom: 2px;
+        }
         .leg { display: flex; align-items: center; gap: 5px; font-size: 0.68rem; color: rgba(255,255,255,0.55); }
         .leg-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
         .leg { opacity: 0.72; transition: opacity 0.2s ease, color 0.2s ease; }
@@ -204,7 +215,73 @@
             margin-top: 0.75rem;
             line-height: 1.45;
         }
-
+        .map-subbasins {
+            margin-top: 0.8rem;
+            border: 1px solid rgba(255,255,255,0.18);
+            background: rgba(255,255,255,0.06);
+            border-radius: 10px;
+            padding: 0.6rem 0.75rem 0.65rem;
+        }
+        .map-subbasins-head {
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.72);
+            margin-bottom: 0.45rem;
+        }
+        .map-subbasin-groups {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 0.55rem;
+            align-items: center;
+            white-space: nowrap;
+            overflow-x: auto;
+            padding-bottom: 2px;
+        }
+        .map-subbasin-group {
+            flex: 0 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 0.42rem;
+        }
+        .map-subbasin-group-title {
+            font-size: 0.66rem;
+            font-weight: 700;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 0;
+            letter-spacing: 0.2px;
+        }
+        .map-subbasin-items {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 0.33rem;
+        }
+        .map-subbasin-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            border: 1px solid rgba(255,255,255,0.26);
+            border-radius: 999px;
+            padding: 2px 8px 2px 6px;
+            font-size: 0.64rem;
+            color: rgba(255,255,255,0.9);
+            line-height: 1.2;
+            background: rgba(255,255,255,0.05);
+        }
+        .map-subbasin-chip-id {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 1.1rem;
+            height: 1.1rem;
+            border-radius: 999px;
+            background: rgba(27,58,107,0.7);
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 0.61rem;
+            padding: 0 4px;
+        }
         /* ===== STATS STRIP ===== */
         .stats-strip {
             background: var(--white);
@@ -418,15 +495,16 @@
             <div class="map-bar">
                 <span class="map-bar-title" id="map-title">Danube River Basin · Upper / Middle / Lower</span>
                 <div class="map-legend">
-                    <div class="leg" data-zone="upper"><span class="leg-dot" style="background:#8FAB7A"></span>Upper Basin</div>
-                    <div class="leg" data-zone="middle"><span class="leg-dot" style="background:#3B8FC2"></span>Middle Basin</div>
-                    <div class="leg" data-zone="lower"><span class="leg-dot" style="background:#1B3A6B"></span>Lower Basin</div>
+                    <div class="leg" data-zone="upper"><span class="leg-dot" style="background:#AECDA0"></span>Upper Basin</div>
+                    <div class="leg" data-zone="middle"><span class="leg-dot" style="background:#A8D4EA"></span>Middle Basin</div>
+                    <div class="leg" data-zone="lower"><span class="leg-dot" style="background:#BABDE0"></span>Lower Basin</div>
                 </div>
                 <div class="map-switcher" id="map-switcher" aria-label="Map selector"></div>
             </div>
             <div class="map-wrapper">
                 <div id="danube-map" role="img" aria-label="Danube River Basin divided into upper, middle and lower basins"></div>
             </div>
+            <div class="map-subbasins" id="map-subbasins" aria-live="polite"></div>
             <p class="map-footnote" id="map-footnote">Vector map generated from JSON geometry data for clean scaling and easy updates.</p>
         </div>
     </div>
@@ -600,12 +678,14 @@
     const mapTitle    = document.getElementById('map-title');
     const mapFootnote = document.getElementById('map-footnote');
     const mapSwitcher = document.getElementById('map-switcher');
+    const subbasinPanel = document.getElementById('map-subbasins');
     const legendItems = Array.from(document.querySelectorAll('.map-legend .leg'));
 
-    if (mapHost && mapPanel && mapTitle && mapFootnote && mapSwitcher) {
+    if (mapHost && mapPanel && mapTitle && mapFootnote && mapSwitcher && subbasinPanel) {
         if (typeof L === 'undefined') {
             mapTitle.textContent = 'Map Library Unavailable';
             mapFootnote.textContent = 'Leaflet could not be loaded.';
+            subbasinPanel.innerHTML = '<div class="map-subbasins-head">ICPDR Subbasins</div><div class="map-subbasin-group-title">Unavailable</div>';
             return;
         }
 
@@ -633,6 +713,7 @@
         const switcherButtons = new Map();
         const mapLayers = L.layerGroup().addTo(map);
         const officialOverlayBounds = L.latLngBounds([41.8, 7.0], [50.8, 31.0]);
+        let basin3FeatureCollection = null;
         let activeMapId = '';
 
         const loadJson = async (path) => {
@@ -657,103 +738,107 @@
             });
         };
 
-        const toBasinGeometry = (basin) => {
-            if (Array.isArray(basin.multipolygon) && basin.multipolygon.length) {
-                return {
-                    type: 'MultiPolygon',
-                    coordinates: basin.multipolygon
-                };
-            }
-            if (Array.isArray(basin.polygon) && basin.polygon.length) {
-                return {
-                    type: 'Polygon',
-                    coordinates: [basin.polygon]
-                };
-            }
-            return null;
+        const basinCards = [
+            { id: 'upper', title: 'Upper Basin', range: 'Source to Bratislava', chip: 'U' },
+            { id: 'middle', title: 'Middle Basin', range: 'Bratislava to Iron Gate', chip: 'M' },
+            { id: 'lower', title: 'Lower Basin', range: 'Iron Gate to Delta', chip: 'L' }
+        ];
+        const zoneLabels = {
+            upper: 'Upper Basin',
+            middle: 'Middle Basin',
+            lower: 'Lower Basin'
+        };
+        const zoneFill = {
+            upper: '#AECDA0',
+            middle: '#A8D4EA',
+            lower: '#BABDE0'
+        };
+
+        const renderBasinPanel = (focusZone) => {
+            const visible = focusZone ? basinCards.filter((b) => b.id === focusZone) : basinCards;
+            const groupsHtml = visible.map((basin) => {
+                return `
+                    <div class="map-subbasin-group">
+                        <div class="map-subbasin-group-title">${basin.title}</div>
+                        <div class="map-subbasin-items">
+                            <span class="map-subbasin-chip"><span class="map-subbasin-chip-id">${basin.chip}</span>${basin.range}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            subbasinPanel.innerHTML = `
+                <div class="map-subbasins-head">Danube 3-Basin Segmentation</div>
+                <div class="map-subbasin-groups">${groupsHtml}</div>
+            `;
         };
 
         const renderMap = (mapData) => {
             const bounds = mapData.bounds;
             const focusZone = mapData.focusZone || '';
-            const hasFocus = Boolean(focusZone);
             mapLayers.clearLayers();
             updateLegend(focusZone);
+            renderBasinPanel(focusZone);
 
-            const basinFeatures = mapData.basins
-                .map((basin) => {
-                    const geometry = toBasinGeometry(basin);
-                    if (!geometry) return null;
-                    return {
-                        type: 'Feature',
-                        properties: {
-                            id: basin.id,
-                            name: basin.name,
-                            color: basin.color,
-                            summary: basin.summary,
-                            isFocus: !focusZone || basin.id === focusZone
-                        },
-                        geometry
-                    };
-                })
-                .filter(Boolean);
+            // Subtle basin footprint as a neutral base under vector subbasin polygons.
+            L.imageOverlay('./data/maps/source/drbd_2021_layer.png', officialOverlayBounds, {
+                pane: 'basinPane',
+                opacity: 0.24,
+                interactive: false,
+                className: 'map-drbd-base'
+            }).addTo(mapLayers);
 
-            const basinLayer = L.geoJSON(
-                { type: 'FeatureCollection', features: basinFeatures },
-                {
-                    pane: 'basinPane',
-                    style: (feature) => ({
-                        color: feature.properties.isFocus ? 'rgba(255,255,255,0.68)' : 'rgba(255,255,255,0.30)',
-                        weight: feature.properties.isFocus ? (hasFocus ? 1.0 : 0.85) : 0.55,
-                        fillColor: feature.properties.isFocus ? feature.properties.color : '#C9D6E4',
-                        fillOpacity: feature.properties.isFocus ? (hasFocus ? 0.31 : 0.28) : 0.14
-                    }),
+            if (basin3FeatureCollection && Array.isArray(basin3FeatureCollection.features)) {
+                L.geoJSON(basin3FeatureCollection, {
+                    pane: 'guidePane',
+                    style: (feature) => {
+                        const basinId = feature.properties.id;
+                        const isActive = !focusZone || basinId === focusZone;
+                        const fillColor = zoneFill[basinId] || feature.properties.color || '#C9CDD4';
+                        return {
+                            color: isActive ? 'rgba(255,255,255,0.86)' : 'rgba(255,255,255,0.48)',
+                            weight: isActive ? 1.2 : 0.85,
+                            fillColor,
+                            fillOpacity: focusZone ? (isActive ? 0.43 : 0.16) : 0.36
+                        };
+                    },
                     onEachFeature: (feature, layer) => {
+                        const basinId = feature.properties.id;
                         layer.bindTooltip(
-                            `<strong>${feature.properties.name}</strong><br>${feature.properties.summary}`,
+                            `<strong>${feature.properties.name || zoneLabels[basinId] || basinId}</strong>`,
                             { className: 'map-zone-tip', sticky: true }
                         );
                     }
-                }
-            ).addTo(mapLayers);
+                }).addTo(mapLayers);
+            }
 
-            // Official basin boundary guides extracted from DanubeGIS for higher visual fidelity.
-            L.imageOverlay('./data/maps/source/rbd_parts_padded.png', officialOverlayBounds, {
-                pane: 'guidePane',
-                opacity: hasFocus ? 0.18 : 0.22,
-                interactive: false,
-                className: 'map-guide-rbd'
-            }).addTo(mapLayers);
-
-            // Official river network layer kept subtle.
-            L.imageOverlay('./data/maps/source/danube_river500_highlight.png', officialOverlayBounds, {
+            // Official DanubeGIS layer: DRBMP2021:River4000 (Danube_River500_Labels_Zoom_Levels style).
+            L.imageOverlay('./data/maps/source/danubegis_river4000.png', officialOverlayBounds, {
                 pane: 'riverPane',
-                opacity: hasFocus ? 0.56 : 0.62,
+                opacity: focusZone ? 0.26 : 0.32,
                 interactive: false,
                 className: 'map-danube-highlight'
             }).addTo(mapLayers);
 
-            // Danube mainline overlay aligned in the same raster grid as the river layer.
-            L.imageOverlay('./data/maps/source/danube_mainline_overlay.png', officialOverlayBounds, {
+            // Official DanubeGIS layer: DRBMP2021:Danube (Danube style) for main stem emphasis.
+            L.imageOverlay('./data/maps/source/danubegis_danube.png', officialOverlayBounds, {
                 pane: 'riverPane',
-                opacity: hasFocus ? 0.84 : 0.88,
+                opacity: focusZone ? 0.9 : 0.94,
                 interactive: false,
                 className: 'map-danube-mainline-overlay'
             }).addTo(mapLayers);
-
-            let fitBounds = basinLayer.getBounds();
-            if (fitBounds.isValid()) map.fitBounds(fitBounds.pad(0.12));
 
             if (bounds && typeof bounds.latMin === 'number') {
                 const dataBounds = L.latLngBounds(
                     [bounds.latMin, bounds.lonMin],
                     [bounds.latMax, bounds.lonMax]
                 );
+                map.fitBounds(dataBounds.pad(0.12));
                 map.setMaxBounds(dataBounds.pad(0.2));
             }
 
             mapTitle.textContent = mapData.title || 'Danube River Basin';
-            mapFootnote.textContent = mapData.description || 'Vector map generated from official DanubeGIS basin units for cleaner and clearer boundaries.';
+            mapFootnote.textContent = mapData.description || 'Upper/Middle/Lower basin segmentation aligned to Bratislava and Iron Gate transitions.';
             setTimeout(() => map.invalidateSize(), 60);
         };
 
@@ -794,7 +879,11 @@
 
         const initMaps = async () => {
             try {
-                const mapIndex = await loadJson('./data/maps/maps-index.json');
+                const [basins3Data, mapIndex] = await Promise.all([
+                    loadJson('./data/maps/danube-basins3.geojson'),
+                    loadJson('./data/maps/maps-index.json')
+                ]);
+                basin3FeatureCollection = basins3Data;
                 const maps = Array.isArray(mapIndex.maps) ? mapIndex.maps : [];
                 if (!maps.length) throw new Error('No map definitions found.');
                 buildMapSwitcher(maps);
@@ -803,6 +892,7 @@
             } catch (error) {
                 mapTitle.textContent = 'Map Data Unavailable';
                 mapFootnote.textContent = 'Could not load map files from data/maps.';
+                subbasinPanel.innerHTML = '<div class="map-subbasins-head">Danube 3-Basin Segmentation</div><div class="map-subbasin-group-title">Could not load map files.</div>';
                 console.error(error);
             }
         };

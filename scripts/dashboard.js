@@ -34,6 +34,8 @@
         riverMetricSelect: document.getElementById('river-metric-select'),
         riverAggregationSelect: document.getElementById('river-aggregation-select'),
         riverPointSelect: document.getElementById('river-point-select'),
+        riverStartDate: document.getElementById('river-start-date'),
+        riverEndDate: document.getElementById('river-end-date'),
         tsChart: document.getElementById('ts-chart'),
         barChart: document.getElementById('bar-chart'),
         bubbleChart: document.getElementById('bubble-chart'),
@@ -291,6 +293,59 @@
         el.riverPointSelect.innerHTML = options;
     }
 
+    function bootstrapRiverDateFilters() {
+        if (!state.riverDaily || !el.riverStartDate || !el.riverEndDate) return;
+        const dates = state.riverDaily.dates || [];
+        if (!dates.length) return;
+
+        const minDate = dates[0];
+        const maxDate = dates[dates.length - 1];
+
+        el.riverStartDate.min = minDate;
+        el.riverStartDate.max = maxDate;
+        el.riverEndDate.min = minDate;
+        el.riverEndDate.max = maxDate;
+
+        if (!el.riverStartDate.value) el.riverStartDate.value = minDate;
+        if (!el.riverEndDate.value) el.riverEndDate.value = maxDate;
+    }
+
+    function getRiverDateWindow() {
+        const dates = state.riverDaily?.dates || [];
+        if (!dates.length) return { startDate: null, endDate: null };
+
+        const minDate = dates[0];
+        const maxDate = dates[dates.length - 1];
+        let startDate = el.riverStartDate?.value || minDate;
+        let endDate = el.riverEndDate?.value || maxDate;
+
+        if (startDate < minDate) startDate = minDate;
+        if (startDate > maxDate) startDate = maxDate;
+        if (endDate < minDate) endDate = minDate;
+        if (endDate > maxDate) endDate = maxDate;
+        if (startDate > endDate) [startDate, endDate] = [endDate, startDate];
+
+        if (el.riverStartDate) el.riverStartDate.value = startDate;
+        if (el.riverEndDate) el.riverEndDate.value = endDate;
+
+        return { startDate, endDate };
+    }
+
+    function filterSeriesByDate(dates, values, startDate, endDate) {
+        const filteredDates = [];
+        const filteredValues = [];
+
+        for (let i = 0; i < dates.length; i += 1) {
+            const date = dates[i];
+            if (startDate && date < startDate) continue;
+            if (endDate && date > endDate) continue;
+            filteredDates.push(date);
+            filteredValues.push(values[i]);
+        }
+
+        return { dates: filteredDates, values: filteredValues };
+    }
+
     function renderRiverDailyChart() {
         if (!state.riverDaily || !el.riverChart) return;
 
@@ -303,10 +358,12 @@
         const points = state.riverDaily.meta?.point_order || [];
         const visiblePoints = selectedPoint === 'all' ? points : points.filter((p) => p === selectedPoint);
         const dates = state.riverDaily.dates || [];
+        const { startDate, endDate } = getRiverDateWindow();
 
         const traces = visiblePoints.map((point) => {
             const pointSeries = state.riverDaily.points?.[point]?.[metric] || [];
-            const aggregated = aggregateSeries(dates, pointSeries, aggregation);
+            const filtered = filterSeriesByDate(dates, pointSeries, startDate, endDate);
+            const aggregated = aggregateSeries(filtered.dates, filtered.values, aggregation);
             return {
                 type: 'scattergl',
                 mode: aggregation === 'monthly' ? 'lines+markers' : 'lines',
@@ -334,11 +391,8 @@
         layout.legend.y = 1.12;
         layout.legend.yanchor = 'top';
         layout.xaxis.type = 'date';
-        layout.xaxis.rangeslider = {
-            visible: true,
-            thickness: 0.1,
-            bgcolor: 'rgba(74, 144, 196, 0.08)'
-        };
+        layout.xaxis.range = startDate && endDate ? [startDate, endDate] : undefined;
+        layout.xaxis.rangeslider = { visible: false };
         layout.xaxis.tickformat = aggregation === 'monthly' ? '%b %Y' : '%d %b';
         layout.xaxis.hoverformat = '%Y-%m-%d';
 
@@ -355,7 +409,9 @@
         const points = state.riverDaily.meta?.point_order || [];
         const visiblePoints = selectedPoint === 'all' ? points : points.filter((p) => p === selectedPoint);
         const dates = state.riverDaily.dates || [];
-        const monthKeys = [...new Set(dates.map((d) => d.slice(0, 7)))];
+        const { startDate, endDate } = getRiverDateWindow();
+        const filteredDatesAll = dates.filter((d) => (!startDate || d >= startDate) && (!endDate || d <= endDate));
+        const monthKeys = [...new Set(filteredDatesAll.map((d) => d.slice(0, 7)))];
         const monthLabels = monthKeys.map((k) => {
             const monthIndex = Number(k.slice(5, 7)) - 1;
             return `${monthShort[monthIndex]} ${k.slice(0, 4)}`;
@@ -363,7 +419,8 @@
 
         const z = visiblePoints.map((point) => {
             const values = state.riverDaily.points?.[point]?.[metric] || [];
-            const aggregated = aggregateSeries(dates, values, aggregation);
+            const filtered = filterSeriesByDate(dates, values, startDate, endDate);
+            const aggregated = aggregateSeries(filtered.dates, filtered.values, aggregation);
             const monthlyRateByKey = new Map();
 
             for (let i = 1; i < aggregated.x.length; i += 1) {
@@ -438,10 +495,12 @@
         const unit = metricMeta.unit || '';
         const points = state.riverDaily.meta?.point_order || [];
         const dates = state.riverDaily.dates || [];
+        const { startDate, endDate } = getRiverDateWindow();
 
         const traces = points.map((point) => {
             const pointSeries = state.riverDaily.points?.[point]?.[metric] || [];
-            const aggregated = aggregateSeries(dates, pointSeries, aggregation);
+            const filtered = filterSeriesByDate(dates, pointSeries, startDate, endDate);
+            const aggregated = aggregateSeries(filtered.dates, filtered.values, aggregation);
             const cleaned = aggregated.y.filter((v) => Number.isFinite(v));
             const isSelected = selectedPoint === 'all' || selectedPoint === point;
             const color = state.riverPointColors[point] || '#1B3A6B';
@@ -489,6 +548,10 @@
             el.riverAggregationSelect.addEventListener('change', renderRiverSectionCharts);
             el.riverPointSelect.addEventListener('change', renderRiverSectionCharts);
         }
+        if (el.riverStartDate && el.riverEndDate) {
+            el.riverStartDate.addEventListener('change', renderRiverSectionCharts);
+            el.riverEndDate.addEventListener('change', renderRiverSectionCharts);
+        }
 
         window.addEventListener('resize', () => {
             [el.tsChart, el.barChart, el.bubbleChart, el.heatmapChart, el.riverChart, el.riverRateChart, el.riverDistributionChart]
@@ -526,6 +589,7 @@
             renderRiskHeatmap();
             buildPointColorMap();
             bootstrapRiverPointSelector();
+            bootstrapRiverDateFilters();
             renderRiverSectionCharts();
             bindEvents();
         } catch (error) {

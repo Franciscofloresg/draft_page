@@ -166,7 +166,8 @@
             letter-spacing: 0.6px;
             font-weight: 700;
         }
-        .panel-toolbar select {
+        .panel-toolbar select,
+        .panel-toolbar input[type="date"] {
             border: 1px solid rgba(27,58,107,0.2);
             border-radius: 8px;
             padding: 5px 9px;
@@ -331,6 +332,10 @@
                 <select id="river-point-select">
                     <option value="all">All stations</option>
                 </select>
+                <label for="river-start-date">From</label>
+                <input id="river-start-date" type="date">
+                <label for="river-end-date">Until</label>
+                <input id="river-end-date" type="date">
             </div>
             <div id="river-chart" class="chart-host chart-tall"></div>
         </article>
