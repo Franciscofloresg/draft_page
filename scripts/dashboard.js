@@ -8,47 +8,47 @@
     };
 
     const riverPalette = ['#1B3A6B', '#2E6DA4', '#4A90C4', '#8FAB7A', '#6B8A5A', '#5BA3C9', '#1F5B99', '#406882'];
-
-    const metricLabelMap = {
-        sediment_load_kt: 'Sediment Load',
-        discharge_m3s: 'Discharge',
-        restoration_index: 'Restoration Index',
-        water_quality_index: 'Water Quality'
+    const ld003GroupPalette = ['#1B3A6B', '#2E6DA4', '#4A90C4', '#5BA3C9', '#8FAB7A', '#6B8A5A', '#406882'];
+    const basinDisplayMap = {
+        upper: 'Upper Danube',
+        middle: 'Middle Danube',
+        lower: 'Lower Danube'
     };
 
     const state = {
-        monthly: null,
-        projects: null,
-        risk: null,
         kpis: null,
         riverDaily: null,
+        biodiversity: null,
         riverPointColors: {}
     };
 
     const el = {
         kpiGrid: document.getElementById('kpi-grid'),
-        metricSelect: document.getElementById('metric-select'),
-        barBreakdownSelect: document.getElementById('bar-breakdown-select'),
-        bubbleBasinSelect: document.getElementById('bubble-basin-select'),
-        riskMetricSelect: document.getElementById('risk-metric-select'),
         riverMetricSelect: document.getElementById('river-metric-select'),
         riverAggregationSelect: document.getElementById('river-aggregation-select'),
         riverPointSelect: document.getElementById('river-point-select'),
         riverStartDate: document.getElementById('river-start-date'),
         riverEndDate: document.getElementById('river-end-date'),
-        tsChart: document.getElementById('ts-chart'),
-        barChart: document.getElementById('bar-chart'),
-        bubbleChart: document.getElementById('bubble-chart'),
-        heatmapChart: document.getElementById('heatmap-chart'),
+        ld003BasinSelect: document.getElementById('ld003-basin-select'),
+        ld003ValueModeSelect: document.getElementById('ld003-value-mode-select'),
         riverChart: document.getElementById('river-chart'),
         riverRateChart: document.getElementById('river-rate-chart'),
-        riverDistributionChart: document.getElementById('river-distribution-chart')
+        riverDistributionChart: document.getElementById('river-distribution-chart'),
+        ld003MonthlyChart: document.getElementById('ld003-monthly-chart'),
+        ld003HeatmapChart: document.getElementById('ld003-heatmap-chart'),
+        ld003SiteChart: document.getElementById('ld003-site-chart')
     };
 
     const toTitle = (str) => str.charAt(0).toUpperCase() + str.slice(1);
     const numberFmt = (n) => new Intl.NumberFormat('en-US', { maximumFractionDigits: 1 }).format(n);
     const aggregationLabel = { daily: 'Daily', weekly: 'Weekly mean', monthly: 'Monthly mean' };
     const monthShort = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const formatMonthKey = (key) => {
+        if (!key || key.length !== 7) return key;
+        const monthIndex = Number(key.slice(5, 7)) - 1;
+        return `${monthShort[monthIndex]} ${key.slice(0, 4)}`;
+    };
+    const basinLabel = (basin) => basinDisplayMap[basin] || toTitle(basin || '');
     const hexToRgba = (hex, alpha) => {
         const clean = hex.replace('#', '');
         const value = clean.length === 3
@@ -113,123 +113,6 @@
             },
             font: { family: 'Inter, system-ui, sans-serif' }
         };
-    }
-
-    function renderTimeSeries() {
-        const metric = el.metricSelect.value;
-        const months = state.monthly.months;
-        const units = state.monthly.meta.units || {};
-
-        const traces = ['upper', 'middle', 'lower'].map((basin) => ({
-            x: months,
-            y: state.monthly.basins[basin].map((row) => row[metric]),
-            mode: 'lines',
-            name: toTitle(basin),
-            line: {
-                width: basin === 'lower' ? 3.2 : 2.6,
-                color: COLORS[basin]
-            },
-            hovertemplate: `${toTitle(basin)}<br>%{x}<br>%{y:.2f} ${units[metric] || ''}<extra></extra>`
-        }));
-
-        const layout = baseLayout(`${metricLabelMap[metric]} - Monthly trend`, units[metric] || '');
-
-        Plotly.react(el.tsChart, traces, layout, { responsive: true, displayModeBar: false });
-    }
-
-    function renderPipelineBar() {
-        const key = el.barBreakdownSelect.value;
-        const projects = state.projects.projects || [];
-        const basins = ['upper', 'middle', 'lower'];
-        const categories = [...new Set(projects.map((p) => p[key]))];
-
-        const traces = categories.map((category) => ({
-            type: 'bar',
-            name: category,
-            x: basins.map((b) => toTitle(b)),
-            y: basins.map((basin) => projects.filter((p) => p.basin === basin && p[key] === category).length),
-            marker: {
-                line: { width: 0 },
-                opacity: 0.9
-            },
-            hovertemplate: `${category}<br>%{x}: %{y} projects<extra></extra>`
-        }));
-
-        const layout = baseLayout(`Portfolio distribution - ${key}`, 'Projects');
-        layout.barmode = 'stack';
-        layout.margin = { l: 46, r: 16, t: 36, b: 36 };
-
-        Plotly.react(el.barChart, traces, layout, { responsive: true, displayModeBar: false });
-    }
-
-    function renderBubbleChart() {
-        const basinFilter = el.bubbleBasinSelect.value;
-        const projects = (state.projects.projects || []).filter((p) => basinFilter === 'all' || p.basin === basinFilter);
-        const basins = basinFilter === 'all' ? ['upper', 'middle', 'lower'] : [basinFilter];
-
-        const traces = basins.map((basin) => {
-            const subset = projects.filter((p) => p.basin === basin);
-            return {
-                type: 'scatter',
-                mode: 'markers',
-                name: toTitle(basin),
-                x: subset.map((p) => p.budget_meur),
-                y: subset.map((p) => p.biodiversity_gain_index),
-                text: subset.map((p) => `${p.id} - ${p.name}`),
-                customdata: subset.map((p) => [p.phase, p.expected_sediment_kt_y, p.progress_pct]),
-                marker: {
-                    color: COLORS[basin],
-                    opacity: 0.74,
-                    size: subset.map((p) => p.expected_sediment_kt_y),
-                    sizemode: 'area',
-                    sizeref: 2 * Math.max(...projects.map((p) => p.expected_sediment_kt_y), 1) / (52 ** 2),
-                    line: { color: 'rgba(255,255,255,0.8)', width: 1.1 }
-                },
-                hovertemplate:
-                    '%{text}<br>Budget: %{x:.1f} M EUR<br>Biodiversity: %{y:.1f}' +
-                    '<br>Phase: %{customdata[0]}<br>Sediment gain: %{customdata[1]:.1f} kt/y' +
-                    '<br>Progress: %{customdata[2]}%<extra></extra>'
-            };
-        });
-
-        const layout = baseLayout('Project impact map', 'Biodiversity gain index');
-        layout.xaxis.title = 'Budget (M EUR)';
-        layout.yaxis.range = [25, 100];
-        layout.margin = { l: 54, r: 16, t: 36, b: 44 };
-
-        Plotly.react(el.bubbleChart, traces, layout, { responsive: true, displayModeBar: false });
-    }
-
-    function renderRiskHeatmap() {
-        const selectedMetric = el.riskMetricSelect.value || Object.keys(state.risk.metrics)[0];
-        const months = state.risk.months;
-        const matrix = state.risk.metrics[selectedMetric];
-        const yLabels = state.risk.basins.map((b) => toTitle(b));
-
-        const data = [{
-            type: 'heatmap',
-            x: months,
-            y: yLabels,
-            z: matrix,
-            colorscale: [
-                [0, '#d9ecf9'],
-                [0.35, '#9dc9e8'],
-                [0.6, '#4a90c4'],
-                [0.8, '#2e6da4'],
-                [1, '#1b3a6b']
-            ],
-            zmin: 0,
-            zmax: 100,
-            colorbar: { title: 'Risk' },
-            hovertemplate: '%{y}<br>%{x}<br>Score: %{z:.1f}<extra></extra>'
-        }];
-
-        const layout = baseLayout(`Risk matrix - ${selectedMetric}`, '');
-        layout.margin = { l: 66, r: 18, t: 36, b: 54 };
-        layout.yaxis.automargin = true;
-        layout.xaxis.tickangle = -30;
-
-        Plotly.react(el.heatmapChart, data, layout, { responsive: true, displayModeBar: false });
     }
 
     function buildPointColorMap() {
@@ -537,12 +420,262 @@
         renderRiverDistributionChart();
     }
 
-    function bindEvents() {
-        el.metricSelect.addEventListener('change', renderTimeSeries);
-        el.barBreakdownSelect.addEventListener('change', renderPipelineBar);
-        el.bubbleBasinSelect.addEventListener('change', renderBubbleChart);
-        el.riskMetricSelect.addEventListener('change', renderRiskHeatmap);
+    function getLd003Filters() {
+        const basin = el.ld003BasinSelect?.value || 'all';
+        const mode = el.ld003ValueModeSelect?.value || 'count';
+        return { basin, mode };
+    }
 
+    function getLd003RecordsFiltered(basin) {
+        const allRecords = state.biodiversity?.records || [];
+        if (basin === 'all') return allRecords;
+        return allRecords.filter((record) => record.basin === basin);
+    }
+
+    function renderLd003NoData(target, title) {
+        if (!target) return;
+        const layout = baseLayout(title, '');
+        layout.margin = { l: 20, r: 20, t: 42, b: 20 };
+        layout.xaxis = { visible: false };
+        layout.yaxis = { visible: false };
+        layout.annotations = [{
+            x: 0.5,
+            y: 0.5,
+            xref: 'paper',
+            yref: 'paper',
+            text: 'No data available for current filter',
+            showarrow: false,
+            font: { size: 12, color: '#64748b' }
+        }];
+        Plotly.react(target, [], layout, { responsive: true, displayModeBar: false });
+    }
+
+    function renderLd003MonthlyChart(records, basin, mode) {
+        if (!el.ld003MonthlyChart) return;
+        if (!records.length) {
+            renderLd003NoData(el.ld003MonthlyChart, 'Monthly activity');
+            return;
+        }
+
+        const monthKeys = [...new Set(records.map((record) => record.month))].sort();
+        const monthLabels = monthKeys.map((monthKey) => formatMonthKey(monthKey));
+        const groups = state.biodiversity?.meta?.taxonomic_groups || [...new Set(records.map((r) => r.taxonomic_group))];
+        const valueByCell = new Map();
+
+        records.forEach((record) => {
+            const key = `${record.month}||${record.taxonomic_group}`;
+            const increment = mode === 'units' ? (Number(record.observed_units) || 0) : 1;
+            valueByCell.set(key, (valueByCell.get(key) || 0) + increment);
+        });
+
+        const traces = groups.map((group, idx) => ({
+            type: 'bar',
+            name: group,
+            x: monthLabels,
+            y: monthKeys.map((monthKey) => valueByCell.get(`${monthKey}||${group}`) || 0),
+            marker: { color: ld003GroupPalette[idx % ld003GroupPalette.length] },
+            hovertemplate: `${group}<br>%{x}<br>%{y:.1f}<extra></extra>`
+        })).filter((trace) => trace.y.some((value) => value > 0));
+
+        const basinScope = basin === 'all' ? 'All basins' : basinLabel(basin);
+        const yLabel = mode === 'units' ? 'Observed units (sum)' : 'Observations';
+        const layout = baseLayout('', yLabel);
+        layout.barmode = 'stack';
+        layout.margin = { l: 62, r: 16, t: 24, b: 68 };
+        layout.xaxis.tickangle = -35;
+        layout.legend = {
+            orientation: 'h',
+            y: 1.02,
+            yanchor: 'bottom',
+            x: 0,
+            xanchor: 'left',
+            font: { size: 10, color: '#475569' },
+            traceorder: 'normal'
+        };
+        layout.annotations = [{
+            x: 0,
+            y: 1.18,
+            xref: 'paper',
+            yref: 'paper',
+            text: `Scope: ${basinScope}`,
+            showarrow: false,
+            xanchor: 'left',
+            font: { size: 11, color: '#64748b' }
+        }];
+
+        Plotly.react(el.ld003MonthlyChart, traces, layout, { responsive: true, displayModeBar: false });
+    }
+
+    function renderLd003HeatmapChart(records, basin, mode) {
+        if (!el.ld003HeatmapChart) return;
+        if (!records.length) {
+            renderLd003NoData(el.ld003HeatmapChart, 'Habitat x taxonomic group');
+            return;
+        }
+
+        const groups = state.biodiversity?.meta?.taxonomic_groups || [...new Set(records.map((r) => r.taxonomic_group))];
+        const habitats = state.biodiversity?.meta?.habitat_types || [...new Set(records.map((r) => r.habitat))];
+        const cellStats = new Map();
+
+        records.forEach((record) => {
+            const key = `${record.taxonomic_group}||${record.habitat}`;
+            if (!cellStats.has(key)) {
+                cellStats.set(key, { count: 0, unitsSum: 0 });
+            }
+            const cell = cellStats.get(key);
+            cell.count += 1;
+            cell.unitsSum += Number(record.observed_units) || 0;
+        });
+
+        const z = groups.map((group) => habitats.map((habitat) => {
+            const cell = cellStats.get(`${group}||${habitat}`);
+            if (!cell || cell.count === 0) return null;
+            if (mode === 'units') return cell.unitsSum / cell.count;
+            return cell.count;
+        }));
+
+        const xLabels = habitats;
+        const yLabels = groups;
+        const basinScope = basin === 'all' ? 'All basins' : basinLabel(basin);
+        const colorTitle = mode === 'units' ? 'Avg units' : 'Count';
+
+        const data = [{
+            type: 'heatmap',
+            x: xLabels,
+            y: yLabels,
+            z,
+            colorscale: [
+                [0, '#ecf4fb'],
+                [0.35, '#b6d6ee'],
+                [0.7, '#5ba3c9'],
+                [1, '#1b3a6b']
+            ],
+            colorbar: { title: colorTitle, thickness: 11 },
+            hovertemplate: '%{y}<br>%{x}<br>%{z:.2f}<extra></extra>'
+        }];
+
+        const layout = baseLayout('', colorTitle);
+        layout.margin = { l: 92, r: 16, t: 24, b: 84 };
+        layout.xaxis.tickangle = -35;
+        layout.yaxis.automargin = true;
+        layout.annotations = [{
+            x: 0,
+            y: 1.14,
+            xref: 'paper',
+            yref: 'paper',
+            text: `Scope: ${basinScope}`,
+            showarrow: false,
+            xanchor: 'left',
+            font: { size: 11, color: '#64748b' }
+        }];
+
+        Plotly.react(el.ld003HeatmapChart, data, layout, { responsive: true, displayModeBar: false });
+    }
+
+    function renderLd003SiteChart(records, basin, mode) {
+        if (!el.ld003SiteChart) return;
+        if (!records.length) {
+            renderLd003NoData(el.ld003SiteChart, 'Site richness vs effort');
+            return;
+        }
+
+        const siteMap = new Map();
+        records.forEach((record) => {
+            const key = record.site_id;
+            if (!siteMap.has(key)) {
+                siteMap.set(key, {
+                    site_id: record.site_id,
+                    site_name: record.site_name,
+                    basin: record.basin,
+                    observations: 0,
+                    total_units: 0,
+                    species: new Set()
+                });
+            }
+            const site = siteMap.get(key);
+            site.observations += 1;
+            site.total_units += Number(record.observed_units) || 0;
+            site.species.add(record.species_id);
+        });
+
+        const siteRows = [...siteMap.values()].map((site) => ({
+            site_id: site.site_id,
+            site_name: site.site_name,
+            basin: site.basin,
+            observations: site.observations,
+            total_units: site.total_units,
+            richness: site.species.size
+        }));
+        const xMetricLabel = mode === 'units' ? 'Observed units (sum)' : 'Observation count';
+        const sizeMetricLabel = mode === 'units' ? 'Observation count' : 'Total observed units';
+        const sizeValues = siteRows.map((site) => (mode === 'units' ? site.observations : site.total_units));
+        const sizeMax = Math.max(...sizeValues, 1);
+        const sizeRef = (2 * sizeMax) / (34 ** 2);
+        const basinOrder = ['upper', 'middle', 'lower'];
+
+        const traces = basinOrder.map((basinKey) => {
+            const subset = siteRows.filter((site) => site.basin === basinKey);
+            return {
+                type: 'scatter',
+                mode: 'markers',
+                name: basinLabel(basinKey),
+                x: subset.map((site) => (mode === 'units' ? site.total_units : site.observations)),
+                y: subset.map((site) => site.richness),
+                text: subset.map((site) => `${site.site_name} (${site.site_id})`),
+                customdata: subset.map((site) => [
+                    basinLabel(site.basin),
+                    site.observations,
+                    site.total_units,
+                    mode === 'units' ? site.observations : site.total_units
+                ]),
+                marker: {
+                    color: COLORS[basinKey],
+                    opacity: 0.82,
+                    size: subset.map((site) => (mode === 'units' ? site.observations : site.total_units)),
+                    sizemode: 'area',
+                    sizeref: sizeRef,
+                    sizemin: 8,
+                    line: { color: 'rgba(255,255,255,0.88)', width: 1.1 }
+                },
+                hovertemplate:
+                    '%{text}<br>Basin: %{customdata[0]}' +
+                    `<br>${xMetricLabel}: %{x:.1f}` +
+                    '<br>Unique species: %{y}' +
+                    '<br>Observation count: %{customdata[1]}' +
+                    '<br>Total observed units: %{customdata[2]:.1f}' +
+                    `<br>Bubble size metric (${sizeMetricLabel}): %{customdata[3]:.1f}<extra></extra>`
+            };
+        }).filter((trace) => trace.x.length);
+
+        const basinScope = basin === 'all' ? 'All basins' : basinLabel(basin);
+        const layout = baseLayout('', 'Unique species');
+        layout.margin = { l: 64, r: 16, t: 24, b: 62 };
+        layout.xaxis.title = xMetricLabel;
+        layout.yaxis.title = 'Species richness';
+        layout.annotations = [{
+            x: 0,
+            y: 1.14,
+            xref: 'paper',
+            yref: 'paper',
+            text: `Scope: ${basinScope}`,
+            showarrow: false,
+            xanchor: 'left',
+            font: { size: 11, color: '#64748b' }
+        }];
+
+        Plotly.react(el.ld003SiteChart, traces, layout, { responsive: true, displayModeBar: false });
+    }
+
+    function renderLd003SectionCharts() {
+        if (!state.biodiversity) return;
+        const { basin, mode } = getLd003Filters();
+        const records = getLd003RecordsFiltered(basin);
+        renderLd003MonthlyChart(records, basin, mode);
+        renderLd003HeatmapChart(records, basin, mode);
+        renderLd003SiteChart(records, basin, mode);
+    }
+
+    function bindEvents() {
         if (el.riverMetricSelect && el.riverAggregationSelect && el.riverPointSelect) {
             el.riverMetricSelect.addEventListener('change', renderRiverSectionCharts);
             el.riverAggregationSelect.addEventListener('change', renderRiverSectionCharts);
@@ -552,45 +685,43 @@
             el.riverStartDate.addEventListener('change', renderRiverSectionCharts);
             el.riverEndDate.addEventListener('change', renderRiverSectionCharts);
         }
+        if (el.ld003BasinSelect && el.ld003ValueModeSelect) {
+            el.ld003BasinSelect.addEventListener('change', renderLd003SectionCharts);
+            el.ld003ValueModeSelect.addEventListener('change', renderLd003SectionCharts);
+        }
 
         window.addEventListener('resize', () => {
-            [el.tsChart, el.barChart, el.bubbleChart, el.heatmapChart, el.riverChart, el.riverRateChart, el.riverDistributionChart]
+            [
+                el.riverChart,
+                el.riverRateChart,
+                el.riverDistributionChart,
+                el.ld003MonthlyChart,
+                el.ld003HeatmapChart,
+                el.ld003SiteChart
+            ]
                 .filter(Boolean)
                 .forEach((chart) => Plotly.Plots.resize(chart));
         });
     }
 
-    function bootstrapRiskSelector() {
-        const keys = Object.keys(state.risk.metrics || {});
-        el.riskMetricSelect.innerHTML = keys.map((k) => `<option value="${k}">${k}</option>`).join('');
-    }
-
     async function init() {
         try {
-            const [monthly, projects, risk, kpis, riverDaily] = await Promise.all([
-                loadJson('./data/synthetic-dashboard/monthly_metrics.json'),
-                loadJson('./data/synthetic-dashboard/projects.json'),
-                loadJson('./data/synthetic-dashboard/risk_matrix.json'),
+            const [kpis, riverDaily, biodiversity] = await Promise.all([
                 loadJson('./data/synthetic-dashboard/kpis.json'),
-                loadJson('./data/synthetic-dashboard/river_daily_2025.json')
+                loadJson('./data/synthetic-dashboard/river_daily_2025.json'),
+                loadJson('./data/synthetic-dashboard/biodiversity_ld003_2025.json')
             ]);
 
-            state.monthly = monthly;
-            state.projects = projects;
-            state.risk = risk;
             state.kpis = kpis;
             state.riverDaily = riverDaily;
+            state.biodiversity = biodiversity;
 
             renderKpis();
-            bootstrapRiskSelector();
-            renderTimeSeries();
-            renderPipelineBar();
-            renderBubbleChart();
-            renderRiskHeatmap();
             buildPointColorMap();
             bootstrapRiverPointSelector();
             bootstrapRiverDateFilters();
             renderRiverSectionCharts();
+            renderLd003SectionCharts();
             bindEvents();
         } catch (error) {
             console.error(error);

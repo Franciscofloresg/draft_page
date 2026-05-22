@@ -183,6 +183,31 @@
             height: auto;
             min-height: 320px;
         }
+        .chart-compact { height: 300px; }
+        .ld003-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.75rem;
+        }
+        .ld003-card {
+            border: 1px solid rgba(27,58,107,0.12);
+            border-radius: 12px;
+            padding: 0.65rem;
+            background: #ffffff;
+        }
+        .ld003-card-wide {
+            grid-column: 1 / -1;
+        }
+        .ld003-card-wide .chart-compact {
+            height: 340px;
+        }
+        .ld003-card h4 {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 0.45rem;
+            letter-spacing: 0.2px;
+        }
         .span-12 { grid-column: span 12; }
         .span-8 { grid-column: span 8; }
         .span-6 { grid-column: span 6; }
@@ -203,6 +228,7 @@
         @media (max-width: 1200px) {
             .kpi-grid { grid-template-columns: repeat(3, 1fr); }
             .span-8, .span-6, .span-4 { grid-column: span 12; }
+            .ld003-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         }
         @media (max-width: 900px) {
             nav { padding: 0 1rem; }
@@ -211,6 +237,7 @@
             .hero-panel { grid-template-columns: 1fr; }
             .kpi-grid { grid-template-columns: repeat(2, 1fr); }
             .chart-host { height: 330px; }
+            .ld003-grid { grid-template-columns: 1fr; }
         }
         @media (max-width: 620px) {
             .nav-links a:nth-child(n+3) { display: none; }
@@ -231,10 +258,8 @@
     <div class="nav-links">
         <a href="./index.html">Home</a>
         <a href="./dashboard.html" class="is-active">Dashboard</a>
-        <a href="#timeseries">Time Series</a>
         <a href="#river-daily">River Daily</a>
-        <a href="#portfolio">Portfolio</a>
-        <a href="#risk">Risk Matrix</a>
+        <a href="#ld003-biodiversity">LD-003</a>
     </div>
 </nav>
 
@@ -244,15 +269,15 @@
             <h1 class="hero-title">DANSER Basin Analytics Dashboard</h1>
             <p class="hero-subtitle">
                 This page keeps the same visual identity as the main site and adds a dynamic dashboard prototype:
-                synthetic portfolio data, monthly basin signals, annual daily hydrology series by station,
-                intervention pipeline, and risk matrix views for Upper, Middle, and Lower Danube.
+                annual daily hydrology series by station and biodiversity monitoring views for Upper,
+                Middle, and Lower Danube.
             </p>
         </div>
         <aside class="hero-meta">
             <h3>Data Context</h3>
             <ul>
-                <li><strong>Source Type:</strong> synthetic portfolio + observed daily stations</li>
-                <li><strong>Coverage:</strong> 2024-01 to 2026-12 (monthly)</li>
+                <li><strong>Source Type:</strong> synthetic biodiversity + observed daily stations</li>
+                <li><strong>Coverage:</strong> 2025 (daily + biodiversity snapshots)</li>
                 <li><strong>Basins:</strong> upper, middle, lower</li>
                 <li><strong>Hydrology:</strong> daily stations 2025 (365 days)</li>
                 <li><strong>Data Folder:</strong> <code>data/synthetic-dashboard/</code></li>
@@ -264,55 +289,6 @@
     <section class="kpi-grid" id="kpi-grid" aria-label="Key performance indicators"></section>
 
     <section class="grid">
-        <article class="panel span-8" id="timeseries">
-            <h3>Monthly Basin Signal</h3>
-            <div class="panel-toolbar">
-                <label for="metric-select">Metric</label>
-                <select id="metric-select">
-                    <option value="sediment_load_kt">Sediment Load</option>
-                    <option value="discharge_m3s">Discharge</option>
-                    <option value="restoration_index">Restoration Index</option>
-                    <option value="water_quality_index">Water Quality</option>
-                </select>
-            </div>
-            <div id="ts-chart" class="chart-host chart-tall"></div>
-        </article>
-
-        <article class="panel span-4" id="portfolio">
-            <h3>Intervention Pipeline</h3>
-            <div class="panel-toolbar">
-                <label for="bar-breakdown-select">Breakdown</label>
-                <select id="bar-breakdown-select">
-                    <option value="phase">By Phase</option>
-                    <option value="type">By Type</option>
-                </select>
-            </div>
-            <div id="bar-chart" class="chart-host chart-tall"></div>
-        </article>
-
-        <article class="panel span-6">
-            <h3>Project Impact vs Budget</h3>
-            <div class="panel-toolbar">
-                <label for="bubble-basin-select">Basin</label>
-                <select id="bubble-basin-select">
-                    <option value="all">All</option>
-                    <option value="upper">Upper</option>
-                    <option value="middle">Middle</option>
-                    <option value="lower">Lower</option>
-                </select>
-            </div>
-            <div id="bubble-chart" class="chart-host"></div>
-        </article>
-
-        <article class="panel span-6" id="risk">
-            <h3>Monthly Risk Heatmap</h3>
-            <div class="panel-toolbar">
-                <label for="risk-metric-select">Risk Metric</label>
-                <select id="risk-metric-select"></select>
-            </div>
-            <div id="heatmap-chart" class="chart-host"></div>
-        </article>
-
         <article class="panel span-12" id="river-daily">
             <h3>Daily River Monitoring (2025)</h3>
             <div class="panel-toolbar">
@@ -348,6 +324,38 @@
         <article class="panel span-6" id="river-distribution">
             <h3>Station Distribution</h3>
             <div id="river-distribution-chart" class="chart-host chart-square"></div>
+        </article>
+
+        <article class="panel span-12" id="ld003-biodiversity">
+            <h3>LD-003: Biodiversity monitoring</h3>
+            <div class="panel-toolbar">
+                <label for="ld003-basin-select">Basin</label>
+                <select id="ld003-basin-select">
+                    <option value="all">All basins</option>
+                    <option value="upper">Upper Danube</option>
+                    <option value="middle">Middle Danube</option>
+                    <option value="lower">Lower Danube</option>
+                </select>
+                <label for="ld003-value-mode-select">Metric</label>
+                <select id="ld003-value-mode-select">
+                    <option value="count">Observation count</option>
+                    <option value="units">Observed units</option>
+                </select>
+            </div>
+            <div class="ld003-grid">
+                <section class="ld003-card ld003-card-wide">
+                    <h4>Monthly Activity by Taxonomic Group</h4>
+                    <div id="ld003-monthly-chart" class="chart-host chart-compact"></div>
+                </section>
+                <section class="ld003-card">
+                    <h4>Habitat x Taxonomic Group Intensity</h4>
+                    <div id="ld003-heatmap-chart" class="chart-host chart-compact"></div>
+                </section>
+                <section class="ld003-card">
+                    <h4>Site Richness vs Monitoring Effort</h4>
+                    <div id="ld003-site-chart" class="chart-host chart-compact"></div>
+                </section>
+            </div>
         </article>
     </section>
 
