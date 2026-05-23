@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <style>
-        /* ===== CSS VARIABLES â€“ DANSER PALETTE ===== */
+        /* ===== CSS VARIABLES – DANSER PALETTE ===== */
         :root {
             --navy:        #1B3A6B;
             --blue:        #2E6DA4;
@@ -264,44 +264,137 @@
         }
 
         /* ===== FOOTER ===== */
-        footer { background: var(--navy); color: rgba(255,255,255,0.65); padding: 3rem 3.5rem 2rem; }
-        .footer-grid {
-            max-width: 1440px; margin: 0 auto;
-            display: grid; grid-template-columns: 2fr 1fr 1fr;
-            gap: 3rem; padding-bottom: 2rem;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+        .danser-footer {
+            margin-top: 1.4rem;
+            background: linear-gradient(180deg, #123a5a 0%, #0a2941 100%);
+            color: rgba(255,255,255,0.9);
+            position: relative;
+            overflow: hidden;
+            padding-bottom: 7em;
         }
-        .footer-brand-name { font-size: 1.35rem; font-weight: 800; color: var(--white); letter-spacing: 3px; }
-        .footer-brand-sub  { font-size: 0.68rem; color: var(--water-light); letter-spacing: 0.5px; text-transform: uppercase; opacity: 0.8; margin-top: 2px; }
-        .footer-brand-desc { font-size: 0.8rem; margin-top: 0.9rem; line-height: 1.6; }
-        .social-row { display: flex; gap: 1.25rem; margin-top: 1.25rem; }
-        .social-row a { font-size: 0.8rem; color: rgba(255,255,255,0.5); transition: color 0.2s; }
-        .social-row a:hover { color: var(--white); }
-        .foot-col h5 { color: var(--white); font-size: 0.82rem; font-weight: 700; letter-spacing: 0.3px; margin-bottom: 0.85rem; }
-        .foot-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.45rem; }
-        .foot-col ul li a { font-size: 0.8rem; color: rgba(255,255,255,0.55); transition: color 0.2s; }
-        .foot-col ul li a:hover { color: var(--white); }
-        .footer-bottom {
-            max-width: 1440px; margin: 1.5rem auto 0;
-            display: flex; justify-content: space-between; align-items: center;
-            font-size: 0.75rem;
+        .danser-footer-inner {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 1.25rem 3.5rem 1.15rem;
+            position: relative;
         }
-        .footer-links { display: flex; gap: 1.5rem; }
-        .footer-links a { color: rgba(255,255,255,0.4); transition: color 0.2s; }
-        .footer-links a:hover { color: var(--white); }
-
+        .danser-footer::before,
+        .danser-footer::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            height: 138px;
+            background-repeat: no-repeat;
+            background-size: contain;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .danser-footer::before {
+            left: 0;
+            width: min(56vw, 820px);
+            background-image: url('./data/footer/eu_missions_left.png');
+            background-position: left bottom;
+            opacity: 0.68;
+        }
+        .danser-footer::after {
+            right: 0;
+            width: min(40vw, 620px);
+            background-image: url('./data/footer/eu_missions_right.png');
+            background-position: right bottom;
+            opacity: 0.72;
+        }
+        .danser-footer-top {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 0.75rem 1rem;
+            align-items: start;
+        }
+        .danser-footer-funding {
+            display: grid;
+            grid-template-columns: minmax(170px, 285px) 1fr;
+            align-items: start;
+            gap: 0.7rem 1rem;
+            padding: 0.25rem 0;
+        }
+        .danser-footer-eu-logo {
+            width: 100%;
+            max-width: 270px;
+            height: auto;
+        }
+        .danser-footer-funding p {
+            font-size: 0.76rem;
+            line-height: 1.4;
+            color: rgba(255,255,255,0.92);
+        }
+        .danser-follow-card {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            padding: 0.25rem 0;
+        }
+        .danser-follow-card h6 {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #ffffff;
+            white-space: nowrap;
+        }
+        .danser-social {
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+        }
+        .danser-social a {
+            width: 34px;
+            height: 34px;
+            border-radius: 999px;
+            border: 1px solid rgba(255,255,255,0.34);
+            color: #ffffff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.18s ease, border-color 0.18s ease;
+        }
+        .danser-social a:hover {
+            background: rgba(255,255,255,0.14);
+            border-color: rgba(255,255,255,0.58);
+        }
+        .danser-social svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
         /* ===== RESPONSIVE ===== */
         @media (max-width: 1100px) {
             .hero-content { grid-template-columns: 1fr; padding: 2.5rem 2rem; }
-            .footer-grid  { grid-template-columns: 1fr 1fr; }
             .stats-inner  { grid-template-columns: repeat(3,1fr); }
             .stats-strip  { padding: 1.5rem 2rem; }
+            .danser-footer-inner {
+                padding: 1.15rem 2rem 1rem;
+            }
+            .danser-footer::after {
+                height: 108px;
+            }
+            .danser-footer::before { height: 108px; }
         }
         @media (max-width: 768px) {
             nav           { padding: 0 1rem; }
             .nav-links    { display: none; }
-            .footer-grid  { grid-template-columns: 1fr; gap: 2rem; }
             .stats-inner  { grid-template-columns: repeat(2,1fr); }
+            .danser-footer-top { grid-template-columns: 1fr; }
+            .danser-footer-funding { grid-template-columns: 1fr; }
+            .danser-follow-card { justify-self: start; }
+            .danser-footer::before {
+                width: min(70%, 440px);
+                height: 92px;
+                opacity: 0.62;
+            }
+            .danser-footer::after {
+                width: min(52%, 300px);
+                height: 92px;
+                opacity: 0.66;
+            }
         }
         @media (max-width: 520px) {
             .stats-head {
@@ -309,6 +402,10 @@
                 flex-direction: column;
             }
             .stats-inner  { grid-template-columns: 1fr; }
+            .danser-footer-inner {
+                padding: 1rem 1rem 0.9rem;
+            }
+            .danser-follow-card { width: 100%; justify-content: space-between; }
         }
     </style>
 </head>
@@ -342,7 +439,7 @@
         </div>
         <div class="hero-map-panel">
             <div class="map-bar">
-                <span class="map-bar-title" id="map-title">Danube River Basin · Upper / Middle / Lower</span>
+                <span class="map-bar-title" id="map-title">Danube River Basin � Upper / Middle / Lower</span>
                 <div class="map-switcher" id="map-switcher" aria-label="Map selector"></div>
             </div>
             <div class="map-wrapper">
@@ -367,40 +464,31 @@
     </div>
 </div>
 
-<footer id="footer">
-    <div class="footer-grid">
-        <div>
-            <div class="footer-brand-name">DANSER</div>
-            <div class="footer-brand-sub">DANube SEdiment Restoration</div>
-            <p class="footer-brand-desc">Dashboard-focused project summary page.</p>
-            <div class="social-row">
-                <a href="https://www.linkedin.com/company/danser" target="_blank" rel="noopener">LinkedIn</a>
-                <a href="https://www.facebook.com/profile.php?id=6157735241286" target="_blank" rel="noopener">Facebook</a>
+<footer class="danser-footer" id="footer">
+    <div class="danser-footer-inner">
+        <div class="danser-footer-top">
+            <div class="danser-footer-funding">
+                <img
+                    class="danser-footer-eu-logo"
+                    src="./data/footer/EN_FundedbytheEU_RGB_WHITE_Outline.png"
+                    alt="Co-funded by the European Union">
+                <p>Co-Funded by the European Union. Views and opinions expressed are however those of the author(s) only and do not necessarily reflect those of the European Union or CINEA. Neither the European Union nor the granting authority can be held responsible for them.</p>
             </div>
-        </div>
-        <div class="foot-col">
-            <h5>Navigation</h5>
-            <ul>
-                <li><a href="./index.html">Home</a></li>
-                <li><a href="#dashboard-kpis">KPI Snapshot</a></li>
-                <li><a href="./dashboard.html">Full Dashboard</a></li>
-            </ul>
-        </div>
-        <div class="foot-col">
-            <h5>Data Views</h5>
-            <ul>
-                <li><a href="./dashboard.html">Basin Monitoring</a></li>
-                <li><a href="./dashboard.html">LD-003 Biodiversity</a></li>
-                <li><a href="./dashboard.html">Station Trends</a></li>
-            </ul>
-        </div>
-    </div>
-    <div class="footer-bottom">
-        <span>© DANSER Project 2025 · Horizon Europe</span>
-        <div class="footer-links">
-            <a href="#">Privacy Policy</a>
-            <a href="#">Accessibility</a>
-            <a href="#">Sitemap</a>
+            <div class="danser-follow-card">
+                <h6>Follow us</h6>
+                <div class="danser-social">
+                    <a href="https://www.linkedin.com/company/danser" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M19.7 3H4.3A1.3 1.3 0 0 0 3 4.3v15.4A1.3 1.3 0 0 0 4.3 21h15.4a1.3 1.3 0 0 0 1.3-1.3V4.3A1.3 1.3 0 0 0 19.7 3zM8.34 18.34H5.67V9.75h2.67zm-1.34-9.76a1.55 1.55 0 1 1 0-3.1 1.55 1.55 0 0 1 0 3.1zm11.34 9.76h-2.67v-4.18c0-1-.02-2.28-1.39-2.28-1.39 0-1.6 1.09-1.6 2.21v4.25H10v-8.6h2.56v1.18h.04c.36-.68 1.23-1.39 2.53-1.39 2.7 0 3.2 1.78 3.2 4.09z"/>
+                        </svg>
+                    </a>
+                    <a href="https://www.facebook.com/profile.php?id=6157735241286" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M12 2C6.5 2 2 6.5 2 12c0 5 3.7 9.1 8.4 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.3v7C18.3 21.1 22 17 22 12c0-5.5-4.5-10-10-10z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </footer>
@@ -452,7 +540,7 @@
 
             addStatNode(card, 'stat-val', formatKpiValue(kpi.value));
             addStatNode(card, 'stat-lbl', kpi.label || 'KPI');
-            addStatNode(card, 'stat-trend', trendParts.join(' · ') || 'No trend available');
+            addStatNode(card, 'stat-trend', trendParts.join(' � ') || 'No trend available');
             kpiGrid.appendChild(card);
         });
     };
@@ -657,6 +745,7 @@
 </script>
 </body>
 </html>
+
 
 
 
