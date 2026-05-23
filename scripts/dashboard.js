@@ -19,7 +19,8 @@
         kpis: null,
         riverDaily: null,
         biodiversity: null,
-        riverPointColors: {}
+        riverPointColors: {},
+        leafletMap: null
     };
 
     const el = {
@@ -36,7 +37,10 @@
         riverDistributionChart: document.getElementById('river-distribution-chart'),
         ld003MonthlyChart: document.getElementById('ld003-monthly-chart'),
         ld003HeatmapChart: document.getElementById('ld003-heatmap-chart'),
-        ld003SiteChart: document.getElementById('ld003-site-chart')
+        ld003SiteChart: document.getElementById('ld003-site-chart'),
+        danubeMap: document.getElementById('danube-map'),
+        mapTitle: document.getElementById('map-title'),
+        mapSwitcher: document.getElementById('map-switcher')
     };
 
     const toTitle = (str) => str.charAt(0).toUpperCase() + str.slice(1);
@@ -65,6 +69,175 @@
         const response = await fetch(path, { cache: 'no-store' });
         if (!response.ok) throw new Error(`Could not load ${path}`);
         return response.json();
+    }
+
+    function setMapTitle(text) {
+        if (el.mapTitle) el.mapTitle.textContent = text;
+    }
+
+    async function initDanubeMap() {
+        if (!el.danubeMap || !el.mapTitle || !el.mapSwitcher) return;
+        if (typeof window.L === 'undefined') {
+            setMapTitle('Map Library Unavailable');
+            return;
+        }
+
+        const map = L.map(el.danubeMap, {
+            zoomControl: true,
+            attributionControl: true,
+            scrollWheelZoom: false
+        }).setView([47.0, 20.5], 5);
+
+        state.leafletMap = map;
+
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
+        }).addTo(map);
+
+        map.createPane('basinPane');
+        map.getPane('basinPane').style.zIndex = 330;
+        map.createPane('guidePane');
+        map.getPane('guidePane').style.zIndex = 345;
+        map.createPane('riverPane');
+        map.getPane('riverPane').style.zIndex = 430;
+
+        const dataCache = new Map();
+        const mapMetaById = new Map();
+        const switcherButtons = new Map();
+        const mapLayers = L.layerGroup().addTo(map);
+        const officialOverlayBounds = L.latLngBounds([41.8, 7.0], [50.8, 31.0]);
+        let basin3FeatureCollection = null;
+        let activeMapId = '';
+
+        const zoneLabels = {
+            upper: 'Upper Basin',
+            middle: 'Middle Basin',
+            lower: 'Lower Basin'
+        };
+        const zoneFill = {
+            upper: '#AECDA0',
+            middle: '#A8D4EA',
+            lower: '#BABDE0'
+        };
+
+        const setActiveButton = (mapId) => {
+            switcherButtons.forEach((button, id) => {
+                const isActive = id === mapId;
+                button.classList.toggle('is-active', isActive);
+                button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+            });
+        };
+
+        const renderMap = (mapData) => {
+            const bounds = mapData.bounds;
+            const focusZone = mapData.focusZone || '';
+            mapLayers.clearLayers();
+
+            L.imageOverlay('./data/maps/source/drbd_2021_layer.png', officialOverlayBounds, {
+                pane: 'basinPane',
+                opacity: 0.24,
+                interactive: false
+            }).addTo(mapLayers);
+
+            if (basin3FeatureCollection && Array.isArray(basin3FeatureCollection.features)) {
+                L.geoJSON(basin3FeatureCollection, {
+                    pane: 'guidePane',
+                    style: (feature) => {
+                        const basinId = feature.properties.id;
+                        const isActive = !focusZone || basinId === focusZone;
+                        const fillColor = zoneFill[basinId] || feature.properties.color || '#C9CDD4';
+                        return {
+                            color: isActive ? 'rgba(255,255,255,0.86)' : 'rgba(255,255,255,0.48)',
+                            weight: isActive ? 1.2 : 0.85,
+                            fillColor,
+                            fillOpacity: focusZone ? (isActive ? 0.43 : 0.16) : 0.36
+                        };
+                    },
+                    onEachFeature: (feature, layer) => {
+                        const basinId = feature.properties.id;
+                        layer.bindTooltip(
+                            `<strong>${feature.properties.name || zoneLabels[basinId] || basinId}</strong>`,
+                            { className: 'map-zone-tip', sticky: true }
+                        );
+                    }
+                }).addTo(mapLayers);
+            }
+
+            L.imageOverlay('./data/maps/source/danubegis_river4000.png', officialOverlayBounds, {
+                pane: 'riverPane',
+                opacity: focusZone ? 0.26 : 0.32,
+                interactive: false
+            }).addTo(mapLayers);
+
+            L.imageOverlay('./data/maps/source/danubegis_danube.png', officialOverlayBounds, {
+                pane: 'riverPane',
+                opacity: focusZone ? 0.9 : 0.94,
+                interactive: false
+            }).addTo(mapLayers);
+
+            if (bounds && typeof bounds.latMin === 'number') {
+                const dataBounds = L.latLngBounds(
+                    [bounds.latMin, bounds.lonMin],
+                    [bounds.latMax, bounds.lonMax]
+                );
+                map.fitBounds(dataBounds.pad(0.12));
+                map.setMaxBounds(dataBounds.pad(0.2));
+            }
+
+            setMapTitle(mapData.title || 'Danube River Basin');
+            setTimeout(() => map.invalidateSize(), 60);
+        };
+
+        const activateMap = async (mapId) => {
+            const meta = mapMetaById.get(mapId);
+            if (!meta) return;
+            setActiveButton(mapId);
+            activeMapId = mapId;
+            try {
+                let mapData = dataCache.get(mapId);
+                if (!mapData) {
+                    mapData = await loadJson(`./data/maps/${meta.file}`);
+                    dataCache.set(mapId, mapData);
+                }
+                if (activeMapId === mapId) renderMap(mapData);
+            } catch (error) {
+                setMapTitle('Map Data Unavailable');
+                console.error(error);
+            }
+        };
+
+        const buildMapSwitcher = (maps) => {
+            el.mapSwitcher.innerHTML = '';
+            switcherButtons.clear();
+            maps.forEach((meta) => {
+                mapMetaById.set(meta.id, meta);
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'map-switcher-btn';
+                button.textContent = meta.label || meta.id;
+                button.setAttribute('aria-pressed', 'false');
+                button.addEventListener('click', () => activateMap(meta.id));
+                el.mapSwitcher.appendChild(button);
+                switcherButtons.set(meta.id, button);
+            });
+        };
+
+        try {
+            const [basins3Data, mapIndex] = await Promise.all([
+                loadJson('./data/maps/danube-basins3.geojson'),
+                loadJson('./data/maps/maps-index.json')
+            ]);
+            basin3FeatureCollection = basins3Data;
+            const maps = Array.isArray(mapIndex.maps) ? mapIndex.maps : [];
+            if (!maps.length) throw new Error('No map definitions found.');
+            buildMapSwitcher(maps);
+            const defaultMap = mapIndex.defaultMap || maps[0].id;
+            await activateMap(defaultMap);
+        } catch (error) {
+            setMapTitle('Map Data Unavailable');
+            console.error(error);
+        }
     }
 
     function renderKpis() {
@@ -701,6 +874,7 @@
             ]
                 .filter(Boolean)
                 .forEach((chart) => Plotly.Plots.resize(chart));
+            if (state.leafletMap) state.leafletMap.invalidateSize();
         });
     }
 
@@ -722,6 +896,7 @@
             bootstrapRiverDateFilters();
             renderRiverSectionCharts();
             renderLd003SectionCharts();
+            await initDanubeMap();
             bindEvents();
         } catch (error) {
             console.error(error);

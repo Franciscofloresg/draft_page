@@ -3,281 +3,431 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>draft_page</title>
+    <title>DANSER Digital Platform</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <style>
-        /* ===== CSS VARIABLES â€“ DANSER PALETTE ===== */
         :root {
-            --navy:        #1B3A6B;
-            --blue:        #2E6DA4;
-            --blue-light:  #4A90C4;
-            --sage:        #8FAB7A;
-            --sage-dark:   #6B8A5A;
-            --water:       #5BA3C9;
-            --water-light: #A8D4E8;
-            --water-pale:  #E8F4FB;
-            --white:       #FFFFFF;
-            --gray-50:     #F8FAFC;
-            --gray-100:    #F1F5F9;
-            --gray-200:    #E2E8F0;
-            --gray-400:    #94A3B8;
-            --gray-600:    #475569;
-            --gray-800:    #1E293B;
+            --navy: #1B3A6B;
+            --blue: #2E6DA4;
+            --blue-dark: #203f79;
+            --green: #5F7F45;
+            --green-soft: #EAF2E6;
+            --mint: #EAF4F0;
+            --ice: #EAF2F9;
+            --slate-700: #334155;
+            --slate-500: #64748B;
+            --slate-300: #CBD5E1;
+            --slate-100: #F1F5F9;
+            --paper: #F3F4F6;
+            --white: #FFFFFF;
             --font: 'Inter', system-ui, -apple-system, sans-serif;
         }
 
-        /* ===== RESET ===== */
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; }
-        body { font-family: var(--font); color: var(--gray-800); background: var(--white); line-height: 1.6; }
-        img  { max-width: 100%; display: block; }
-        a    { text-decoration: none; color: inherit; }
 
-        /* ===== NAVIGATION ===== */
-        nav {
-            position: fixed; top: 0; left: 0; right: 0; z-index: 2200;
-            background: rgba(244, 250, 255, 0.96);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(27,58,107,0.12);
-            box-shadow: 0 4px 14px rgba(15,37,71,0.08);
-            padding: 0 2.5rem;
-            height: 68px;
-            display: flex; align-items: center; justify-content: space-between;
-        }
-        .nav-logo { display: flex; align-items: center; gap: 12px; }
-        .nav-logo img {
-            width: 42px;
-            height: 42px;
-            object-fit: contain;
-            flex-shrink: 0;
-        }
-        .nav-logo-text { display: flex; flex-direction: column; line-height: 1.1; }
-        .nav-logo-text .acronym  { font-size: 1.25rem; font-weight: 800; color: var(--navy); letter-spacing: 3px; }
-        .nav-logo-text .tagline  { font-size: 0.6rem; color: var(--blue); font-weight: 400; letter-spacing: 0.5px; text-transform: uppercase; opacity: 0.9; }
-        .nav-links { display: flex; align-items: center; gap: 1.75rem; }
-        .nav-links a { color: rgba(27,58,107,0.78); font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
-        .nav-links a:hover { color: var(--navy); }
-        .nav-links .nav-dashboard-link {
-            background: var(--navy);
-            color: var(--white);
-            padding: 7px 12px;
-            border-radius: 999px;
-            border: 1px solid rgba(27,58,107,0.96);
-            box-shadow: 0 6px 14px rgba(27,58,107,0.18);
-            font-weight: 700;
-            line-height: 1;
-        }
-        .nav-links .nav-dashboard-link:hover {
-            color: var(--white);
-            background: #153058;
+        body {
+            font-family: var(--font);
+            color: #1e293b;
+            background: var(--paper);
+            line-height: 1.45;
         }
 
-        /* ===== HERO ===== */
-        .hero {
-            min-height: 100vh;
-            padding-top: 68px;
-            background: linear-gradient(155deg, #0f2547 0%, #1b3a6b 45%, #1e4d8c 100%);
-            display: flex; flex-direction: column;
-            position: relative; overflow: hidden;
-        }
-        .hero-grain {
-            position: absolute; inset: 0; pointer-events: none; opacity: 0.025;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-            background-size: 200px;
-        }
-        .hero-content {
-            flex: 1;
-            display: grid; grid-template-columns: 1fr 1.65fr;
-            align-items: center; gap: 3rem;
-            padding: 3rem 3.5rem;
-            max-width: 1440px; margin: 0 auto; width: 100%;
-        }
-        .hero-text { color: var(--white); }
-        .hero-badge {
-            display: inline-flex; align-items: center; gap: 8px;
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.18);
-            border-radius: 20px; padding: 5px 14px;
-            font-size: 0.72rem; font-weight: 600; letter-spacing: 1px;
-            text-transform: uppercase; color: var(--water-light);
-            margin-bottom: 1.5rem;
-        }
-        .hero-badge .dot { width: 6px; height: 6px; background: var(--sage); border-radius: 50%; animation: blink 2s infinite; }
-        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
-        .hero-title {
-            font-size: clamp(1.9rem, 3.5vw, 3rem);
-            font-weight: 800; line-height: 1.15;
-            margin-bottom: 1.1rem;
-        }
-        .hero-title em { font-style: normal; color: var(--water-light); }
-        .hero-subtitle {
-            font-size: 0.95rem; color: rgba(255,255,255,0.72);
-            max-width: 440px; margin-bottom: 2.5rem; line-height: 1.75;
-        }
-        .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
-        .btn-primary {
-            background: var(--sage); color: var(--white);
-            padding: 11px 26px; border-radius: 8px;
-            font-weight: 600; font-size: 0.88rem;
-            transition: all 0.2s; display: inline-flex; align-items: center; gap: 7px;
-        }
-        .btn-primary:hover { background: var(--sage-dark); transform: translateY(-1px); box-shadow: 0 6px 18px rgba(107,138,90,0.4); }
-        .btn-outline {
-            background: transparent; color: var(--white);
-            padding: 11px 26px; border-radius: 8px;
-            font-weight: 600; font-size: 0.88rem;
-            border: 1.5px solid rgba(255,255,255,0.35);
-            transition: all 0.2s; display: inline-flex; align-items: center; gap: 7px;
-        }
-        .btn-outline:hover { border-color: rgba(255,255,255,0.75); background: rgba(255,255,255,0.06); }
+        a { color: inherit; text-decoration: none; }
 
-        /* ===== MAP PANEL ===== */
-        .hero-map-panel {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 16px; overflow: hidden; padding: 1.25rem;
-            position: relative;
-            z-index: 1;
-            isolation: isolate;
-        }
-        .map-bar {
-            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.85rem;
-            margin-bottom: 0.9rem;
-        }
-        .map-bar-title { color: rgba(255,255,255,0.6); font-size: 0.72rem; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; }
-        .map-switcher { display: flex; gap: 0.45rem; flex-wrap: wrap; width: 100%; }
-        .map-switcher-btn {
-            appearance: none;
-            font-family: inherit;
-            border: 1px solid rgba(255,255,255,0.26);
-            background: rgba(255,255,255,0.08);
-            color: rgba(255,255,255,0.86);
-            padding: 5px 10px;
-            border-radius: 999px;
-            font-size: 0.68rem;
-            font-weight: 600;
-            letter-spacing: 0.2px;
-            cursor: pointer;
-            transition: all 0.18s ease;
-        }
-        .map-switcher-btn:hover {
-            border-color: rgba(255,255,255,0.52);
-            background: rgba(255,255,255,0.14);
-        }
-        .map-switcher-btn.is-active {
-            background: rgba(168,212,232,0.22);
-            border-color: rgba(168,212,232,0.9);
-            color: #ffffff;
-            box-shadow: 0 0 0 1px rgba(168,212,232,0.25) inset;
+        .landing-wrap {
+            max-width: 1380px;
+            margin: 0 auto;
+            padding: 1.1rem 1rem 0;
         }
 
-        /* ===== MAP SVG ===== */
-        .map-wrapper { position: relative; }
-        #danube-map {
-            width: 100%;
-            height: 460px;
-            border-radius: 12px;
-            display: block;
-            background: linear-gradient(165deg, #e6eef9 0%, #d8e4f4 100%);
-            border: 1px solid rgba(255,255,255,0.18);
+        .platform-shell {
+            background: #fff;
+            border: 1px solid #dbe1ea;
+            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
         }
-        .leaflet-container { font-family: var(--font); }
-        .leaflet-tooltip.map-zone-tip {
-            background: rgba(15,37,71,0.95);
-            border: 1px solid rgba(255,255,255,0.16);
-            color: #ffffff;
-            border-radius: 8px;
-            box-shadow: none;
-            padding: 7px 10px;
-            font-size: 12px;
-        }
-        .leaflet-tooltip.map-zone-tip::before { border-top-color: rgba(15,37,71,0.95); }
-        /* ===== STATS STRIP ===== */
-        .stats-strip {
-            background: var(--white);
-            border-top: 4px solid var(--sage);
-            padding: 1.75rem 3.5rem;
-        }
-        .stats-head {
-            max-width: 1440px;
-            margin: 0 auto 1rem;
-            display: flex;
-            justify-content: space-between;
+
+        .platform-header {
+            min-height: 74px;
+            border-bottom: 1px solid #d9e2ee;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
             align-items: center;
             gap: 1rem;
-            flex-wrap: wrap;
-        }
-        .stats-title {
-            font-size: 1rem;
-            font-weight: 800;
-            color: var(--navy);
-            letter-spacing: 0.2px;
-        }
-        .stats-link {
-            font-size: 0.78rem;
-            font-weight: 700;
-            color: var(--blue);
-            border: 1px solid rgba(46,109,164,0.26);
-            border-radius: 999px;
-            padding: 6px 12px;
-            transition: all 0.18s ease;
-        }
-        .stats-link:hover {
-            color: #1f4f7a;
-            border-color: rgba(46,109,164,0.45);
-            background: rgba(168,212,232,0.24);
-        }
-        .stats-inner {
-            max-width: 1440px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(6, minmax(0, 1fr));
-            gap: 1rem;
-            align-items: stretch;
-        }
-        .stat {
-            text-align: center;
-            border: 1px solid var(--gray-200);
-            background: linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
-            border-radius: 12px;
-            padding: 0.95rem 0.7rem;
-        }
-        .stat-val  {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--navy);
-            line-height: 1.1;
-        }
-        .stat-lbl  {
-            font-size: 0.75rem;
-            color: var(--gray-600);
-            margin-top: 6px;
-            line-height: 1.3;
-        }
-        .stat-trend {
-            font-size: 0.68rem;
-            color: var(--blue);
-            margin-top: 4px;
-            line-height: 1.3;
+            padding: 0.85rem 1.1rem;
         }
 
-        /* ===== FOOTER ===== */
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.65rem;
+        }
+
+        .brand img {
+            width: 46px;
+            height: 46px;
+            object-fit: contain;
+        }
+
+        .brand-text {
+            display: grid;
+            gap: 0.12rem;
+            line-height: 1.15;
+        }
+
+        .brand-title {
+            font-size: 1.42rem;
+            letter-spacing: 2.6px;
+            font-weight: 800;
+            color: var(--navy);
+        }
+
+        .brand-subtitle {
+            font-size: 0.76rem;
+            color: #4b5563;
+            letter-spacing: 0.25px;
+        }
+
+        .platform-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.48rem 0.82rem;
+            border-radius: 999px;
+            border: 1px solid rgba(95, 127, 69, 0.24);
+            color: #22364b;
+            font-size: 0.86rem;
+            font-weight: 600;
+            background: #fff;
+            transition: border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .nav-chip:hover {
+            border-color: rgba(95, 127, 69, 0.56);
+            background: #f8fbf6;
+        }
+
+        .nav-chip.is-active {
+            border-color: rgba(26, 63, 124, 0.46);
+            background: linear-gradient(180deg, #edf4ff 0%, #dbe9ff 100%);
+            color: var(--blue-dark);
+        }
+
+        .chip-icon,
+        .action-icon {
+            width: 26px;
+            height: 26px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 auto;
+        }
+
+        .chip-icon {
+            background: #5f7f45;
+            color: #fff;
+        }
+
+        .chip-icon svg,
+        .action-icon svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.24rem;
+        }
+
+        .header-actions a {
+            color: #334155;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+
+        .action-icon {
+            color: #334155;
+        }
+
+        .platform-main {
+            padding: 0;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(320px, 1.3fr);
+            min-height: 305px;
+        }
+
+        .hero-copy {
+            padding: 2rem 1.75rem;
+            background: linear-gradient(90deg, #ffffff 0%, #f6f9fd 100%);
+        }
+
+        .hero-title {
+            color: #1f2f49;
+            font-size: clamp(1.9rem, 3.2vw, 3.05rem);
+            line-height: 1.08;
+            font-weight: 800;
+            margin-bottom: 0.8rem;
+        }
+
+        .hero-copy p {
+            max-width: 44ch;
+            color: #334155;
+            font-size: 0.98rem;
+            line-height: 1.6;
+            margin-bottom: 1.15rem;
+        }
+
+        .primary-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 1px solid #9db5cb;
+            color: #1e3a56;
+            background: #f7fafc;
+            border-radius: 9px;
+            padding: 0.68rem 1rem;
+            font-size: 0.84rem;
+            font-weight: 600;
+        }
+
+        .primary-btn:hover {
+            background: #ecf5ff;
+            border-color: #7ca0bf;
+        }
+
+        .hero-media {
+            position: relative;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 23% 52%, rgba(200, 221, 235, 0.62), rgba(200, 221, 235, 0) 43%),
+                linear-gradient(155deg, #bacde1 0%, #99b3ca 26%, #6c87a4 49%, #3e5670 100%);
+        }
+
+        .hero-media::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(175px 90px at 22% 50%, rgba(225, 242, 252, 0.88), rgba(225, 242, 252, 0) 72%),
+                radial-gradient(620px 160px at 57% 78%, rgba(24, 62, 84, 0.46), rgba(24, 62, 84, 0) 73%),
+                radial-gradient(520px 170px at 81% 72%, rgba(38, 87, 62, 0.58), rgba(38, 87, 62, 0) 78%);
+        }
+
+        .hero-media::after {
+            content: "";
+            position: absolute;
+            right: -4%;
+            bottom: -8%;
+            width: 44%;
+            height: 64%;
+            border-radius: 50% 0 0 0;
+            background:
+                repeating-radial-gradient(circle at 100% 100%, rgba(168, 214, 234, 0.45) 0, rgba(168, 214, 234, 0.45) 2px, transparent 2px, transparent 12px);
+            opacity: 0.75;
+        }
+
+        .portal-grid {
+            padding: 0.8rem;
+            display: grid;
+            gap: 0.75rem;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .portal-card {
+            border-radius: 13px;
+            border: 1px solid #dbe5ef;
+            min-height: 185px;
+            padding: 1rem 1rem 0.9rem;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            isolation: isolate;
+        }
+
+        .portal-card::after {
+            content: "";
+            position: absolute;
+            right: -14%;
+            bottom: -28%;
+            width: 68%;
+            height: 82%;
+            border-radius: 42% 58% 50% 50%;
+            opacity: 0.85;
+            z-index: -1;
+        }
+
+        .portal-stories {
+            background: linear-gradient(170deg, #f6f8f4 0%, #ebf3e7 100%);
+        }
+
+        .portal-stories::after {
+            background: radial-gradient(circle at 15% 35%, rgba(177, 205, 154, 0.95), rgba(177, 205, 154, 0) 62%);
+        }
+
+        .portal-graphs {
+            background: linear-gradient(160deg, #edf3fb 0%, #dfeaf8 100%);
+        }
+
+        .portal-graphs::after {
+            background:
+                url('./data/maps/source/map01_overview.png') center / cover no-repeat;
+            width: 72%;
+            height: 88%;
+            opacity: 0.32;
+            right: -9%;
+            bottom: -16%;
+            border-radius: 0;
+        }
+
+        .portal-datasets {
+            background: linear-gradient(160deg, #edf6f5 0%, #e5f1ef 100%);
+        }
+
+        .portal-datasets::after {
+            background:
+                radial-gradient(circle at 35% 38%, rgba(184, 218, 212, 0.96), rgba(184, 218, 212, 0) 66%),
+                radial-gradient(circle at 80% 65%, rgba(159, 195, 188, 0.86), rgba(159, 195, 188, 0) 62%);
+        }
+
+        .portal-top {
+            display: flex;
+            align-items: center;
+            gap: 0.52rem;
+            margin-bottom: 0.6rem;
+            color: #334155;
+        }
+
+        .portal-top strong {
+            font-size: 1.06rem;
+        }
+
+        .portal-card p {
+            font-size: 0.9rem;
+            color: #334155;
+            max-width: 30ch;
+            line-height: 1.45;
+            margin-bottom: auto;
+        }
+
+        .portal-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            width: fit-content;
+            margin-top: 0.9rem;
+            font-size: 0.77rem;
+            font-weight: 700;
+            border-radius: 8px;
+            padding: 0.42rem 0.7rem;
+            border: 1px solid rgba(30, 64, 175, 0.22);
+            color: #21344e;
+            background: rgba(255,255,255,0.68);
+            transition: background 0.2s ease;
+        }
+
+        .portal-btn:hover {
+            background: rgba(255,255,255,0.95);
+        }
+
+        .portal-graphs .portal-btn {
+            color: #ffffff;
+            background: #355f9a;
+            border-color: #355f9a;
+        }
+
+        .portal-graphs .portal-btn:hover {
+            background: #2d4f80;
+            border-color: #2d4f80;
+        }
+
+        .why {
+            padding: 0.42rem 0.95rem 1rem;
+        }
+
+        .why h2 {
+            color: #253754;
+            font-size: 1.26rem;
+            margin-bottom: 0.7rem;
+        }
+
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            border-top: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
+            background: #fff;
+        }
+
+        .why-item {
+            padding: 0.75rem 0.8rem;
+            border-right: 1px solid #e2e8f0;
+            display: grid;
+            gap: 0.2rem;
+            align-content: start;
+        }
+
+        .why-item:last-child { border-right: none; }
+
+        .why-item strong {
+            font-size: 0.94rem;
+            color: #1f3555;
+        }
+
+        .why-item p {
+            font-size: 0.82rem;
+            color: #334155;
+            line-height: 1.45;
+        }
+
+        .why-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.2rem;
+            color: #355f9a;
+            background: #edf3ff;
+        }
+
+        .why-icon svg {
+            width: 15px;
+            height: 15px;
+            fill: currentColor;
+        }
+
         .danser-footer {
-            margin-top: 1.4rem;
+            margin-top: 1.2rem;
             background: linear-gradient(180deg, #123a5a 0%, #0a2941 100%);
             color: rgba(255,255,255,0.9);
             position: relative;
             overflow: hidden;
             padding-bottom: 7em;
         }
+
         .danser-footer-inner {
             max-width: 1440px;
             margin: 0 auto;
-            padding: 1.25rem 3.5rem 1.15rem;
+            padding: 1.25rem 2.4rem 1.15rem;
             position: relative;
         }
+
         .danser-footer::before,
         .danser-footer::after {
             content: "";
@@ -289,6 +439,7 @@
             pointer-events: none;
             z-index: 0;
         }
+
         .danser-footer::before {
             left: 0;
             width: min(56vw, 820px);
@@ -296,6 +447,7 @@
             background-position: left bottom;
             opacity: 0.68;
         }
+
         .danser-footer::after {
             right: 0;
             width: min(40vw, 620px);
@@ -303,6 +455,7 @@
             background-position: right bottom;
             opacity: 0.72;
         }
+
         .danser-footer-top {
             position: relative;
             z-index: 1;
@@ -311,6 +464,7 @@
             gap: 0.75rem 1rem;
             align-items: start;
         }
+
         .danser-footer-funding {
             display: grid;
             grid-template-columns: minmax(170px, 285px) 1fr;
@@ -318,33 +472,39 @@
             gap: 0.7rem 1rem;
             padding: 0.25rem 0;
         }
+
         .danser-footer-eu-logo {
             width: 100%;
             max-width: 270px;
             height: auto;
         }
+
         .danser-footer-funding p {
-            font-size: 0.76rem;
+            font-size: 0.78rem;
             line-height: 1.4;
             color: rgba(255,255,255,0.92);
         }
+
         .danser-follow-card {
             display: flex;
             align-items: center;
             gap: 0.65rem;
             padding: 0.25rem 0;
         }
+
         .danser-follow-card h6 {
             font-size: 0.82rem;
             font-weight: 700;
             color: #ffffff;
             white-space: nowrap;
         }
+
         .danser-social {
             display: flex;
             align-items: center;
             gap: 0.55rem;
         }
+
         .danser-social a {
             width: 34px;
             height: 34px;
@@ -356,398 +516,335 @@
             justify-content: center;
             transition: background 0.18s ease, border-color 0.18s ease;
         }
+
         .danser-social a:hover {
             background: rgba(255,255,255,0.14);
             border-color: rgba(255,255,255,0.58);
         }
+
         .danser-social svg {
             width: 16px;
             height: 16px;
             fill: currentColor;
         }
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 1100px) {
-            .hero-content { grid-template-columns: 1fr; padding: 2.5rem 2rem; }
-            .stats-inner  { grid-template-columns: repeat(3,1fr); }
-            .stats-strip  { padding: 1.5rem 2rem; }
-            .danser-footer-inner {
-                padding: 1.15rem 2rem 1rem;
+
+        @media (max-width: 1150px) {
+            .platform-header {
+                grid-template-columns: 1fr;
+                justify-items: start;
+                gap: 0.65rem;
             }
+
+            .platform-nav {
+                justify-content: flex-start;
+            }
+
+            .hero {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-media {
+                min-height: 240px;
+            }
+
+            .portal-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .why-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+
+        }
+
+        @media (max-width: 760px) {
+            .landing-wrap {
+                padding: 0.55rem 0.5rem 0;
+            }
+
+            .brand-title {
+                font-size: 1.2rem;
+                letter-spacing: 2px;
+            }
+
+            .platform-nav {
+                width: 100%;
+                justify-content: space-between;
+                gap: 0.5rem;
+            }
+
+            .nav-chip {
+                flex: 1 1 calc(50% - 0.3rem);
+                justify-content: center;
+                padding: 0.42rem 0.5rem;
+                font-size: 0.78rem;
+            }
+
+            .header-actions {
+                gap: 0.1rem;
+            }
+
+            .hero-copy {
+                padding: 1.35rem 1rem;
+            }
+
+            .hero-copy p {
+                font-size: 0.9rem;
+            }
+
+            .portal-grid {
+                grid-template-columns: 1fr;
+                padding: 0.65rem;
+            }
+
+            .why {
+                padding: 0.45rem 0.65rem 0.75rem;
+            }
+
+            .why-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .why-item {
+                border-right: none;
+                border-bottom: 1px solid #e2e8f0;
+            }
+
+            .why-item:last-child {
+                border-bottom: none;
+            }
+
+            .danser-footer-inner {
+                padding: 1.15rem 1rem 1rem;
+            }
+
             .danser-footer::after {
                 height: 108px;
             }
-            .danser-footer::before { height: 108px; }
+
+            .danser-footer::before {
+                height: 108px;
+            }
+
+            .danser-footer-top {
+                grid-template-columns: 1fr;
+            }
+
+            .danser-footer-funding {
+                grid-template-columns: 1fr;
+            }
+
+            .danser-follow-card {
+                justify-self: start;
+            }
         }
-        @media (max-width: 768px) {
-            nav           { padding: 0 1rem; }
-            .nav-links    { display: none; }
-            .stats-inner  { grid-template-columns: repeat(2,1fr); }
-            .danser-footer-top { grid-template-columns: 1fr; }
-            .danser-footer-funding { grid-template-columns: 1fr; }
-            .danser-follow-card { justify-self: start; }
+
+        @media (max-width: 620px) {
+            .chip-icon,
+            .action-icon {
+                width: 24px;
+                height: 24px;
+            }
+
+            .brand img {
+                width: 40px;
+                height: 40px;
+            }
+
+            .brand-subtitle {
+                font-size: 0.68rem;
+            }
+
+            .danser-footer-inner {
+                padding: 1rem 1rem 0.9rem;
+            }
+
+            .danser-follow-card {
+                width: 100%;
+                justify-content: space-between;
+            }
+
             .danser-footer::before {
                 width: min(70%, 440px);
                 height: 92px;
                 opacity: 0.62;
             }
+
             .danser-footer::after {
                 width: min(52%, 300px);
                 height: 92px;
                 opacity: 0.66;
             }
         }
-        @media (max-width: 520px) {
-            .stats-head {
-                align-items: flex-start;
-                flex-direction: column;
-            }
-            .stats-inner  { grid-template-columns: 1fr; }
-            .danser-footer-inner {
-                padding: 1rem 1rem 0.9rem;
-            }
-            .danser-follow-card { width: 100%; justify-content: space-between; }
-        }
     </style>
 </head>
 <body>
+    <div class="landing-wrap">
+        <section class="platform-shell" aria-label="DANSER Digital Platform landing">
+            <header class="platform-header">
+                <a class="brand" href="./index.html" aria-label="DANSER home">
+                    <img src="./DANSERArtboard-1.png" alt="DANSER logo">
+                    <span class="brand-text">
+                        <span class="brand-title">DANSER</span>
+                        <span class="brand-subtitle">Digital Platform</span>
+                    </span>
+                </a>
 
-<nav>
-    <div class="nav-logo">
-        <img src="./DANSERArtboard-1.png" alt="DANSER logo">
-        <div class="nav-logo-text">
-            <span class="acronym">DANSER</span>
-            <span class="tagline">DANube SEdiment Restoration</span>
-        </div>
-    </div>
-    <div class="nav-links">
-        <a href="./index.html">Home</a>
-        <a href="./dashboard.html" class="nav-dashboard-link">Dashboard</a>
-    </div>
-</nav>
-
-<div class="hero">
-    <div class="hero-grain"></div>
-    <div class="hero-content">
-        <div class="hero-text">
-            <div class="hero-badge"><span class="dot"></span>Dashboard View</div>
-            <h1 class="hero-title">Danube Sediment<br><em>Restoration Dashboard</em></h1>
-            <p class="hero-subtitle">Operational overview of DANSER across the Danube Basin. Explore the map here, then move to the full analytics dashboard for detailed indicators.</p>
-            <div class="hero-actions">
-                <a href="./dashboard.html" class="btn-primary">Open Full Dashboard</a>
-                <a href="#dashboard-kpis" class="btn-outline">See KPI Snapshot</a>
-            </div>
-        </div>
-        <div class="hero-map-panel">
-            <div class="map-bar">
-                <span class="map-bar-title" id="map-title">Danube River Basin · Upper / Middle / Lower</span>
-                <div class="map-switcher" id="map-switcher" aria-label="Map selector"></div>
-            </div>
-            <div class="map-wrapper">
-                <div id="danube-map" role="img" aria-label="Danube River Basin divided into upper, middle and lower basins"></div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="stats-strip" id="dashboard-kpis">
-    <div class="stats-head">
-        <div class="stats-title">Dashboard KPI Snapshot</div>
-        <a class="stats-link" href="./dashboard.html">View interactive dashboard</a>
-    </div>
-    <div class="stats-inner" id="kpi-summary-grid">
-        <div class="stat"><div class="stat-val">-</div><div class="stat-lbl">Loading KPI</div><div class="stat-trend">Please wait</div></div>
-        <div class="stat"><div class="stat-val">-</div><div class="stat-lbl">Loading KPI</div><div class="stat-trend">Please wait</div></div>
-        <div class="stat"><div class="stat-val">-</div><div class="stat-lbl">Loading KPI</div><div class="stat-trend">Please wait</div></div>
-        <div class="stat"><div class="stat-val">-</div><div class="stat-lbl">Loading KPI</div><div class="stat-trend">Please wait</div></div>
-        <div class="stat"><div class="stat-val">-</div><div class="stat-lbl">Loading KPI</div><div class="stat-trend">Please wait</div></div>
-        <div class="stat"><div class="stat-val">-</div><div class="stat-lbl">Loading KPI</div><div class="stat-trend">Please wait</div></div>
-    </div>
-</div>
-
-<footer class="danser-footer" id="footer">
-    <div class="danser-footer-inner">
-        <div class="danser-footer-top">
-            <div class="danser-footer-funding">
-                <img
-                    class="danser-footer-eu-logo"
-                    src="./data/footer/EN_FundedbytheEU_RGB_NEG.png"
-                    alt="Co-funded by the European Union">
-                <p>Co-Funded by the European Union. Views and opinions expressed are however those of the author(s) only and do not necessarily reflect those of the European Union or CINEA. Neither the European Union nor the granting authority can be held responsible for them.</p>
-            </div>
-            <div class="danser-follow-card">
-                <h6>Follow us</h6>
-                <div class="danser-social">
-                    <a href="https://www.linkedin.com/company/danser" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-                        <svg viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M19.7 3H4.3A1.3 1.3 0 0 0 3 4.3v15.4A1.3 1.3 0 0 0 4.3 21h15.4a1.3 1.3 0 0 0 1.3-1.3V4.3A1.3 1.3 0 0 0 19.7 3zM8.34 18.34H5.67V9.75h2.67zm-1.34-9.76a1.55 1.55 0 1 1 0-3.1 1.55 1.55 0 0 1 0 3.1zm11.34 9.76h-2.67v-4.18c0-1-.02-2.28-1.39-2.28-1.39 0-1.6 1.09-1.6 2.21v4.25H10v-8.6h2.56v1.18h.04c.36-.68 1.23-1.39 2.53-1.39 2.7 0 3.2 1.78 3.2 4.09z"/>
-                        </svg>
+                <nav class="platform-nav" aria-label="Primary navigation">
+                    <a class="nav-chip" href="#stories">
+                        <span class="chip-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M6 4h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm1 3v2h8V7H7zm0 4v2h8v-2H7zm0 4v2h5v-2H7z"/></svg>
+                        </span>
+                        DANSER Stories
                     </a>
-                    <a href="https://www.facebook.com/profile.php?id=6157735241286" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-                        <svg viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M12 2C6.5 2 2 6.5 2 12c0 5 3.7 9.1 8.4 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.3v7C18.3 21.1 22 17 22 12c0-5.5-4.5-10-10-10z"/>
-                        </svg>
+                    <a class="nav-chip is-active" href="./dashboard.html">
+                        <span class="chip-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 5.15-7 13-7 13S5 14.15 5 9a7 7 0 0 1 7-7zm0 3.2A3.8 3.8 0 1 0 12 12.8 3.8 3.8 0 0 0 12 5.2z"/></svg>
+                        </span>
+                        Graphs &amp; Maps
                     </a>
+                    <a class="nav-chip" href="#datasets">
+                        <span class="chip-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M12 2c4.97 0 9 1.79 9 4s-4.03 4-9 4-9-1.79-9-4 4.03-4 9-4zm-9 8v4c0 2.21 4.03 4 9 4s9-1.79 9-4v-4c-2.03 1.49-5.39 2.4-9 2.4S5.03 11.49 3 10zm0 6v2c0 2.21 4.03 4 9 4s9-1.79 9-4v-2c-2.03 1.49-5.39 2.4-9 2.4S5.03 17.49 3 16z"/></svg>
+                        </span>
+                        Datasets
+                    </a>
+                </nav>
+
+                <div class="header-actions" aria-label="Utility actions">
+                    <a class="action-icon" href="#" aria-label="Search">
+                        <svg viewBox="0 0 24 24"><path d="M10.5 3a7.5 7.5 0 1 1 0 15 7.5 7.5 0 0 1 0-15zm0 2a5.5 5.5 0 1 0 3.42 9.8l3.14 3.14 1.41-1.41-3.14-3.14A5.5 5.5 0 0 0 10.5 5z"/></svg>
+                    </a>
+                    <a class="action-icon" href="#" aria-label="Help">
+                        <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20zm0 16a1.2 1.2 0 1 0 0 2.4A1.2 1.2 0 0 0 12 18zm-.2-12a4 4 0 0 0-4 4h2a2 2 0 1 1 4 0c0 1.42-2 1.92-2 4h2c0-1.35 2-1.95 2-4a4 4 0 0 0-4-4z"/></svg>
+                    </a>
+                    <a class="action-icon" href="#" aria-label="Account">
+                        <svg viewBox="0 0 24 24"><path d="M12 3a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 12c4.42 0 8 2.24 8 5v1H4v-1c0-2.76 3.58-5 8-5z"/></svg>
+                    </a>
+                    <a href="#" aria-label="Language">EN</a>
+                </div>
+            </header>
+
+            <main class="platform-main">
+                <section class="hero">
+                    <div class="hero-copy">
+                        <h1 class="hero-title">Welcome to the<br>DANSER Digital Platform</h1>
+                        <p>A FAIR-oriented digital environment for the Danube River basin that connects environmental data, maps, dashboards and stories to support cooperation, knowledge sharing and evidence-based decision making.</p>
+                        <a class="primary-btn" href="#">
+                            Learn more about DANSER
+                            <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M5 12h12m-4-4 4 4-4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </a>
+                    </div>
+                    <div class="hero-media" role="img" aria-label="Illustrative river basin panorama"></div>
+                </section>
+
+                <section class="portal-grid" aria-label="Platform entrances">
+                    <article class="portal-card portal-stories" id="stories">
+                        <div class="portal-top">
+                            <span class="chip-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24"><path d="M6 4h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm1 3v2h8V7H7zm0 4v2h8v-2H7zm0 4v2h5v-2H7z"/></svg>
+                            </span>
+                            <strong>DANSER Stories</strong>
+                        </div>
+                        <p>Discover stories, insights and news about the Danube River basin and our activities.</p>
+                        <a class="portal-btn" href="#">Explore Stories <span aria-hidden="true">&#8594;</span></a>
+                    </article>
+
+                    <article class="portal-card portal-graphs">
+                        <div class="portal-top">
+                            <span class="chip-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 5.15-7 13-7 13S5 14.15 5 9a7 7 0 0 1 7-7zm0 3.2A3.8 3.8 0 1 0 12 12.8 3.8 3.8 0 0 0 12 5.2z"/></svg>
+                            </span>
+                            <strong>Graphs &amp; Maps</strong>
+                        </div>
+                        <p>Explore interactive maps, visualisations and dashboards to understand environmental data in space and time.</p>
+                        <a class="portal-btn" href="./dashboard.html">Open Maps &amp; Dashboards <span aria-hidden="true">&#8594;</span></a>
+                    </article>
+
+                    <article class="portal-card portal-datasets" id="datasets">
+                        <div class="portal-top">
+                            <span class="chip-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24"><path d="M12 2c4.97 0 9 1.79 9 4s-4.03 4-9 4-9-1.79-9-4 4.03-4 9-4zm-9 8v4c0 2.21 4.03 4 9 4s9-1.79 9-4v-4c-2.03 1.49-5.39 2.4-9 2.4S5.03 11.49 3 10zm0 6v2c0 2.21 4.03 4 9 4s9-1.79 9-4v-2c-2.03 1.49-5.39 2.4-9 2.4S5.03 17.49 3 16z"/></svg>
+                            </span>
+                            <strong>Datasets</strong>
+                        </div>
+                        <p>Search, explore and access a wide range of environmental datasets and data services.</p>
+                        <a class="portal-btn" href="#">Browse Datasets <span aria-hidden="true">&#8594;</span></a>
+                    </article>
+                </section>
+
+                <section class="why">
+                    <h2>Why use the DANSER Digital Platform?</h2>
+                    <div class="why-grid">
+                        <article class="why-item">
+                            <span class="why-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24"><path d="M10.5 3a7.5 7.5 0 1 1 0 15 7.5 7.5 0 0 1 0-15zm0 2a5.5 5.5 0 1 0 3.42 9.8l3.14 3.14 1.41-1.41-3.14-3.14A5.5 5.5 0 0 0 10.5 5z"/></svg>
+                            </span>
+                            <strong>Find</strong>
+                            <p>Search and discover relevant datasets and resources.</p>
+                        </article>
+                        <article class="why-item">
+                            <span class="why-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm7.93 9h-3.22a15.5 15.5 0 0 0-1.24-5.02A8.02 8.02 0 0 1 19.93 11zM12 4.07c.97 1.31 1.73 3.33 2 5.93h-4c.27-2.6 1.03-4.62 2-5.93zM4.07 13h3.22a15.5 15.5 0 0 0 1.24 5.02A8.02 8.02 0 0 1 4.07 13zm3.22-2H4.07a8.02 8.02 0 0 1 4.46-5.02A15.5 15.5 0 0 0 7.29 11zm2.71 2h4c-.27 2.6-1.03 4.62-2 5.93-.97-1.31-1.73-3.33-2-5.93zm5.47 5.02A15.5 15.5 0 0 0 16.71 13h3.22a8.02 8.02 0 0 1-4.46 5.02z"/></svg>
+                            </span>
+                            <strong>Visualise</strong>
+                            <p>Explore data through interactive maps and dashboards.</p>
+                        </article>
+                        <article class="why-item">
+                            <span class="why-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24"><path d="M16 11a4 4 0 1 0-3.9-5h-.2a5.1 5.1 0 0 0-4.7 3.2A3.8 3.8 0 1 0 8 16h8a2.5 2.5 0 1 0 0-5zM7.5 17c2.6 0 4.5 1.33 4.5 3v1H3v-1c0-1.67 1.9-3 4.5-3zm9 0c2.6 0 4.5 1.33 4.5 3v1h-8v-1c0-1.67 1.9-3 4.5-3z"/></svg>
+                            </span>
+                            <strong>Collaborate</strong>
+                            <p>Share knowledge and contribute to the DANSER community.</p>
+                        </article>
+                        <article class="why-item">
+                            <span class="why-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 19h14v2H5z"/></svg>
+                            </span>
+                            <strong>Reuse</strong>
+                            <p>Access data via standard services, APIs and downloads.</p>
+                        </article>
+                        <article class="why-item">
+                            <span class="why-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5.25 3.4 10.16 8 11 4.6-.84 8-5.75 8-11V5l-8-3zm0 3.2 5 1.88V11c0 4.2-2.62 8.08-5 8.93C9.62 19.08 7 15.2 7 11V7.08L12 5.2zm-1.2 8.8-2.1-2.1-1.4 1.4 3.5 3.5 6-6-1.4-1.4z"/></svg>
+                            </span>
+                            <strong>Trust</strong>
+                            <p>Built on FAIR principles ensuring quality, openness and interoperability.</p>
+                        </article>
+                    </div>
+                </section>
+
+            </main>
+        </section>
+    </div>
+
+    <footer class="danser-footer" id="footer">
+        <div class="danser-footer-inner">
+            <div class="danser-footer-top">
+                <div class="danser-footer-funding">
+                    <img
+                        class="danser-footer-eu-logo"
+                        src="./data/footer/EN_FundedbytheEU_RGB_NEG.png"
+                        alt="Co-funded by the European Union">
+                    <p>Co-Funded by the European Union. Views and opinions expressed are however those of the author(s) only and do not necessarily reflect those of the European Union or CINEA. Neither the European Union nor the granting authority can be held responsible for them.</p>
+                </div>
+                <div class="danser-follow-card">
+                    <h6>Follow us</h6>
+                    <div class="danser-social">
+                        <a href="https://www.linkedin.com/company/danser" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M19.7 3H4.3A1.3 1.3 0 0 0 3 4.3v15.4A1.3 1.3 0 0 0 4.3 21h15.4a1.3 1.3 0 0 0 1.3-1.3V4.3A1.3 1.3 0 0 0 19.7 3zM8.34 18.34H5.67V9.75h2.67zm-1.34-9.76a1.55 1.55 0 1 1 0-3.1 1.55 1.55 0 0 1 0 3.1zm11.34 9.76h-2.67v-4.18c0-1-.02-2.28-1.39-2.28-1.39 0-1.6 1.09-1.6 2.21v4.25H10v-8.6h2.56v1.18h.04c.36-.68 1.23-1.39 2.53-1.39 2.7 0 3.2 1.78 3.2 4.09z"/>
+                            </svg>
+                        </a>
+                        <a href="https://www.facebook.com/profile.php?id=6157735241286" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M12 2C6.5 2 2 6.5 2 12c0 5 3.7 9.1 8.4 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.3v7C18.3 21.1 22 17 22 12c0-5.5-4.5-10-10-10z"/>
+                            </svg>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</footer>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script>
-(function () {
-    'use strict';
-
-    /* Map rendering from JSON files */
-    const mapHost     = document.getElementById('danube-map');
-    const mapPanel    = document.querySelector('.hero-map-panel');
-    const mapTitle    = document.getElementById('map-title');
-    const mapSwitcher = document.getElementById('map-switcher');
-    const kpiGrid     = document.getElementById('kpi-summary-grid');
-
-    const loadJson = async (path) => {
-        const response = await fetch(path, { cache: 'no-store' });
-        if (!response.ok) throw new Error(`Failed to load ${path}`);
-        return response.json();
-    };
-
-    const formatKpiValue = (value) => {
-        if (typeof value !== 'number' || Number.isNaN(value)) return 'N/A';
-        const hasDecimal = !Number.isInteger(value);
-        return new Intl.NumberFormat('en-US', {
-            minimumFractionDigits: hasDecimal ? 1 : 0,
-            maximumFractionDigits: hasDecimal ? 1 : 0
-        }).format(value);
-    };
-
-    const addStatNode = (parent, className, text) => {
-        const node = document.createElement('div');
-        node.className = className;
-        node.textContent = text;
-        parent.appendChild(node);
-    };
-
-    const renderKpiSummary = (kpis) => {
-        if (!kpiGrid) return;
-        kpiGrid.innerHTML = '';
-
-        kpis.slice(0, 6).forEach((kpi) => {
-            const card = document.createElement('div');
-            card.className = 'stat';
-
-            const trendParts = [];
-            if (kpi.unit) trendParts.push(kpi.unit);
-            if (kpi.trend) trendParts.push(kpi.trend);
-
-            addStatNode(card, 'stat-val', formatKpiValue(kpi.value));
-            addStatNode(card, 'stat-lbl', kpi.label || 'KPI');
-            addStatNode(card, 'stat-trend', trendParts.join(' · ') || 'No trend available');
-            kpiGrid.appendChild(card);
-        });
-    };
-
-    const renderKpiError = () => {
-        if (!kpiGrid) return;
-        kpiGrid.innerHTML = '';
-        const card = document.createElement('div');
-        card.className = 'stat';
-        addStatNode(card, 'stat-val', 'N/A');
-        addStatNode(card, 'stat-lbl', 'KPI data unavailable');
-        addStatNode(card, 'stat-trend', 'Check data/synthetic-dashboard/kpis.json');
-        kpiGrid.appendChild(card);
-    };
-
-    const initKpiSummary = async () => {
-        if (!kpiGrid) return;
-        try {
-            const data = await loadJson('./data/synthetic-dashboard/kpis.json');
-            const kpis = Array.isArray(data.kpis) ? data.kpis : [];
-            if (!kpis.length) throw new Error('No KPI records found');
-            renderKpiSummary(kpis);
-        } catch (error) {
-            console.error(error);
-            renderKpiError();
-        }
-    };
-
-    if (mapHost && mapPanel && mapTitle && mapSwitcher) {
-        if (typeof L === 'undefined') {
-            mapTitle.textContent = 'Map Library Unavailable';
-        } else {
-            const map = L.map(mapHost, {
-                zoomControl: true,
-                attributionControl: true,
-                scrollWheelZoom: false
-            }).setView([47.0, 20.5], 5);
-
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
-                maxZoom: 18,
-                attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
-            }).addTo(map);
-
-            // Layer order control: basins and guides stay below, rivers stay above.
-            map.createPane('basinPane');
-            map.getPane('basinPane').style.zIndex = 330;
-            map.createPane('guidePane');
-            map.getPane('guidePane').style.zIndex = 345;
-            map.createPane('riverPane');
-            map.getPane('riverPane').style.zIndex = 430;
-
-            const dataCache = new Map();
-            const mapMetaById = new Map();
-            const switcherButtons = new Map();
-            const mapLayers = L.layerGroup().addTo(map);
-            const officialOverlayBounds = L.latLngBounds([41.8, 7.0], [50.8, 31.0]);
-            let basin3FeatureCollection = null;
-            let activeMapId = '';
-
-            const setActiveButton = (mapId) => {
-                switcherButtons.forEach((btn, id) => {
-                    btn.classList.toggle('is-active', id === mapId);
-                    btn.setAttribute('aria-pressed', id === mapId ? 'true' : 'false');
-                });
-            };
-
-            const zoneLabels = {
-                upper: 'Upper Basin',
-                middle: 'Middle Basin',
-                lower: 'Lower Basin'
-            };
-            const zoneFill = {
-                upper: '#AECDA0',
-                middle: '#A8D4EA',
-                lower: '#BABDE0'
-            };
-
-            const renderMap = (mapData) => {
-                const bounds = mapData.bounds;
-                const focusZone = mapData.focusZone || '';
-                mapLayers.clearLayers();
-
-                // Subtle basin footprint as a neutral base under vector subbasin polygons.
-                L.imageOverlay('./data/maps/source/drbd_2021_layer.png', officialOverlayBounds, {
-                    pane: 'basinPane',
-                    opacity: 0.24,
-                    interactive: false,
-                    className: 'map-drbd-base'
-                }).addTo(mapLayers);
-
-                if (basin3FeatureCollection && Array.isArray(basin3FeatureCollection.features)) {
-                    L.geoJSON(basin3FeatureCollection, {
-                        pane: 'guidePane',
-                        style: (feature) => {
-                            const basinId = feature.properties.id;
-                            const isActive = !focusZone || basinId === focusZone;
-                            const fillColor = zoneFill[basinId] || feature.properties.color || '#C9CDD4';
-                            return {
-                                color: isActive ? 'rgba(255,255,255,0.86)' : 'rgba(255,255,255,0.48)',
-                                weight: isActive ? 1.2 : 0.85,
-                                fillColor,
-                                fillOpacity: focusZone ? (isActive ? 0.43 : 0.16) : 0.36
-                            };
-                        },
-                        onEachFeature: (feature, layer) => {
-                            const basinId = feature.properties.id;
-                            layer.bindTooltip(
-                                `<strong>${feature.properties.name || zoneLabels[basinId] || basinId}</strong>`,
-                                { className: 'map-zone-tip', sticky: true }
-                            );
-                        }
-                    }).addTo(mapLayers);
-                }
-
-                // Official DanubeGIS layer: DRBMP2021:River4000 (Danube_River500_Labels_Zoom_Levels style).
-                L.imageOverlay('./data/maps/source/danubegis_river4000.png', officialOverlayBounds, {
-                    pane: 'riverPane',
-                    opacity: focusZone ? 0.26 : 0.32,
-                    interactive: false,
-                    className: 'map-danube-highlight'
-                }).addTo(mapLayers);
-
-                // Official DanubeGIS layer: DRBMP2021:Danube (Danube style) for main stem emphasis.
-                L.imageOverlay('./data/maps/source/danubegis_danube.png', officialOverlayBounds, {
-                    pane: 'riverPane',
-                    opacity: focusZone ? 0.9 : 0.94,
-                    interactive: false,
-                    className: 'map-danube-mainline-overlay'
-                }).addTo(mapLayers);
-
-                if (bounds && typeof bounds.latMin === 'number') {
-                    const dataBounds = L.latLngBounds(
-                        [bounds.latMin, bounds.lonMin],
-                        [bounds.latMax, bounds.lonMax]
-                    );
-                    map.fitBounds(dataBounds.pad(0.12));
-                    map.setMaxBounds(dataBounds.pad(0.2));
-                }
-
-                mapTitle.textContent = mapData.title || 'Danube River Basin';
-                setTimeout(() => map.invalidateSize(), 60);
-            };
-
-            const activateMap = async (mapId) => {
-                const meta = mapMetaById.get(mapId);
-                if (!meta) return;
-                setActiveButton(mapId);
-                activeMapId = mapId;
-                try {
-                    let mapData = dataCache.get(mapId);
-                    if (!mapData) {
-                        mapData = await loadJson(`./data/maps/${meta.file}`);
-                        dataCache.set(mapId, mapData);
-                    }
-                    if (activeMapId === mapId) renderMap(mapData);
-                } catch (error) {
-                    mapTitle.textContent = 'Map Data Unavailable';
-                    console.error(error);
-                }
-            };
-
-            const buildMapSwitcher = (maps) => {
-                mapSwitcher.innerHTML = '';
-                switcherButtons.clear();
-                maps.forEach((meta) => {
-                    mapMetaById.set(meta.id, meta);
-                    const button = document.createElement('button');
-                    button.type = 'button';
-                    button.className = 'map-switcher-btn';
-                    button.textContent = meta.label || meta.id;
-                    button.setAttribute('aria-pressed', 'false');
-                    button.addEventListener('click', () => activateMap(meta.id));
-                    mapSwitcher.appendChild(button);
-                    switcherButtons.set(meta.id, button);
-                });
-            };
-
-            const initMaps = async () => {
-                try {
-                    const [basins3Data, mapIndex] = await Promise.all([
-                        loadJson('./data/maps/danube-basins3.geojson'),
-                        loadJson('./data/maps/maps-index.json')
-                    ]);
-                    basin3FeatureCollection = basins3Data;
-                    const maps = Array.isArray(mapIndex.maps) ? mapIndex.maps : [];
-                    if (!maps.length) throw new Error('No map definitions found.');
-                    buildMapSwitcher(maps);
-                    const defaultMap = mapIndex.defaultMap || maps[0].id;
-                    await activateMap(defaultMap);
-                } catch (error) {
-                    mapTitle.textContent = 'Map Data Unavailable';
-                    console.error(error);
-                }
-            };
-            window.addEventListener('resize', () => map.invalidateSize());
-            initMaps();
-        }
-    }
-
-    initKpiSummary();
-})();
-</script>
+    </footer>
 </body>
 </html>
-
-
-
-
-
-

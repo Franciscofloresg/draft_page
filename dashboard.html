@@ -6,6 +6,7 @@
     <title>draft_page | dashboard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
     <style>
         :root {
@@ -184,6 +185,72 @@
             min-height: 320px;
         }
         .chart-compact { height: 300px; }
+        .map-panel-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.65rem;
+            margin-bottom: 0.75rem;
+        }
+        .map-panel-title {
+            color: var(--gray-600);
+            font-size: 0.73rem;
+            font-weight: 700;
+            letter-spacing: 0.9px;
+            text-transform: uppercase;
+        }
+        .map-switcher {
+            display: flex;
+            gap: 0.45rem;
+            flex-wrap: wrap;
+        }
+        .map-switcher-btn {
+            appearance: none;
+            border: 1px solid rgba(27,58,107,0.24);
+            border-radius: 999px;
+            background: rgba(255,255,255,0.9);
+            color: rgba(27,58,107,0.88);
+            padding: 5px 11px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            line-height: 1;
+            cursor: pointer;
+            transition: all 0.18s ease;
+        }
+        .map-switcher-btn:hover {
+            border-color: rgba(27,58,107,0.5);
+            background: rgba(232,244,251,0.86);
+        }
+        .map-switcher-btn.is-active {
+            background: #1B3A6B;
+            border-color: #1B3A6B;
+            color: #ffffff;
+        }
+        .map-frame {
+            border: 1px solid rgba(27,58,107,0.14);
+            border-radius: 12px;
+            overflow: hidden;
+            background: linear-gradient(170deg, #ecf3fb 0%, #dce8f7 100%);
+        }
+        #danube-map {
+            width: 100%;
+            height: 460px;
+            display: block;
+        }
+        .leaflet-container { font-family: var(--font); }
+        .leaflet-tooltip.map-zone-tip {
+            background: rgba(15,37,71,0.95);
+            border: 1px solid rgba(255,255,255,0.16);
+            color: #ffffff;
+            border-radius: 8px;
+            box-shadow: none;
+            padding: 7px 10px;
+            font-size: 12px;
+        }
+        .leaflet-tooltip.map-zone-tip::before {
+            border-top-color: rgba(15,37,71,0.95);
+        }
         .ld003-grid {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -337,6 +404,7 @@
             .hero-panel { grid-template-columns: 1fr; }
             .kpi-grid { grid-template-columns: repeat(2, 1fr); }
             .chart-host { height: 330px; }
+            #danube-map { height: 360px; }
             .ld003-grid { grid-template-columns: 1fr; }
             .danser-footer-inner { padding: 1.15rem 1rem 1rem; }
             .danser-footer::after {
@@ -350,6 +418,7 @@
         @media (max-width: 620px) {
             .nav-links a:nth-child(n+3) { display: none; }
             .kpi-grid { grid-template-columns: 1fr; }
+            #danube-map { height: 300px; }
             .danser-footer-inner {
                 padding: 1rem 1rem 0.9rem;
             }
@@ -379,7 +448,8 @@
     </a>
     <div class="nav-links">
         <a href="./index.html">Home</a>
-        <a href="./dashboard.html" class="is-active">Dashboard</a>
+        <a href="./dashboard.html" class="is-active">Graphs &amp; Maps</a>
+        <a href="#danube-map-section">Map Explorer</a>
         <a href="#river-daily">River Daily</a>
         <a href="#ld003-biodiversity">LD-003</a>
     </div>
@@ -411,6 +481,17 @@
     <section class="kpi-grid" id="kpi-grid" aria-label="Key performance indicators"></section>
 
     <section class="grid">
+        <article class="panel span-12" id="danube-map-section">
+            <h3>Danube Basin Map Explorer</h3>
+            <div class="map-panel-toolbar">
+                <span class="map-panel-title" id="map-title">Danube River Basin - Upper / Middle / Lower</span>
+                <div class="map-switcher" id="map-switcher" aria-label="Map selector"></div>
+            </div>
+            <div class="map-frame">
+                <div id="danube-map" role="img" aria-label="Danube River Basin divided into upper, middle and lower basins"></div>
+            </div>
+        </article>
+
         <article class="panel span-12" id="river-daily">
             <h3>Daily River Monitoring (2025)</h3>
             <div class="panel-toolbar">
@@ -515,6 +596,7 @@
     </div>
 </footer>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="./scripts/dashboard.js"></script>
 </body>
 </html>
