@@ -22,6 +22,7 @@
             --gray-200: #E2E8F0;
             --gray-400: #94A3B8;
             --gray-600: #475569;
+            --gray-700: #334155;
             --gray-800: #1E293B;
             --font: 'Inter', system-ui, -apple-system, sans-serif;
         }
@@ -115,6 +116,53 @@
             color: rgba(255,255,255,0.9);
         }
         .hero-meta strong { color: #fff; font-weight: 700; }
+        .dashboard-tabs {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.55rem;
+            margin-bottom: 1rem;
+        }
+        .dashboard-tab-btn {
+            appearance: none;
+            border: 1px solid rgba(27,58,107,0.18);
+            background: #ffffff;
+            color: rgba(27,58,107,0.82);
+            border-radius: 999px;
+            padding: 0.52rem 0.95rem;
+            font-size: 0.77rem;
+            font-weight: 700;
+            letter-spacing: 0.25px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .dashboard-tab-btn:hover {
+            border-color: rgba(27,58,107,0.4);
+            background: rgba(241, 248, 255, 0.9);
+        }
+        .dashboard-tab-btn.is-active {
+            background: #1B3A6B;
+            color: #ffffff;
+            border-color: #1B3A6B;
+            box-shadow: 0 8px 16px rgba(27,58,107,0.22);
+        }
+        .dashboard-tab-panel {
+            display: none;
+            animation: tabFadeIn 0.28s ease;
+        }
+        .dashboard-tab-panel.is-active {
+            display: block;
+        }
+        @keyframes tabFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
         .kpi-grid {
             display: grid;
@@ -279,6 +327,296 @@
         .span-8 { grid-column: span 8; }
         .span-6 { grid-column: span 6; }
         .span-4 { grid-column: span 4; }
+        .workspace-panel {
+            padding: 1rem;
+        }
+        .workspace-shell {
+            display: grid;
+            grid-template-columns: 240px minmax(0, 1fr) 290px;
+            gap: 0.8rem;
+            align-items: start;
+        }
+        .workspace-box {
+            border: 1px solid rgba(27,58,107,0.13);
+            border-radius: 12px;
+            background: #fbfdff;
+            min-height: 100%;
+        }
+        .workspace-box-header {
+            padding: 0.7rem 0.75rem 0.55rem;
+            border-bottom: 1px solid rgba(27,58,107,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+        }
+        .workspace-box h4 {
+            font-size: 0.78rem;
+            color: var(--navy);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            font-weight: 800;
+        }
+        .workspace-light-btn {
+            appearance: none;
+            border: 1px solid rgba(27,58,107,0.18);
+            border-radius: 8px;
+            background: #ffffff;
+            color: var(--gray-600);
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 4px 8px;
+            cursor: pointer;
+        }
+        .workspace-light-btn:hover {
+            border-color: rgba(27,58,107,0.35);
+            color: var(--navy);
+        }
+        .workspace-search {
+            padding: 0.7rem 0.75rem 0;
+        }
+        .workspace-search input {
+            width: 100%;
+            border: 1px solid rgba(27,58,107,0.22);
+            border-radius: 8px;
+            padding: 7px 10px;
+            font: inherit;
+            font-size: 0.78rem;
+            color: var(--gray-800);
+            background: #ffffff;
+        }
+        .workspace-layer-list {
+            padding: 0.75rem;
+            display: grid;
+            gap: 0.75rem;
+        }
+        .workspace-layer-group h5 {
+            color: var(--gray-600);
+            font-size: 0.67rem;
+            text-transform: uppercase;
+            letter-spacing: 0.75px;
+            margin-bottom: 0.4rem;
+        }
+        .workspace-layer-items {
+            display: grid;
+            gap: 0.32rem;
+        }
+        .workspace-layer-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.25rem 0.3rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            color: var(--gray-700);
+        }
+        .workspace-layer-item:hover {
+            background: rgba(177, 215, 242, 0.16);
+        }
+        .workspace-layer-item input {
+            accent-color: var(--navy);
+        }
+        .workspace-map-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.65rem;
+            padding: 0.7rem 0.75rem;
+            border-bottom: 1px solid rgba(27,58,107,0.1);
+        }
+        .workspace-map-search {
+            display: flex;
+            align-items: center;
+            gap: 0.42rem;
+            min-width: min(100%, 340px);
+            flex: 1;
+        }
+        .workspace-map-search input {
+            flex: 1;
+            border: 1px solid rgba(27,58,107,0.22);
+            border-radius: 8px;
+            padding: 7px 10px;
+            font: inherit;
+            font-size: 0.78rem;
+            background: #ffffff;
+        }
+        .workspace-map-search button {
+            appearance: none;
+            border: 1px solid rgba(27,58,107,0.2);
+            border-radius: 8px;
+            background: #ffffff;
+            color: var(--navy);
+            padding: 6px 10px;
+            font-size: 0.73rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .workspace-map-search button:hover {
+            background: rgba(27,58,107,0.06);
+        }
+        .workspace-map-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            flex-wrap: wrap;
+        }
+        .workspace-map-controls label {
+            font-size: 0.71rem;
+            color: var(--gray-600);
+            text-transform: uppercase;
+            letter-spacing: 0.65px;
+            font-weight: 700;
+        }
+        .workspace-map-controls select {
+            border: 1px solid rgba(27,58,107,0.22);
+            border-radius: 8px;
+            padding: 6px 9px;
+            font: inherit;
+            font-size: 0.75rem;
+            color: var(--gray-800);
+            background: #ffffff;
+        }
+        .workspace-action-btn {
+            appearance: none;
+            border: 1px solid rgba(27,58,107,0.2);
+            border-radius: 8px;
+            background: #ffffff;
+            color: var(--gray-700);
+            padding: 6px 10px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .workspace-action-btn:hover {
+            border-color: rgba(27,58,107,0.4);
+            color: var(--navy);
+        }
+        .workspace-map-frame {
+            margin: 0.75rem;
+            border: 1px solid rgba(27,58,107,0.13);
+            border-radius: 12px;
+            overflow: hidden;
+            background: linear-gradient(165deg, #ebf4fb 0%, #d9e6f6 100%);
+        }
+        #operations-map {
+            width: 100%;
+            height: 470px;
+        }
+        .workspace-timeline {
+            display: grid;
+            gap: 0.4rem;
+            padding: 0 0.75rem 0.72rem;
+        }
+        .workspace-timeline-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            color: var(--gray-600);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.65px;
+        }
+        .workspace-timeline output {
+            color: var(--navy);
+            font-size: 0.76rem;
+            font-weight: 800;
+            letter-spacing: 0.4px;
+        }
+        .workspace-timeline input[type="range"] {
+            width: 100%;
+            accent-color: #1B3A6B;
+        }
+        .workspace-timeline-years {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.5rem;
+            color: #64748b;
+            font-size: 0.66rem;
+        }
+        .workspace-feature-body {
+            padding: 0.75rem;
+        }
+        .workspace-feature-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            border-radius: 999px;
+            padding: 4px 9px;
+            background: rgba(34, 197, 94, 0.14);
+            color: #166534;
+            font-size: 0.68rem;
+            font-weight: 700;
+            margin-bottom: 0.6rem;
+        }
+        .workspace-feature-status::before {
+            content: "";
+            width: 7px;
+            height: 7px;
+            border-radius: 999px;
+            background: currentColor;
+        }
+        .workspace-feature-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: var(--navy);
+            line-height: 1.3;
+        }
+        .workspace-feature-code {
+            margin-top: 0.18rem;
+            color: var(--gray-600);
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .workspace-feature-grid {
+            margin-top: 0.72rem;
+            display: grid;
+            gap: 0.45rem;
+        }
+        .workspace-feature-row {
+            display: grid;
+            grid-template-columns: minmax(88px, 34%) 1fr;
+            gap: 0.5rem;
+            align-items: baseline;
+            font-size: 0.75rem;
+        }
+        .workspace-feature-row dt {
+            color: var(--gray-600);
+            font-weight: 700;
+        }
+        .workspace-feature-row dd {
+            color: var(--gray-800);
+            font-weight: 600;
+            margin: 0;
+        }
+        .workspace-feature-actions {
+            display: grid;
+            gap: 0.45rem;
+            margin-top: 0.85rem;
+        }
+        .workspace-feature-actions button {
+            appearance: none;
+            width: 100%;
+            border: 1px solid rgba(27,58,107,0.2);
+            border-radius: 8px;
+            background: #ffffff;
+            color: var(--gray-700);
+            font-size: 0.73rem;
+            font-weight: 700;
+            text-align: left;
+            padding: 8px 10px;
+            cursor: pointer;
+        }
+        .workspace-feature-actions button:hover {
+            border-color: rgba(27,58,107,0.45);
+            color: var(--navy);
+            background: rgba(241, 248, 255, 0.9);
+        }
+        .workspace-feature-actions button.is-primary {
+            background: rgba(27,58,107,0.08);
+            color: var(--navy);
+        }
 
         .footer-note {
             margin-top: 0.9rem;
@@ -396,6 +734,13 @@
             .kpi-grid { grid-template-columns: repeat(3, 1fr); }
             .span-8, .span-6, .span-4 { grid-column: span 12; }
             .ld003-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .workspace-shell {
+                grid-template-columns: 220px minmax(0, 1fr);
+            }
+            .workspace-feature-panel {
+                grid-column: 1 / -1;
+            }
+            #operations-map { height: 420px; }
         }
         @media (max-width: 900px) {
             nav { padding: 0 1rem; }
@@ -414,11 +759,16 @@
             .danser-footer-top { grid-template-columns: 1fr; }
             .danser-footer-funding { grid-template-columns: 1fr; }
             .danser-follow-card { justify-self: start; }
+            .workspace-shell { grid-template-columns: 1fr; }
+            .workspace-map-toolbar { padding: 0.6rem 0.65rem; }
+            .workspace-map-frame { margin: 0.65rem; }
+            #operations-map { height: 360px; }
         }
         @media (max-width: 620px) {
             .nav-links a:nth-child(n+3) { display: none; }
             .kpi-grid { grid-template-columns: 1fr; }
             #danube-map { height: 300px; }
+            #operations-map { height: 300px; }
             .danser-footer-inner {
                 padding: 1rem 1rem 0.9rem;
             }
@@ -450,6 +800,7 @@
         <a href="./index.html">Home</a>
         <a href="./dashboard.html" class="is-active">Graphs &amp; Maps</a>
         <a href="#danube-map-section">Map Explorer</a>
+        <a href="#map-workspace-section" data-open-tab="map-workspace">Map Workspace</a>
         <a href="#river-daily">River Daily</a>
         <a href="#ld003-biodiversity">LD-003</a>
     </div>
@@ -478,93 +829,224 @@
         </aside>
     </section>
 
-    <section class="kpi-grid" id="kpi-grid" aria-label="Key performance indicators"></section>
+    <section class="dashboard-tabs" aria-label="Dashboard views">
+        <button class="dashboard-tab-btn is-active" type="button" data-tab-target="analytics">Analytics</button>
+        <button class="dashboard-tab-btn" type="button" data-tab-target="map-workspace">Map Workspace</button>
+    </section>
 
-    <section class="grid">
-        <article class="panel span-12" id="danube-map-section">
-            <h3>Danube Basin Map Explorer</h3>
-            <div class="map-panel-toolbar">
-                <span class="map-panel-title" id="map-title">Danube River Basin - Upper / Middle / Lower</span>
-                <div class="map-switcher" id="map-switcher" aria-label="Map selector"></div>
-            </div>
-            <div class="map-frame">
-                <div id="danube-map" role="img" aria-label="Danube River Basin divided into upper, middle and lower basins"></div>
-            </div>
-        </article>
+    <section class="dashboard-tab-panel is-active" data-tab-panel="analytics">
+        <section class="kpi-grid" id="kpi-grid" aria-label="Key performance indicators"></section>
 
-        <article class="panel span-12" id="river-daily">
-            <h3>Daily River Monitoring (2025)</h3>
-            <div class="panel-toolbar">
-                <label for="river-metric-select">Metric</label>
-                <select id="river-metric-select">
-                    <option value="water_level_cm">Water level H</option>
-                    <option value="discharge_m3s">Discharge Q</option>
-                    <option value="water_temp_c">Water temperature t</option>
-                </select>
-                <label for="river-aggregation-select">Resolution</label>
-                <select id="river-aggregation-select">
-                    <option value="daily">Daily</option>
-                    <option value="weekly">Weekly mean</option>
-                    <option value="monthly">Monthly mean</option>
-                </select>
-                <label for="river-point-select">Station</label>
-                <select id="river-point-select">
-                    <option value="all">All stations</option>
-                </select>
-                <label for="river-start-date">From</label>
-                <input id="river-start-date" type="date">
-                <label for="river-end-date">Until</label>
-                <input id="river-end-date" type="date">
-            </div>
-            <div id="river-chart" class="chart-host chart-tall"></div>
-        </article>
+        <section class="grid">
+            <article class="panel span-12" id="danube-map-section">
+                <h3>Danube Basin Map Explorer</h3>
+                <div class="map-panel-toolbar">
+                    <span class="map-panel-title" id="map-title">Danube River Basin - Upper / Middle / Lower</span>
+                    <div class="map-switcher" id="map-switcher" aria-label="Map selector"></div>
+                </div>
+                <div class="map-frame">
+                    <div id="danube-map" role="img" aria-label="Danube River Basin divided into upper, middle and lower basins"></div>
+                </div>
+            </article>
 
-        <article class="panel span-6" id="river-rates">
-            <h3>Monthly Rate of Change by Station</h3>
-            <div id="river-rate-chart" class="chart-host chart-square"></div>
-        </article>
+            <article class="panel span-12" id="river-daily">
+                <h3>Daily River Monitoring (2025)</h3>
+                <div class="panel-toolbar">
+                    <label for="river-metric-select">Metric</label>
+                    <select id="river-metric-select">
+                        <option value="water_level_cm">Water level H</option>
+                        <option value="discharge_m3s">Discharge Q</option>
+                        <option value="water_temp_c">Water temperature t</option>
+                    </select>
+                    <label for="river-aggregation-select">Resolution</label>
+                    <select id="river-aggregation-select">
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly mean</option>
+                        <option value="monthly">Monthly mean</option>
+                    </select>
+                    <label for="river-point-select">Station</label>
+                    <select id="river-point-select">
+                        <option value="all">All stations</option>
+                    </select>
+                    <label for="river-start-date">From</label>
+                    <input id="river-start-date" type="date">
+                    <label for="river-end-date">Until</label>
+                    <input id="river-end-date" type="date">
+                </div>
+                <div id="river-chart" class="chart-host chart-tall"></div>
+            </article>
 
-        <article class="panel span-6" id="river-distribution">
-            <h3>Station Distribution</h3>
-            <div id="river-distribution-chart" class="chart-host chart-square"></div>
-        </article>
+            <article class="panel span-6" id="river-rates">
+                <h3>Monthly Rate of Change by Station</h3>
+                <div id="river-rate-chart" class="chart-host chart-square"></div>
+            </article>
 
-        <article class="panel span-12" id="ld003-biodiversity">
-            <h3>LD-003: Biodiversity monitoring</h3>
-            <div class="panel-toolbar">
-                <label for="ld003-basin-select">Basin</label>
-                <select id="ld003-basin-select">
-                    <option value="all">All basins</option>
-                    <option value="upper">Upper Danube</option>
-                    <option value="middle">Middle Danube</option>
-                    <option value="lower">Lower Danube</option>
-                </select>
-                <label for="ld003-value-mode-select">Metric</label>
-                <select id="ld003-value-mode-select">
-                    <option value="count">Observation count</option>
-                    <option value="units">Observed units</option>
-                </select>
-            </div>
-            <div class="ld003-grid">
-                <section class="ld003-card ld003-card-wide">
-                    <h4>Monthly Activity by Taxonomic Group</h4>
-                    <div id="ld003-monthly-chart" class="chart-host chart-compact"></div>
+            <article class="panel span-6" id="river-distribution">
+                <h3>Station Distribution</h3>
+                <div id="river-distribution-chart" class="chart-host chart-square"></div>
+            </article>
+
+            <article class="panel span-12" id="ld003-biodiversity">
+                <h3>LD-003: Biodiversity monitoring</h3>
+                <div class="panel-toolbar">
+                    <label for="ld003-basin-select">Basin</label>
+                    <select id="ld003-basin-select">
+                        <option value="all">All basins</option>
+                        <option value="upper">Upper Danube</option>
+                        <option value="middle">Middle Danube</option>
+                        <option value="lower">Lower Danube</option>
+                    </select>
+                    <label for="ld003-value-mode-select">Metric</label>
+                    <select id="ld003-value-mode-select">
+                        <option value="count">Observation count</option>
+                        <option value="units">Observed units</option>
+                    </select>
+                </div>
+                <div class="ld003-grid">
+                    <section class="ld003-card ld003-card-wide">
+                        <h4>Monthly Activity by Taxonomic Group</h4>
+                        <div id="ld003-monthly-chart" class="chart-host chart-compact"></div>
+                    </section>
+                    <section class="ld003-card">
+                        <h4>Habitat x Taxonomic Group Intensity</h4>
+                        <div id="ld003-heatmap-chart" class="chart-host chart-compact"></div>
+                    </section>
+                    <section class="ld003-card">
+                        <h4>Site Richness vs Monitoring Effort</h4>
+                        <div id="ld003-site-chart" class="chart-host chart-compact"></div>
+                    </section>
+                </div>
+            </article>
+        </section>
+
+        <p class="footer-note">
+            Synthetic files were created to prototype style and interactions. Swap them later with real sources without changing the chart structure.
+        </p>
+    </section>
+
+    <section class="dashboard-tab-panel" data-tab-panel="map-workspace" id="map-workspace-section" hidden>
+        <article class="panel workspace-panel">
+            <h3>Operational Graphs &amp; Maps Workspace</h3>
+            <div class="workspace-shell">
+                <aside class="workspace-box workspace-layers-panel">
+                    <header class="workspace-box-header">
+                        <h4>Layers</h4>
+                        <button type="button" class="workspace-light-btn" id="ops-reset-layers">Reset</button>
+                    </header>
+                    <div class="workspace-search">
+                        <input id="ops-layer-search" type="search" placeholder="Search layer...">
+                    </div>
+                    <div class="workspace-layer-list" id="ops-layer-list">
+                        <section class="workspace-layer-group">
+                            <h5>Hydrology</h5>
+                            <div class="workspace-layer-items">
+                                <label class="workspace-layer-item"><input type="checkbox" data-layer-id="basin-zones" checked> Basin zones</label>
+                                <label class="workspace-layer-item"><input type="checkbox" data-layer-id="main-corridor" checked> Danube main corridor</label>
+                                <label class="workspace-layer-item"><input type="checkbox" data-layer-id="monitoring-stations" checked> Monitoring stations</label>
+                            </div>
+                        </section>
+                        <section class="workspace-layer-group">
+                            <h5>Water quality</h5>
+                            <div class="workspace-layer-items">
+                                <label class="workspace-layer-item"><input type="checkbox" data-layer-id="water-quality-hotspots" checked> Water quality hotspots</label>
+                                <label class="workspace-layer-item"><input type="checkbox" data-layer-id="sediment-alerts"> Sediment alerts</label>
+                            </div>
+                        </section>
+                        <section class="workspace-layer-group">
+                            <h5>Restoration</h5>
+                            <div class="workspace-layer-items">
+                                <label class="workspace-layer-item"><input type="checkbox" data-layer-id="restoration-sites" checked> Nature restoration sites</label>
+                                <label class="workspace-layer-item"><input type="checkbox" data-layer-id="project-clusters"> Project clusters</label>
+                            </div>
+                        </section>
+                    </div>
+                </aside>
+
+                <section class="workspace-box workspace-map-box">
+                    <div class="workspace-map-toolbar">
+                        <div class="workspace-map-search">
+                            <input id="ops-location-search" type="search" placeholder="Search station or city">
+                            <button type="button" id="ops-location-search-btn">Find</button>
+                        </div>
+                        <div class="workspace-map-controls">
+                            <label for="ops-basemap-select">Basemap</label>
+                            <select id="ops-basemap-select">
+                                <option value="light">Light</option>
+                                <option value="topo">Topographic</option>
+                                <option value="satellite">Satellite</option>
+                            </select>
+                            <button type="button" class="workspace-action-btn">Help</button>
+                            <button type="button" class="workspace-action-btn">Share</button>
+                            <button type="button" class="workspace-action-btn">Export</button>
+                        </div>
+                    </div>
+                    <div class="workspace-map-frame">
+                        <div id="operations-map" role="img" aria-label="Operational map view with layer controls"></div>
+                    </div>
+                    <div class="workspace-timeline">
+                        <div class="workspace-timeline-head">
+                            <span>Reference year</span>
+                            <output for="ops-timeline-year" id="ops-timeline-value">2023</output>
+                        </div>
+                        <input id="ops-timeline-year" type="range" min="2018" max="2026" value="2023" step="1">
+                        <div class="workspace-timeline-years">
+                            <span>2018</span>
+                            <span>2020</span>
+                            <span>2022</span>
+                            <span>2024</span>
+                            <span>2026</span>
+                        </div>
+                    </div>
                 </section>
-                <section class="ld003-card">
-                    <h4>Habitat x Taxonomic Group Intensity</h4>
-                    <div id="ld003-heatmap-chart" class="chart-host chart-compact"></div>
-                </section>
-                <section class="ld003-card">
-                    <h4>Site Richness vs Monitoring Effort</h4>
-                    <div id="ld003-site-chart" class="chart-host chart-compact"></div>
-                </section>
+
+                <aside class="workspace-box workspace-feature-panel">
+                    <header class="workspace-box-header">
+                        <h4>Feature information</h4>
+                    </header>
+                    <div class="workspace-feature-body">
+                        <div class="workspace-feature-status" id="ops-feature-status">Operational</div>
+                        <p class="workspace-feature-title" id="ops-feature-title">WQ_200345, Vienna monitoring station</p>
+                        <p class="workspace-feature-code" id="ops-feature-code">Danube Public Monitoring Network</p>
+                        <dl class="workspace-feature-grid">
+                            <div class="workspace-feature-row">
+                                <dt>Owner</dt>
+                                <dd id="ops-feature-owner">ICPDR</dd>
+                            </div>
+                            <div class="workspace-feature-row">
+                                <dt>Parameter</dt>
+                                <dd id="ops-feature-parameter">Nitrate (NO3)</dd>
+                            </div>
+                            <div class="workspace-feature-row">
+                                <dt>Date</dt>
+                                <dd id="ops-feature-date">15 Mar 2026</dd>
+                            </div>
+                            <div class="workspace-feature-row">
+                                <dt>Value</dt>
+                                <dd id="ops-feature-value">4.2 mg/L</dd>
+                            </div>
+                            <div class="workspace-feature-row">
+                                <dt>Basin</dt>
+                                <dd id="ops-feature-basin">Upper Danube</dd>
+                            </div>
+                            <div class="workspace-feature-row">
+                                <dt>Country</dt>
+                                <dd id="ops-feature-country">Austria</dd>
+                            </div>
+                            <div class="workspace-feature-row">
+                                <dt>Data source</dt>
+                                <dd id="ops-feature-source">Public National Water Monitoring</dd>
+                            </div>
+                        </dl>
+                        <div class="workspace-feature-actions">
+                            <button class="is-primary" type="button">View in Dashboard</button>
+                            <button type="button">View in Dataset Catalogue</button>
+                            <button type="button">Add to Collection</button>
+                        </div>
+                    </div>
+                </aside>
             </div>
         </article>
     </section>
-
-    <p class="footer-note">
-        Synthetic files were created to prototype style and interactions. Swap them later with real sources without changing the chart structure.
-    </p>
 </main>
 
 <footer class="danser-footer" id="footer">

@@ -14,16 +14,184 @@
         middle: 'Middle Danube',
         lower: 'Lower Danube'
     };
+    const OPS_DEFAULT_YEAR = 2023;
+    const OPS_MONITORING_STATIONS = [
+        {
+            id: 'WQ_200345',
+            name: 'Vienna monitoring station',
+            basin: 'upper',
+            country: 'Austria',
+            owner: 'ICPDR',
+            source: 'Public National Water Monitoring',
+            parameter: 'Nitrate (NO3)',
+            unit: 'mg/L',
+            coords: [48.2082, 16.3738],
+            yearly: {
+                2018: { value: 5.1, status: 'Operational', date: '2018-03-16' },
+                2019: { value: 5.0, status: 'Operational', date: '2019-03-20' },
+                2020: { value: 4.8, status: 'Operational', date: '2020-03-14' },
+                2021: { value: 4.7, status: 'Operational', date: '2021-03-15' },
+                2022: { value: 4.5, status: 'Operational', date: '2022-03-11' },
+                2023: { value: 4.2, status: 'Operational', date: '2023-03-12' },
+                2024: { value: 4.0, status: 'Operational', date: '2024-03-17' },
+                2025: { value: 4.1, status: 'Operational', date: '2025-03-18' },
+                2026: { value: 3.9, status: 'Operational', date: '2026-03-15' }
+            }
+        },
+        {
+            id: 'WQ_334210',
+            name: 'Budapest monitoring station',
+            basin: 'middle',
+            country: 'Hungary',
+            owner: 'National Water Directorate',
+            source: 'National Surface Water Program',
+            parameter: 'Nitrate (NO3)',
+            unit: 'mg/L',
+            coords: [47.4979, 19.0402],
+            yearly: {
+                2018: { value: 6.2, status: 'Watch', date: '2018-04-04' },
+                2019: { value: 6.0, status: 'Watch', date: '2019-04-06' },
+                2020: { value: 5.7, status: 'Watch', date: '2020-04-05' },
+                2021: { value: 5.3, status: 'Operational', date: '2021-04-03' },
+                2022: { value: 5.0, status: 'Operational', date: '2022-04-08' },
+                2023: { value: 4.8, status: 'Operational', date: '2023-04-02' },
+                2024: { value: 4.6, status: 'Operational', date: '2024-04-09' },
+                2025: { value: 4.7, status: 'Operational', date: '2025-04-06' },
+                2026: { value: 4.4, status: 'Operational', date: '2026-04-07' }
+            }
+        },
+        {
+            id: 'WQ_411550',
+            name: 'Belgrade monitoring station',
+            basin: 'middle',
+            country: 'Serbia',
+            owner: 'Republic Hydrometeorological Service',
+            source: 'Public River Monitoring',
+            parameter: 'Nitrate (NO3)',
+            unit: 'mg/L',
+            coords: [44.7866, 20.4489],
+            yearly: {
+                2018: { value: 7.4, status: 'Alert', date: '2018-05-10' },
+                2019: { value: 7.0, status: 'Watch', date: '2019-05-06' },
+                2020: { value: 6.8, status: 'Watch', date: '2020-05-11' },
+                2021: { value: 6.4, status: 'Watch', date: '2021-05-09' },
+                2022: { value: 6.1, status: 'Watch', date: '2022-05-12' },
+                2023: { value: 5.8, status: 'Watch', date: '2023-05-14' },
+                2024: { value: 5.5, status: 'Operational', date: '2024-05-15' },
+                2025: { value: 5.3, status: 'Operational', date: '2025-05-13' },
+                2026: { value: 5.0, status: 'Operational', date: '2026-05-16' }
+            }
+        },
+        {
+            id: 'WQ_509890',
+            name: 'Iron Gates monitoring station',
+            basin: 'lower',
+            country: 'Romania',
+            owner: 'Romanian Waters National Administration',
+            source: 'Danube Water Quality Network',
+            parameter: 'Nitrate (NO3)',
+            unit: 'mg/L',
+            coords: [44.6755, 22.5210],
+            yearly: {
+                2018: { value: 5.9, status: 'Watch', date: '2018-06-20' },
+                2019: { value: 5.7, status: 'Watch', date: '2019-06-17' },
+                2020: { value: 5.4, status: 'Operational', date: '2020-06-18' },
+                2021: { value: 5.0, status: 'Operational', date: '2021-06-19' },
+                2022: { value: 4.8, status: 'Operational', date: '2022-06-15' },
+                2023: { value: 4.6, status: 'Operational', date: '2023-06-21' },
+                2024: { value: 4.4, status: 'Operational', date: '2024-06-22' },
+                2025: { value: 4.5, status: 'Operational', date: '2025-06-18' },
+                2026: { value: 4.3, status: 'Operational', date: '2026-06-20' }
+            }
+        },
+        {
+            id: 'WQ_623004',
+            name: 'Tulcea delta station',
+            basin: 'lower',
+            country: 'Romania',
+            owner: 'Danube Delta Biosphere Authority',
+            source: 'Wetland Sentinel Program',
+            parameter: 'Nitrate (NO3)',
+            unit: 'mg/L',
+            coords: [45.1808, 28.8053],
+            yearly: {
+                2018: { value: 4.6, status: 'Operational', date: '2018-07-10' },
+                2019: { value: 4.7, status: 'Operational', date: '2019-07-08' },
+                2020: { value: 4.5, status: 'Operational', date: '2020-07-10' },
+                2021: { value: 4.3, status: 'Operational', date: '2021-07-11' },
+                2022: { value: 4.2, status: 'Operational', date: '2022-07-09' },
+                2023: { value: 4.1, status: 'Operational', date: '2023-07-07' },
+                2024: { value: 4.0, status: 'Operational', date: '2024-07-12' },
+                2025: { value: 4.1, status: 'Operational', date: '2025-07-14' },
+                2026: { value: 3.9, status: 'Operational', date: '2026-07-12' }
+            }
+        }
+    ];
+    const OPS_WATER_HOTSPOTS = [
+        { id: 'HS_URBAN_AT', label: 'Urban runoff hotspot', basin: 'upper', coords: [48.12, 16.72], severity: 0.64 },
+        { id: 'HS_TRIB_HU', label: 'Tributary nutrient load', basin: 'middle', coords: [47.05, 19.9], severity: 0.79 },
+        { id: 'HS_PORT_RS', label: 'Port industrial pressure', basin: 'middle', coords: [44.92, 20.22], severity: 0.88 },
+        { id: 'HS_DELTA_RO', label: 'Delta sediment overload', basin: 'lower', coords: [45.12, 29.21], severity: 0.57 }
+    ];
+    const OPS_RESTORATION_SITES = [
+        { id: 'RS_001', label: 'Riparian wetland restoration', basin: 'upper', coords: [48.01, 14.76] },
+        { id: 'RS_012', label: 'Floodplain reconnection', basin: 'middle', coords: [45.98, 18.85] },
+        { id: 'RS_029', label: 'Delta habitat enhancement', basin: 'lower', coords: [45.27, 28.98] }
+    ];
+    const OPS_PROJECT_CLUSTERS = [
+        { id: 'PC_UP_1', label: 'Upper basin project cluster', coords: [47.6, 13.9], projects: 11 },
+        { id: 'PC_MD_1', label: 'Middle basin project cluster', coords: [46.4, 19.9], projects: 16 },
+        { id: 'PC_LW_1', label: 'Lower basin project cluster', coords: [45.3, 27.5], projects: 9 }
+    ];
+    const OPS_SEDIMENT_ALERTS = [
+        { id: 'SA_100', label: 'High suspended sediment event', coords: [45.9, 21.8], level: 'Moderate' },
+        { id: 'SA_101', label: 'Bank erosion risk segment', coords: [44.5, 22.8], level: 'High' }
+    ];
+    const OPS_CORRIDOR_SEGMENTS = [
+        [[48.66, 12.14], [48.21, 16.37], [47.86, 17.91], [47.5, 19.04]],
+        [[47.5, 19.04], [46.25, 20.15], [45.81, 21.13], [44.79, 20.45]],
+        [[44.79, 20.45], [44.67, 22.52], [44.42, 26.1], [45.18, 28.81]]
+    ];
+    const OPS_STATUS_THEMES = {
+        operational: { label: 'Operational', marker: '#16a34a', chipText: '#166534', chipBg: 'rgba(34,197,94,0.14)' },
+        watch: { label: 'Watch', marker: '#d97706', chipText: '#92400e', chipBg: 'rgba(245,158,11,0.16)' },
+        alert: { label: 'Alert', marker: '#dc2626', chipText: '#991b1b', chipBg: 'rgba(239,68,68,0.16)' }
+    };
+    const OPS_BASEMAP_CONFIG = {
+        light: {
+            url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+            options: { maxZoom: 19, attribution: '&copy; OpenStreetMap contributors &copy; CARTO' }
+        },
+        topo: {
+            url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+            options: { maxZoom: 17, attribution: '&copy; OpenTopoMap contributors' }
+        },
+        satellite: {
+            url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+            options: { maxZoom: 18, attribution: 'Tiles &copy; Esri' }
+        }
+    };
 
     const state = {
         kpis: null,
         riverDaily: null,
         biodiversity: null,
         riverPointColors: {},
-        leafletMap: null
+        leafletMap: null,
+        dashboardActiveTab: 'analytics',
+        operationsMap: null,
+        operationsBasemapLayers: {},
+        operationsActiveBasemap: 'light',
+        operationsLayerGroups: new Map(),
+        operationsStationMarkers: [],
+        operationsActiveFeature: null,
+        operationsSelectedYear: OPS_DEFAULT_YEAR
     };
 
     const el = {
+        dashboardTabButtons: Array.from(document.querySelectorAll('.dashboard-tab-btn[data-tab-target]')),
+        dashboardTabPanels: Array.from(document.querySelectorAll('.dashboard-tab-panel[data-tab-panel]')),
+        navAnchorLinks: Array.from(document.querySelectorAll('.nav-links a[href^="#"]')),
         kpiGrid: document.getElementById('kpi-grid'),
         riverMetricSelect: document.getElementById('river-metric-select'),
         riverAggregationSelect: document.getElementById('river-aggregation-select'),
@@ -40,7 +208,27 @@
         ld003SiteChart: document.getElementById('ld003-site-chart'),
         danubeMap: document.getElementById('danube-map'),
         mapTitle: document.getElementById('map-title'),
-        mapSwitcher: document.getElementById('map-switcher')
+        mapSwitcher: document.getElementById('map-switcher'),
+        operationsMap: document.getElementById('operations-map'),
+        opsBasemapSelect: document.getElementById('ops-basemap-select'),
+        opsTimelineYear: document.getElementById('ops-timeline-year'),
+        opsTimelineValue: document.getElementById('ops-timeline-value'),
+        opsLayerSearch: document.getElementById('ops-layer-search'),
+        opsLayerList: document.getElementById('ops-layer-list'),
+        opsLayerToggles: Array.from(document.querySelectorAll('#ops-layer-list input[type="checkbox"][data-layer-id]')),
+        opsResetLayers: document.getElementById('ops-reset-layers'),
+        opsLocationSearch: document.getElementById('ops-location-search'),
+        opsLocationSearchBtn: document.getElementById('ops-location-search-btn'),
+        opsFeatureStatus: document.getElementById('ops-feature-status'),
+        opsFeatureTitle: document.getElementById('ops-feature-title'),
+        opsFeatureCode: document.getElementById('ops-feature-code'),
+        opsFeatureOwner: document.getElementById('ops-feature-owner'),
+        opsFeatureParameter: document.getElementById('ops-feature-parameter'),
+        opsFeatureDate: document.getElementById('ops-feature-date'),
+        opsFeatureValue: document.getElementById('ops-feature-value'),
+        opsFeatureBasin: document.getElementById('ops-feature-basin'),
+        opsFeatureCountry: document.getElementById('ops-feature-country'),
+        opsFeatureSource: document.getElementById('ops-feature-source')
     };
 
     const toTitle = (str) => str.charAt(0).toUpperCase() + str.slice(1);
@@ -63,6 +251,28 @@
         const g = (num >> 8) & 255;
         const b = num & 255;
         return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    };
+    const formatDate = (value) => {
+        const parsed = new Date(value);
+        if (!Number.isFinite(parsed.getTime())) return value;
+        return parsed.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+    };
+    const parseStatusKey = (status) => {
+        const normalized = String(status || '').trim().toLowerCase();
+        if (normalized.includes('alert') || normalized.includes('critical')) return 'alert';
+        if (normalized.includes('watch') || normalized.includes('warning')) return 'watch';
+        return 'operational';
+    };
+    const getOpsTheme = (status) => OPS_STATUS_THEMES[parseStatusKey(status)] || OPS_STATUS_THEMES.operational;
+    const getOpsMeasurementForYear = (station, year) => {
+        const yearly = station?.yearly || {};
+        const years = Object.keys(yearly).map(Number).sort((a, b) => a - b);
+        if (!years.length) return null;
+        let selectedYear = years[0];
+        years.forEach((candidate) => {
+            if (candidate <= year) selectedYear = candidate;
+        });
+        return { year: selectedYear, ...yearly[selectedYear] };
     };
 
     async function loadJson(path) {
@@ -238,6 +448,382 @@
             setMapTitle('Map Data Unavailable');
             console.error(error);
         }
+    }
+
+    function setDashboardTab(tabId) {
+        const targetTab = tabId === 'map-workspace' ? 'map-workspace' : 'analytics';
+        state.dashboardActiveTab = targetTab;
+
+        el.dashboardTabButtons.forEach((button) => {
+            const isActive = button.dataset.tabTarget === targetTab;
+            button.classList.toggle('is-active', isActive);
+            button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+        });
+
+        el.dashboardTabPanels.forEach((panel) => {
+            const isActive = panel.dataset.tabPanel === targetTab;
+            panel.classList.toggle('is-active', isActive);
+            panel.hidden = !isActive;
+        });
+
+        window.requestAnimationFrame(() => {
+            if (targetTab === 'analytics' && state.leafletMap) state.leafletMap.invalidateSize();
+            if (targetTab === 'map-workspace' && state.operationsMap) state.operationsMap.invalidateSize();
+        });
+    }
+
+    function openAnchorInTab(targetHash, tabId) {
+        const target = document.querySelector(targetHash);
+        if (!target) return;
+        setDashboardTab(tabId);
+        window.requestAnimationFrame(() => {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    }
+
+    function initDashboardTabs() {
+        if (el.dashboardTabButtons.length) {
+            el.dashboardTabButtons.forEach((button) => {
+                button.addEventListener('click', () => {
+                    const targetTab = button.dataset.tabTarget || 'analytics';
+                    setDashboardTab(targetTab);
+                });
+            });
+        }
+
+        if (el.navAnchorLinks.length) {
+            el.navAnchorLinks.forEach((link) => {
+                link.addEventListener('click', (event) => {
+                    const targetHash = link.getAttribute('href');
+                    if (!targetHash || !targetHash.startsWith('#')) return;
+                    event.preventDefault();
+                    const targetTab = link.dataset.openTab || (targetHash === '#map-workspace-section' ? 'map-workspace' : 'analytics');
+                    openAnchorInTab(targetHash, targetTab);
+                    if (window.location.hash !== targetHash) {
+                        window.history.replaceState(null, '', targetHash);
+                    }
+                });
+            });
+        }
+
+        const initialTab = window.location.hash === '#map-workspace-section' ? 'map-workspace' : 'analytics';
+        setDashboardTab(initialTab);
+    }
+
+    function getOpsStationById(stationId) {
+        return OPS_MONITORING_STATIONS.find((station) => station.id === stationId) || null;
+    }
+
+    function renderOpsFeatureInfo(station) {
+        if (!station) return;
+
+        const measurement = getOpsMeasurementForYear(station, state.operationsSelectedYear);
+        const theme = getOpsTheme(measurement?.status);
+        if (el.opsFeatureStatus) {
+            el.opsFeatureStatus.textContent = theme.label;
+            el.opsFeatureStatus.style.color = theme.chipText;
+            el.opsFeatureStatus.style.background = theme.chipBg;
+        }
+        if (el.opsFeatureTitle) el.opsFeatureTitle.textContent = `${station.id}, ${station.name}`;
+        if (el.opsFeatureCode) el.opsFeatureCode.textContent = 'Danube Public Monitoring Network';
+        if (el.opsFeatureOwner) el.opsFeatureOwner.textContent = station.owner || 'n/a';
+        if (el.opsFeatureParameter) el.opsFeatureParameter.textContent = station.parameter || 'n/a';
+        if (el.opsFeatureDate) {
+            el.opsFeatureDate.textContent = measurement?.date ? `${formatDate(measurement.date)} (${measurement.year})` : 'No measurement';
+        }
+        if (el.opsFeatureValue) {
+            const formatted = Number.isFinite(measurement?.value) ? measurement.value.toFixed(1) : 'n/a';
+            el.opsFeatureValue.textContent = `${formatted} ${station.unit || ''}`.trim();
+        }
+        if (el.opsFeatureBasin) el.opsFeatureBasin.textContent = basinLabel(station.basin);
+        if (el.opsFeatureCountry) el.opsFeatureCountry.textContent = station.country || 'n/a';
+        if (el.opsFeatureSource) el.opsFeatureSource.textContent = station.source || 'n/a';
+    }
+
+    function setActiveOpsFeature(stationId) {
+        const station = typeof stationId === 'string' ? getOpsStationById(stationId) : stationId;
+        if (!station) return;
+        state.operationsActiveFeature = station.id;
+        renderOpsFeatureInfo(station);
+        refreshOpsStationsForYear();
+    }
+
+    function buildOpsPopup(station, measurement) {
+        const theme = getOpsTheme(measurement?.status);
+        const value = Number.isFinite(measurement?.value) ? measurement.value.toFixed(1) : 'n/a';
+        const dateLabel = measurement?.date ? formatDate(measurement.date) : 'No date';
+        return `
+            <strong>${station.name}</strong><br>
+            <span>${station.id} - ${basinLabel(station.basin)}</span><br>
+            <span>Status: ${theme.label}</span><br>
+            <span>${station.parameter}: ${value} ${station.unit}</span><br>
+            <span>${dateLabel}</span>
+        `;
+    }
+
+    function refreshOpsStationsForYear() {
+        state.operationsStationMarkers.forEach((entry) => {
+            const measurement = getOpsMeasurementForYear(entry.station, state.operationsSelectedYear);
+            const theme = getOpsTheme(measurement?.status);
+            entry.marker.setStyle({
+                fillColor: theme.marker,
+                color: '#ffffff',
+                weight: 1.4,
+                opacity: 0.95,
+                fillOpacity: 0.9,
+                radius: state.operationsActiveFeature === entry.station.id ? 8 : 7
+            });
+            entry.marker.bindPopup(buildOpsPopup(entry.station, measurement));
+        });
+
+        if (state.operationsActiveFeature) {
+            const activeStation = getOpsStationById(state.operationsActiveFeature);
+            if (activeStation) renderOpsFeatureInfo(activeStation);
+        }
+    }
+
+    function setOpsYear(yearValue) {
+        const parsed = Number(yearValue);
+        if (!Number.isFinite(parsed)) return;
+        state.operationsSelectedYear = parsed;
+        if (el.opsTimelineYear) el.opsTimelineYear.value = String(parsed);
+        if (el.opsTimelineValue) el.opsTimelineValue.textContent = String(parsed);
+        refreshOpsStationsForYear();
+    }
+
+    function setOpsBasemap(basemapId) {
+        if (!state.operationsMap) return;
+        const requested = OPS_BASEMAP_CONFIG[basemapId] ? basemapId : 'light';
+        const nextLayer = state.operationsBasemapLayers[requested];
+        if (!nextLayer) return;
+
+        const currentLayer = state.operationsBasemapLayers[state.operationsActiveBasemap];
+        if (currentLayer && state.operationsMap.hasLayer(currentLayer)) {
+            state.operationsMap.removeLayer(currentLayer);
+        }
+        if (!state.operationsMap.hasLayer(nextLayer)) {
+            nextLayer.addTo(state.operationsMap);
+        }
+        state.operationsActiveBasemap = requested;
+        if (el.opsBasemapSelect) el.opsBasemapSelect.value = requested;
+    }
+
+    function setOpsLayerVisibility(layerId, isVisible) {
+        if (!state.operationsMap) return;
+        const layerGroup = state.operationsLayerGroups.get(layerId);
+        if (!layerGroup) return;
+        if (isVisible) {
+            if (!state.operationsMap.hasLayer(layerGroup)) layerGroup.addTo(state.operationsMap);
+            return;
+        }
+        if (state.operationsMap.hasLayer(layerGroup)) {
+            state.operationsMap.removeLayer(layerGroup);
+        }
+    }
+
+    function filterOpsLayerList(queryText) {
+        if (!el.opsLayerList) return;
+        const query = String(queryText || '').trim().toLowerCase();
+        const groups = Array.from(el.opsLayerList.querySelectorAll('.workspace-layer-group'));
+
+        groups.forEach((group) => {
+            const items = Array.from(group.querySelectorAll('.workspace-layer-item'));
+            let visibleCount = 0;
+            items.forEach((item) => {
+                const label = item.textContent.toLowerCase();
+                const visible = !query || label.includes(query);
+                item.hidden = !visible;
+                if (visible) visibleCount += 1;
+            });
+            group.hidden = visibleCount === 0;
+        });
+    }
+
+    function resetOpsLayerVisibility() {
+        el.opsLayerToggles.forEach((toggle) => {
+            const defaultState = toggle.dataset.defaultChecked === '1';
+            toggle.checked = defaultState;
+            setOpsLayerVisibility(toggle.dataset.layerId, defaultState);
+        });
+        if (el.opsLayerSearch) {
+            el.opsLayerSearch.value = '';
+            filterOpsLayerList('');
+        }
+    }
+
+    function focusOpsLocation(queryText) {
+        if (!state.operationsMap) return;
+        const query = String(queryText || '').trim().toLowerCase();
+        if (!query) return;
+
+        const match = OPS_MONITORING_STATIONS.find((station) => (
+            station.id.toLowerCase().includes(query)
+            || station.name.toLowerCase().includes(query)
+            || station.country.toLowerCase().includes(query)
+        ));
+        if (!match) return;
+
+        const markerEntry = state.operationsStationMarkers.find((entry) => entry.station.id === match.id);
+        setActiveOpsFeature(match.id);
+        state.operationsMap.flyTo(match.coords, 8, { duration: 0.8 });
+        if (markerEntry) markerEntry.marker.openPopup();
+    }
+
+    function buildOperationsLayers(basinData) {
+        if (!state.operationsMap) return;
+        state.operationsLayerGroups = new Map();
+        state.operationsStationMarkers = [];
+
+        const basinZones = L.layerGroup();
+        if (basinData && Array.isArray(basinData.features)) {
+            L.geoJSON(basinData, {
+                style: (feature) => {
+                    const basinId = feature?.properties?.id;
+                    const fillColor = basinId === 'upper' ? '#8FAB7A' : basinId === 'middle' ? '#5BA3C9' : '#7c88be';
+                    return {
+                        color: '#ffffff',
+                        weight: 1.1,
+                        fillColor,
+                        fillOpacity: 0.32
+                    };
+                },
+                onEachFeature: (feature, layer) => {
+                    const label = feature?.properties?.name || basinLabel(feature?.properties?.id);
+                    layer.bindTooltip(label, { className: 'map-zone-tip', sticky: true });
+                }
+            }).addTo(basinZones);
+        }
+        state.operationsLayerGroups.set('basin-zones', basinZones);
+
+        const corridor = L.layerGroup();
+        OPS_CORRIDOR_SEGMENTS.forEach((segment) => {
+            L.polyline(segment, {
+                color: '#1B3A6B',
+                weight: 3,
+                opacity: 0.86,
+                dashArray: '8 8'
+            }).addTo(corridor);
+        });
+        state.operationsLayerGroups.set('main-corridor', corridor);
+
+        const stations = L.layerGroup();
+        OPS_MONITORING_STATIONS.forEach((station) => {
+            const measurement = getOpsMeasurementForYear(station, state.operationsSelectedYear);
+            const theme = getOpsTheme(measurement?.status);
+            const marker = L.circleMarker(station.coords, {
+                radius: 7,
+                fillColor: theme.marker,
+                color: '#ffffff',
+                weight: 1.4,
+                opacity: 0.95,
+                fillOpacity: 0.9
+            });
+            marker.bindTooltip(station.name, { direction: 'top', offset: [0, -6] });
+            marker.bindPopup(buildOpsPopup(station, measurement));
+            marker.on('click', () => setActiveOpsFeature(station.id));
+            marker.addTo(stations);
+            state.operationsStationMarkers.push({ station, marker });
+        });
+        state.operationsLayerGroups.set('monitoring-stations', stations);
+
+        const hotspots = L.layerGroup();
+        OPS_WATER_HOTSPOTS.forEach((hotspot) => {
+            const radius = 6 + (hotspot.severity * 8);
+            L.circleMarker(hotspot.coords, {
+                radius,
+                fillColor: '#ef4444',
+                color: '#7f1d1d',
+                weight: 1,
+                fillOpacity: 0.28 + (hotspot.severity * 0.4),
+                opacity: 0.78
+            })
+                .bindPopup(`<strong>${hotspot.label}</strong><br>Severity index: ${(hotspot.severity * 100).toFixed(0)}%`)
+                .addTo(hotspots);
+        });
+        state.operationsLayerGroups.set('water-quality-hotspots', hotspots);
+
+        const sedimentAlerts = L.layerGroup();
+        OPS_SEDIMENT_ALERTS.forEach((alert) => {
+            L.circleMarker(alert.coords, {
+                radius: 7,
+                fillColor: '#f97316',
+                color: '#9a3412',
+                weight: 1.2,
+                fillOpacity: 0.72
+            })
+                .bindPopup(`<strong>${alert.label}</strong><br>Risk level: ${alert.level}`)
+                .addTo(sedimentAlerts);
+        });
+        state.operationsLayerGroups.set('sediment-alerts', sedimentAlerts);
+
+        const restorationSites = L.layerGroup();
+        OPS_RESTORATION_SITES.forEach((site) => {
+            L.circleMarker(site.coords, {
+                radius: 6.5,
+                fillColor: '#16a34a',
+                color: '#14532d',
+                weight: 1.1,
+                fillOpacity: 0.72
+            })
+                .bindPopup(`<strong>${site.label}</strong><br>${basinLabel(site.basin)}`)
+                .addTo(restorationSites);
+        });
+        state.operationsLayerGroups.set('restoration-sites', restorationSites);
+
+        const projectClusters = L.layerGroup();
+        OPS_PROJECT_CLUSTERS.forEach((cluster) => {
+            L.circleMarker(cluster.coords, {
+                radius: 7 + (cluster.projects / 5),
+                fillColor: '#2563eb',
+                color: '#1e3a8a',
+                weight: 1.1,
+                fillOpacity: 0.34
+            })
+                .bindPopup(`<strong>${cluster.label}</strong><br>Projects in cluster: ${cluster.projects}`)
+                .addTo(projectClusters);
+        });
+        state.operationsLayerGroups.set('project-clusters', projectClusters);
+
+        el.opsLayerToggles.forEach((toggle) => {
+            if (!toggle.dataset.defaultChecked) {
+                toggle.dataset.defaultChecked = toggle.checked ? '1' : '0';
+            }
+            setOpsLayerVisibility(toggle.dataset.layerId, toggle.checked);
+        });
+    }
+
+    async function initMapWorkspace() {
+        if (!el.operationsMap) return;
+        if (typeof window.L === 'undefined') return;
+        if (state.operationsMap) return;
+
+        const map = L.map(el.operationsMap, {
+            zoomControl: true,
+            attributionControl: true,
+            scrollWheelZoom: false
+        }).setView([47.0, 20.5], 5);
+
+        state.operationsMap = map;
+        Object.entries(OPS_BASEMAP_CONFIG).forEach(([id, config]) => {
+            state.operationsBasemapLayers[id] = L.tileLayer(config.url, config.options);
+        });
+        setOpsBasemap(el.opsBasemapSelect?.value || 'light');
+
+        let basinData = null;
+        try {
+            basinData = await loadJson('./data/maps/danube-basins3.geojson');
+        } catch (error) {
+            console.error(error);
+        }
+
+        buildOperationsLayers(basinData);
+        setOpsYear(state.operationsSelectedYear);
+        setActiveOpsFeature(OPS_MONITORING_STATIONS[0].id);
+
+        const bounds = L.latLngBounds([41.8, 7.0], [50.8, 31.0]);
+        map.fitBounds(bounds.pad(-0.04));
+        map.setMaxBounds(bounds.pad(0.14));
+        setTimeout(() => map.invalidateSize(), 80);
     }
 
     function renderKpis() {
@@ -862,6 +1448,43 @@
             el.ld003BasinSelect.addEventListener('change', renderLd003SectionCharts);
             el.ld003ValueModeSelect.addEventListener('change', renderLd003SectionCharts);
         }
+        if (el.opsBasemapSelect) {
+            el.opsBasemapSelect.addEventListener('change', (event) => {
+                setOpsBasemap(event.target.value);
+            });
+        }
+        if (el.opsTimelineYear) {
+            el.opsTimelineYear.addEventListener('input', (event) => {
+                setOpsYear(event.target.value);
+            });
+        }
+        if (el.opsLayerToggles.length) {
+            el.opsLayerToggles.forEach((toggle) => {
+                toggle.addEventListener('change', (event) => {
+                    setOpsLayerVisibility(toggle.dataset.layerId, event.target.checked);
+                });
+            });
+        }
+        if (el.opsLayerSearch) {
+            el.opsLayerSearch.addEventListener('input', (event) => {
+                filterOpsLayerList(event.target.value);
+            });
+        }
+        if (el.opsResetLayers) {
+            el.opsResetLayers.addEventListener('click', resetOpsLayerVisibility);
+        }
+        if (el.opsLocationSearchBtn) {
+            el.opsLocationSearchBtn.addEventListener('click', () => {
+                focusOpsLocation(el.opsLocationSearch?.value);
+            });
+        }
+        if (el.opsLocationSearch) {
+            el.opsLocationSearch.addEventListener('keydown', (event) => {
+                if (event.key !== 'Enter') return;
+                event.preventDefault();
+                focusOpsLocation(el.opsLocationSearch.value);
+            });
+        }
 
         window.addEventListener('resize', () => {
             [
@@ -875,11 +1498,13 @@
                 .filter(Boolean)
                 .forEach((chart) => Plotly.Plots.resize(chart));
             if (state.leafletMap) state.leafletMap.invalidateSize();
+            if (state.operationsMap) state.operationsMap.invalidateSize();
         });
     }
 
     async function init() {
         try {
+            initDashboardTabs();
             const [kpis, riverDaily, biodiversity] = await Promise.all([
                 loadJson('./data/synthetic-dashboard/kpis.json'),
                 loadJson('./data/synthetic-dashboard/river_daily_2025.json'),
@@ -896,7 +1521,7 @@
             bootstrapRiverDateFilters();
             renderRiverSectionCharts();
             renderLd003SectionCharts();
-            await initDanubeMap();
+            await Promise.all([initDanubeMap(), initMapWorkspace()]);
             bindEvents();
         } catch (error) {
             console.error(error);
