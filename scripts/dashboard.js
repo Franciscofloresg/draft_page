@@ -171,6 +171,7 @@
             options: { maxZoom: 18, attribution: 'Tiles &copy; Esri' }
         }
     };
+    const OPS_VIEW_BOUNDS = [[41.8, 7.0], [50.8, 31.0]];
 
     const state = {
         kpis: null,
@@ -185,7 +186,8 @@
         operationsLayerGroups: new Map(),
         operationsStationMarkers: [],
         operationsActiveFeature: null,
-        operationsSelectedYear: OPS_DEFAULT_YEAR
+        operationsSelectedYear: OPS_DEFAULT_YEAR,
+        operationsHasInitialViewport: false
     };
 
     const el = {
@@ -468,8 +470,27 @@
 
         window.requestAnimationFrame(() => {
             if (targetTab === 'analytics' && state.leafletMap) state.leafletMap.invalidateSize();
-            if (targetTab === 'map-workspace' && state.operationsMap) state.operationsMap.invalidateSize();
+            if (targetTab === 'map-workspace' && state.operationsMap) {
+                state.operationsMap.invalidateSize();
+                if (!state.operationsHasInitialViewport) {
+                    window.requestAnimationFrame(() => fitOpsMapToDanube(true));
+                }
+            }
         });
+    }
+
+    function fitOpsMapToDanube(markInitialized = false) {
+        if (!state.operationsMap || typeof window.L === 'undefined') return;
+        const bounds = L.latLngBounds(OPS_VIEW_BOUNDS);
+        state.operationsMap.fitBounds(bounds.pad(-0.04), { animate: false });
+        state.operationsMap.setMaxBounds(bounds.pad(0.14));
+        if (markInitialized) state.operationsHasInitialViewport = true;
+    }
+
+    function getFixedNavOffset() {
+        const nav = document.querySelector('nav');
+        if (!nav) return 0;
+        return Math.ceil(nav.getBoundingClientRect().height) + 12;
     }
 
     function openAnchorInTab(targetHash, tabId) {
@@ -477,7 +498,8 @@
         if (!target) return;
         setDashboardTab(tabId);
         window.requestAnimationFrame(() => {
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            const targetTop = target.getBoundingClientRect().top + window.scrollY - getFixedNavOffset();
+            window.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
         });
     }
 
@@ -820,9 +842,7 @@
         setOpsYear(state.operationsSelectedYear);
         setActiveOpsFeature(OPS_MONITORING_STATIONS[0].id);
 
-        const bounds = L.latLngBounds([41.8, 7.0], [50.8, 31.0]);
-        map.fitBounds(bounds.pad(-0.04));
-        map.setMaxBounds(bounds.pad(0.14));
+        fitOpsMapToDanube(state.dashboardActiveTab === 'map-workspace');
         setTimeout(() => map.invalidateSize(), 80);
     }
 
