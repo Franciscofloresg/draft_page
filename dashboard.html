@@ -42,11 +42,12 @@
             top: 0;
             left: 0;
             right: 0;
-            z-index: 100;
+            z-index: 5000;
             height: var(--nav-height);
             padding: 0 2.5rem;
             background: rgba(244, 250, 255, 0.96);
             backdrop-filter: blur(12px);
+            isolation: isolate;
             border-bottom: 1px solid rgba(27,58,107,0.12);
             box-shadow: 0 4px 14px rgba(15,37,71,0.08);
             display: flex;
@@ -73,7 +74,7 @@
         }
         #danube-map-section,
         #map-workspace-section {
-            scroll-margin-top: calc(var(--nav-height) + 16px);
+            scroll-margin-top: calc(var(--nav-height) + 28px);
         }
 
         .hero-panel {
