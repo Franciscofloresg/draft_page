@@ -1024,11 +1024,15 @@
         const visiblePoints = selectedPoint === 'all' ? points : points.filter((p) => p === selectedPoint);
         const dates = state.riverDaily.dates || [];
         const { startDate, endDate } = getRiverDateWindow();
+        const periodValues = [];
 
         const traces = visiblePoints.map((point) => {
             const pointSeries = state.riverDaily.points?.[point]?.[metric] || [];
             const filtered = filterSeriesByDate(dates, pointSeries, startDate, endDate);
             const aggregated = aggregateSeries(filtered.dates, filtered.values, aggregation);
+            aggregated.y.forEach((value) => {
+                if (Number.isFinite(value)) periodValues.push(value);
+            });
             return {
                 type: 'scattergl',
                 mode: aggregation === 'monthly' ? 'lines+markers' : 'lines',
@@ -1060,6 +1064,65 @@
         layout.xaxis.rangeslider = { visible: false };
         layout.xaxis.tickformat = aggregation === 'monthly' ? '%b %Y' : '%d %b';
         layout.xaxis.hoverformat = '%Y-%m-%d';
+        if (periodValues.length) {
+            const minValue = Math.min(...periodValues);
+            const maxValue = Math.max(...periodValues);
+            const formatValue = (value) => `${value.toFixed(2)} ${unit}`.trim();
+            layout.shapes = [{
+                type: 'line',
+                xref: 'paper',
+                x0: 0,
+                x1: 1,
+                yref: 'y',
+                y0: maxValue,
+                y1: maxValue,
+                line: {
+                    color: 'rgba(185, 28, 28, 0.9)',
+                    width: 1.8,
+                    dash: 'dot'
+                }
+            }];
+            layout.annotations = [{
+                xref: 'paper',
+                x: 0.012,
+                xanchor: 'left',
+                yref: 'y',
+                y: maxValue,
+                yanchor: 'bottom',
+                text: `Max ${formatValue(maxValue)}`,
+                showarrow: false,
+                font: { size: 11, color: '#7f1d1d' },
+                bgcolor: 'rgba(255,255,255,0.74)'
+            }];
+            if (Math.abs(maxValue - minValue) > 1e-9) {
+                layout.shapes.push({
+                    type: 'line',
+                    xref: 'paper',
+                    x0: 0,
+                    x1: 1,
+                    yref: 'y',
+                    y0: minValue,
+                    y1: minValue,
+                    line: {
+                        color: 'rgba(30, 64, 175, 0.92)',
+                        width: 1.8,
+                        dash: 'dot'
+                    }
+                });
+                layout.annotations.push({
+                    xref: 'paper',
+                    x: 0.012,
+                    xanchor: 'left',
+                    yref: 'y',
+                    y: minValue,
+                    yanchor: 'top',
+                    text: `Min ${formatValue(minValue)}`,
+                    showarrow: false,
+                    font: { size: 11, color: '#1e3a8a' },
+                    bgcolor: 'rgba(255,255,255,0.74)'
+                });
+            }
+        }
 
         Plotly.react(el.riverChart, traces, layout, { responsive: true, displayModeBar: false });
     }
