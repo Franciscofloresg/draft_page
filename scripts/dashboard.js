@@ -1052,7 +1052,7 @@
             `${metricMeta.label} - ${aggregationLabel[aggregation] || aggregation} by station`,
             unit
         );
-        layout.margin = { l: 62, r: 18, t: 92, b: 62 };
+        layout.margin = { l: 62, r: 112, t: 92, b: 62 };
         layout.hovermode = 'x unified';
         layout.legend.orientation = 'h';
         layout.legend.x = 1;
@@ -1067,6 +1067,7 @@
         if (periodValues.length) {
             const minValue = Math.min(...periodValues);
             const maxValue = Math.max(...periodValues);
+            const deltaValue = maxValue - minValue;
             const formatValue = (value) => `${value.toFixed(2)} ${unit}`.trim();
             layout.shapes = [{
                 type: 'line',
@@ -1094,7 +1095,61 @@
                 font: { size: 11, color: '#7f1d1d' },
                 bgcolor: 'rgba(255,255,255,0.74)'
             }];
+            layout.annotations.push({
+                xref: 'paper',
+                x: 1.01,
+                xanchor: 'left',
+                yref: 'y',
+                y: minValue + (deltaValue / 2),
+                yanchor: 'middle',
+                text: `&#916; ${formatValue(deltaValue)}`,
+                showarrow: false,
+                font: { size: 11, color: '#334155' },
+                bgcolor: 'rgba(255,255,255,0.84)',
+                bordercolor: 'rgba(148,163,184,0.7)',
+                borderwidth: 1
+            });
             if (Math.abs(maxValue - minValue) > 1e-9) {
+                layout.shapes.push({
+                    type: 'line',
+                    xref: 'paper',
+                    x0: 1,
+                    x1: 1,
+                    yref: 'y',
+                    y0: minValue,
+                    y1: maxValue,
+                    line: {
+                        color: 'rgba(51, 65, 85, 0.7)',
+                        width: 1.5,
+                        dash: 'dot'
+                    }
+                });
+                layout.shapes.push({
+                    type: 'line',
+                    xref: 'paper',
+                    x0: 0.988,
+                    x1: 1.012,
+                    yref: 'y',
+                    y0: maxValue,
+                    y1: maxValue,
+                    line: {
+                        color: 'rgba(51, 65, 85, 0.7)',
+                        width: 1.5
+                    }
+                });
+                layout.shapes.push({
+                    type: 'line',
+                    xref: 'paper',
+                    x0: 0.988,
+                    x1: 1.012,
+                    yref: 'y',
+                    y0: minValue,
+                    y1: minValue,
+                    line: {
+                        color: 'rgba(51, 65, 85, 0.7)',
+                        width: 1.5
+                    }
+                });
                 layout.shapes.push({
                     type: 'line',
                     xref: 'paper',
