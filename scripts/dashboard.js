@@ -147,11 +147,6 @@
         { id: 'SA_100', label: 'High suspended sediment event', coords: [45.9, 21.8], level: 'Moderate' },
         { id: 'SA_101', label: 'Bank erosion risk segment', coords: [44.5, 22.8], level: 'High' }
     ];
-    const OPS_CORRIDOR_SEGMENTS = [
-        [[48.66, 12.14], [48.21, 16.37], [47.86, 17.91], [47.5, 19.04]],
-        [[47.5, 19.04], [46.25, 20.15], [45.81, 21.13], [44.79, 20.45]],
-        [[44.79, 20.45], [44.67, 22.52], [44.42, 26.1], [45.18, 28.81]]
-    ];
     const OPS_STATUS_THEMES = {
         operational: { label: 'Operational', marker: '#16a34a', chipText: '#166534', chipBg: 'rgba(34,197,94,0.14)' },
         watch: { label: 'Watch', marker: '#d97706', chipText: '#92400e', chipBg: 'rgba(245,158,11,0.16)' },
@@ -699,6 +694,7 @@
         const basinZones = L.layerGroup();
         if (basinData && Array.isArray(basinData.features)) {
             L.geoJSON(basinData, {
+                pane: 'opsBasinPane',
                 style: (feature) => {
                     const basinId = feature?.properties?.id;
                     const fillColor = basinId === 'upper' ? '#8FAB7A' : basinId === 'middle' ? '#5BA3C9' : '#7c88be';
@@ -718,14 +714,17 @@
         state.operationsLayerGroups.set('basin-zones', basinZones);
 
         const corridor = L.layerGroup();
-        OPS_CORRIDOR_SEGMENTS.forEach((segment) => {
-            L.polyline(segment, {
-                color: '#1B3A6B',
-                weight: 3,
-                opacity: 0.86,
-                dashArray: '8 8'
-            }).addTo(corridor);
-        });
+        L.imageOverlay('./data/maps/source/danubegis_river4000.png', OPS_VIEW_BOUNDS, {
+            pane: 'opsCorridorPane',
+            opacity: 0.24,
+            interactive: false
+        }).addTo(corridor);
+        L.imageOverlay('./data/maps/source/danubegis_danube.png', OPS_VIEW_BOUNDS, {
+            pane: 'opsCorridorPane',
+            opacity: 1,
+            className: 'ops-river-darken',
+            interactive: false
+        }).addTo(corridor);
         state.operationsLayerGroups.set('main-corridor', corridor);
 
         const stations = L.layerGroup();
@@ -826,6 +825,10 @@
         }).setView([47.0, 20.5], 5);
 
         state.operationsMap = map;
+        map.createPane('opsBasinPane');
+        map.getPane('opsBasinPane').style.zIndex = 330;
+        map.createPane('opsCorridorPane');
+        map.getPane('opsCorridorPane').style.zIndex = 370;
         Object.entries(OPS_BASEMAP_CONFIG).forEach(([id, config]) => {
             state.operationsBasemapLayers[id] = L.tileLayer(config.url, config.options);
         });
